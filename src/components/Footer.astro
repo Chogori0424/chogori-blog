@@ -1,0 +1,27 @@
+---
+import { SITE_TITLE, SITE_URL } from '../consts';
+
+const today = new Date();
+---
+
+<footer>
+	<p>&copy; {today.getFullYear()} Chogori Lee. All rights reserved.</p>
+	<p>
+		<a href={SITE_URL}>{SITE_TITLE}</a> / 个人技术博客
+	</p>
+</footer>
+<style>
+	footer {
+		padding: 2em 1em 6em;
+		background: linear-gradient(var(--gray-gradient)) no-repeat;
+		color: rgb(var(--gray));
+		text-align: center;
+	}
+	footer p {
+		margin: 0.25rem 0;
+	}
+	footer a {
+		color: rgb(var(--gray-dark));
+		text-decoration: none;
+	}
+</style>

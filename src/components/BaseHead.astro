@@ -1,0 +1,51 @@
+---
+// Import global styles here so every page using <BaseHead /> gets the same base CSS.
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import FallbackImage from '../assets/blog-placeholder-1.jpg';
+import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../consts';
+
+interface Props {
+	title: string;
+	description?: string;
+	image?: ImageMetadata;
+	type?: 'website' | 'article';
+}
+
+const { title, description = SITE_DESCRIPTION, image = FallbackImage, type = 'website' } = Astro.props;
+const siteURL = Astro.site ?? new URL(SITE_URL);
+const canonicalURL = new URL(Astro.url.pathname, siteURL);
+const fullTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
+const imageURL = new URL(image.src, siteURL);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL('/rss.xml', siteURL)} />
+<meta name="generator" content={Astro.generator} />
+
+<Font cssVariable="--font-atkinson" preload />
+
+<link rel="canonical" href={canonicalURL} />
+
+<title>{fullTitle}</title>
+<meta name="title" content={fullTitle} />
+<meta name="description" content={description} />
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageURL} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageURL} />

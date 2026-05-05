@@ -1,0 +1,109 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title="关于" description="关于 Chogori Lee：模具注塑工艺工程师，关注网络代理配置、工程制造、CAD/UG、音频设备和个人知识管理。" />
+		<style>
+			main {
+				width: 860px;
+			}
+			.about-head {
+				margin-bottom: 2rem;
+			}
+			.kicker {
+				margin: 0 0 0.65rem;
+				color: rgb(var(--gray));
+				font-size: 0.9rem;
+				font-weight: 700;
+			}
+			h1 {
+				margin-bottom: 0.75rem;
+				font-size: 2.6rem;
+			}
+			.summary {
+				max-width: 720px;
+				margin: 0;
+			}
+			.info-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 1rem;
+				margin: 2rem 0;
+			}
+			.info-card {
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 8px;
+				background: white;
+				padding: 1rem;
+			}
+			.info-card h2 {
+				margin: 0 0 0.6rem;
+				font-size: 1.2rem;
+			}
+			.info-card p,
+			.info-card ul {
+				margin: 0;
+			}
+			.info-card ul {
+				padding-left: 1.1rem;
+			}
+			.note {
+				border-left: 4px solid var(--accent);
+				padding-left: 1rem;
+			}
+			@media (max-width: 720px) {
+				.info-grid {
+					grid-template-columns: 1fr;
+				}
+				h1 {
+					font-size: 2.1rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="about-head">
+				<p class="kicker">{SITE_TITLE} / About</p>
+				<h1>Chogori Lee</h1>
+				<p class="summary">
+					模具注塑工艺工程师，关注网络代理配置、工程制造、CAD/UG、音频设备和个人知识管理。
+				</p>
+			</section>
+
+			<section class="info-grid">
+				<article class="info-card">
+					<h2>工程背景</h2>
+					<p>
+						长期接触模具注塑工艺、工程制造流程和 Siemens NX/UG 相关工作，关注如何把现场经验整理成可复用的方法。
+					</p>
+				</article>
+				<article class="info-card">
+					<h2>技术兴趣</h2>
+					<ul>
+						<li>Surge / Quantumult X 网络代理配置</li>
+						<li>代理规则维护与分流策略</li>
+						<li>CAD/UG 工程经验</li>
+						<li>音频设备与桌面链路</li>
+						<li>个人知识管理与写作系统</li>
+					</ul>
+				</article>
+			</section>
+
+			<section class="note">
+				<p>
+					这个博客会把“怎么做”和“为什么这样做”一起记录下来。相比单纯保存配置片段，我更希望留下排查路径、
+					约束条件和维护成本，方便以后复盘，也方便同样方向的人参考。
+				</p>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

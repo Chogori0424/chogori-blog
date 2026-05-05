@@ -1,0 +1,106 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { BLOG_CATEGORIES, SITE_TITLE } from '../../consts';
+
+const posts = await getCollection('blog');
+const categories = BLOG_CATEGORIES.map((category) => {
+	const categoryPosts = posts
+		.filter((post) => post.data.category === category.name)
+		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+	return {
+		...category,
+		count: categoryPosts.length,
+		latestPost: categoryPosts[0],
+	};
+});
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title="分类" description="Chogori Blog 的技术分类：网络代理、工程制造、音频设备和个人日志。" />
+		<style>
+			main {
+				width: 960px;
+			}
+			.page-head {
+				margin-bottom: 2rem;
+			}
+			.page-head h1 {
+				margin-bottom: 0.75rem;
+				font-size: 2.4rem;
+			}
+			.page-head p {
+				max-width: 720px;
+				margin: 0;
+			}
+			.category-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 1rem;
+			}
+			.category-card {
+				display: grid;
+				gap: 0.7rem;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 8px;
+				background: white;
+				padding: 1rem;
+				color: rgb(var(--gray-dark));
+				text-decoration: none;
+			}
+			.category-card h2 {
+				margin: 0;
+				font-size: 1.35rem;
+			}
+			.category-card p {
+				margin: 0;
+			}
+			.meta {
+				color: rgb(var(--gray));
+				font-size: 0.88rem;
+			}
+			.latest {
+				border-top: 1px solid rgb(var(--gray-light));
+				padding-top: 0.7rem;
+				font-size: 0.92rem;
+			}
+			@media (max-width: 720px) {
+				.category-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-head">
+				<h1>分类</h1>
+				<p>{SITE_TITLE} 目前按技术方向整理文章，先保持少量清晰栏目，后续随着内容增长再细分标签。</p>
+			</section>
+
+			<section class="category-grid">
+				{
+					categories.map((category) => (
+						<a class="category-card" href={`/categories/${category.slug}/`}>
+							<div>
+								<h2>{category.name}</h2>
+								<p class="meta">{category.count} 篇文章</p>
+							</div>
+							<p>{category.description}</p>
+							<p class="latest">
+								{category.latestPost ? `最新：${category.latestPost.data.title}` : '这个分类还在整理中。'}
+							</p>
+						</a>
+					))
+				}
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
