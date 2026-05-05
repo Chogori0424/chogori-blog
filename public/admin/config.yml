@@ -1,0 +1,53 @@
+backend:
+  name: github
+  repo: Chogori0424/chogori-blog
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: blog
+    label: Blog
+    folder: src/content/blog
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Publish Date
+        name: pubDate
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: YYYY-MM-DD
+        time_format: false
+      - label: Description
+        name: description
+        widget: text
+      - label: Category
+        name: category
+        widget: select
+        options:
+          - 网络代理
+          - 工程制造
+          - 音频设备
+          - 个人日志
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        summary: "{{fields.tag}}"
+        field:
+          label: Tag
+          name: tag
+          widget: string
+      - label: Hero Image
+        name: heroImage
+        widget: image
+        required: false
+      - label: Body
+        name: body
+        widget: markdown

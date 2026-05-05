@@ -9,7 +9,7 @@ import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../consts';
 interface Props {
 	title: string;
 	description?: string;
-	image?: ImageMetadata;
+	image?: ImageMetadata | string;
 	type?: 'website' | 'article';
 }
 
@@ -17,7 +17,7 @@ const { title, description = SITE_DESCRIPTION, image = FallbackImage, type = 'we
 const siteURL = Astro.site ?? new URL(SITE_URL);
 const canonicalURL = new URL(Astro.url.pathname, siteURL);
 const fullTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
-const imageURL = new URL(image.src, siteURL);
+const imageURL = new URL(typeof image === 'string' ? image : image.src, siteURL);
 ---
 
 <meta charset="utf-8" />
