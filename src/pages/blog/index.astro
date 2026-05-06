@@ -41,11 +41,15 @@ const posts = (await getCollection('blog')).sort(
 				border: 1px solid rgb(var(--gray-light));
 				border-radius: 999px;
 				padding: 0.35rem 0.75rem;
-				background: white;
+				background: var(--surface);
 				color: rgb(var(--gray-dark));
 				font-size: 0.9rem;
 				font-weight: 700;
 				text-decoration: none;
+				transition:
+					background-color 0.3s ease,
+					border-color 0.3s ease,
+					color 0.3s ease;
 			}
 			.post-grid {
 				display: grid;
@@ -60,7 +64,11 @@ const posts = (await getCollection('blog')).sort(
 				height: 100%;
 				border: 1px solid rgb(var(--gray-light));
 				border-radius: 8px;
-				background: white;
+				background: var(--surface);
+				transition:
+					background-color 0.3s ease,
+					border-color 0.3s ease,
+					color 0.3s ease;
 			}
 			.post-card a {
 				display: grid;

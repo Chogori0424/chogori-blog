@@ -68,8 +68,12 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 			.site-note {
 				border: 1px solid rgb(var(--gray-light));
 				border-radius: 8px;
-				background: rgba(255, 255, 255, 0.82);
+				background: var(--surface-soft);
 				padding: 1.1rem;
+				transition:
+					background-color 0.3s ease,
+					border-color 0.3s ease,
+					color 0.3s ease;
 			}
 			.profile-panel h2,
 			.site-note h2,
@@ -98,7 +102,11 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				height: 100%;
 				border: 1px solid rgb(var(--gray-light));
 				border-radius: 8px;
-				background: white;
+				background: var(--surface);
+				transition:
+					background-color 0.3s ease,
+					border-color 0.3s ease,
+					color 0.3s ease;
 			}
 			.post-card a {
 				display: grid;
@@ -144,10 +152,14 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				gap: 0.55rem;
 				border: 1px solid rgb(var(--gray-light));
 				border-radius: 8px;
-				background: rgba(255, 255, 255, 0.82);
+				background: var(--surface-soft);
 				padding: 1rem;
 				color: rgb(var(--gray-dark));
 				text-decoration: none;
+				transition:
+					background-color 0.3s ease,
+					border-color 0.3s ease,
+					color 0.3s ease;
 			}
 			.category-card strong {
 				color: rgb(var(--black));

@@ -20,6 +20,21 @@ const fullTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`
 const imageURL = new URL(typeof image === 'string' ? image : image.src, siteURL);
 ---
 
+<script is:inline>
+	(() => {
+		try {
+			const storageKey = 'theme';
+			const root = document.documentElement;
+			const savedTheme = localStorage.getItem(storageKey);
+			const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			const theme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : systemTheme;
+			root.dataset.theme = theme;
+			root.style.colorScheme = theme;
+		} catch {
+			document.documentElement.dataset.theme = 'light';
+		}
+	})();
+</script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

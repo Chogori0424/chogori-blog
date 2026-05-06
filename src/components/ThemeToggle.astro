@@ -1,0 +1,91 @@
+<button class="theme-toggle" type="button" aria-label="切换深色模式" aria-pressed="false">
+	<span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+</button>
+
+<script>
+	const storageKey = 'theme';
+	const root = document.documentElement;
+	const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+	const icon = toggle?.querySelector<HTMLElement>('.theme-toggle__icon');
+
+	const getTheme = () => {
+		const storedTheme = localStorage.getItem(storageKey);
+
+		if (storedTheme === 'dark' || storedTheme === 'light') {
+			return storedTheme;
+		}
+
+		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	};
+
+	const applyTheme = (theme: string) => {
+		root.dataset.theme = theme;
+		root.style.colorScheme = theme;
+
+		if (toggle && icon) {
+			toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+			toggle.setAttribute('aria-label', theme === 'dark' ? '切换浅色模式' : '切换深色模式');
+			icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+		}
+	};
+
+	applyTheme(getTheme());
+
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+		if (!localStorage.getItem(storageKey)) {
+			applyTheme(getTheme());
+		}
+	});
+
+	toggle?.addEventListener('click', () => {
+		const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+		localStorage.setItem(storageKey, nextTheme);
+		applyTheme(nextTheme);
+	});
+</script>
+
+<style>
+	.theme-toggle {
+		position: fixed;
+		top: 0.85rem;
+		right: max(1rem, calc((100vw - 1120px) / 2 + 1rem));
+		z-index: 20;
+		display: inline-grid;
+		place-items: center;
+		width: 2.35rem;
+		height: 2.35rem;
+		border: 1px solid var(--border-color);
+		border-radius: 999px;
+		background: var(--surface-soft);
+		color: rgb(var(--black));
+		box-shadow: 0 6px 20px rgba(var(--black), 8%);
+		cursor: pointer;
+		backdrop-filter: blur(10px);
+		transition:
+			background-color 0.3s ease,
+			border-color 0.3s ease,
+			color 0.3s ease,
+			transform 0.2s ease;
+	}
+
+	.theme-toggle:hover {
+		transform: translateY(-1px);
+	}
+
+	.theme-toggle:focus-visible {
+		outline: 3px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	.theme-toggle__icon {
+		font-size: 1.05rem;
+		line-height: 1;
+	}
+
+	@media (max-width: 720px) {
+		.theme-toggle {
+			top: 0.75rem;
+			right: 0.75rem;
+		}
+	}
+</style>
