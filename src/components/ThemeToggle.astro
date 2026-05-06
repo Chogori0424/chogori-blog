@@ -1,91 +1,110 @@
-<button class="theme-toggle" type="button" aria-label="切换深色模式" aria-pressed="false">
-	<span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+<button id="theme-toggle" type="button" aria-label="切换深色模式" aria-pressed="false">
+	<svg
+		id="icon-moon"
+		xmlns="http://www.w3.org/2000/svg"
+		width="20"
+		height="20"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+	</svg>
+	<svg
+		id="icon-sun"
+		xmlns="http://www.w3.org/2000/svg"
+		width="20"
+		height="20"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<circle cx="12" cy="12" r="5"></circle>
+		<line x1="12" y1="1" x2="12" y2="3"></line>
+		<line x1="12" y1="21" x2="12" y2="23"></line>
+		<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+		<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+		<line x1="1" y1="12" x2="3" y2="12"></line>
+		<line x1="21" y1="12" x2="23" y2="12"></line>
+		<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+		<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+	</svg>
 </button>
 
 <script>
-	const storageKey = 'theme';
-	const root = document.documentElement;
-	const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
-	const icon = toggle?.querySelector<HTMLElement>('.theme-toggle__icon');
+	const btn = document.getElementById('theme-toggle');
+	const iconSun = document.getElementById('icon-sun');
+	const iconMoon = document.getElementById('icon-moon');
 
-	const getTheme = () => {
-		const storedTheme = localStorage.getItem(storageKey);
-
-		if (storedTheme === 'dark' || storedTheme === 'light') {
-			return storedTheme;
-		}
-
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	};
-
-	const applyTheme = (theme: string) => {
-		root.dataset.theme = theme;
-		root.style.colorScheme = theme;
-
-		if (toggle && icon) {
-			toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-			toggle.setAttribute('aria-label', theme === 'dark' ? '切换浅色模式' : '切换深色模式');
-			icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+	const syncThemeIcon = (theme: string | null) => {
+		if (iconSun && iconMoon && btn) {
+			const isDark = theme === 'dark';
+			iconSun.style.display = isDark ? 'block' : 'none';
+			iconMoon.style.display = isDark ? 'none' : 'block';
+			btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+			btn.setAttribute('aria-label', isDark ? '切换浅色模式' : '切换深色模式');
 		}
 	};
 
-	applyTheme(getTheme());
+	const initial = document.documentElement.getAttribute('data-theme');
+	syncThemeIcon(initial);
 
-	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-		if (!localStorage.getItem(storageKey)) {
-			applyTheme(getTheme());
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+		if (!localStorage.getItem('theme')) {
+			const next = event.matches ? 'dark' : 'light';
+			document.documentElement.setAttribute('data-theme', next);
+			document.documentElement.style.colorScheme = next;
+			syncThemeIcon(next);
 		}
 	});
 
-	toggle?.addEventListener('click', () => {
-		const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-		localStorage.setItem(storageKey, nextTheme);
-		applyTheme(nextTheme);
+	btn?.addEventListener('click', () => {
+		const current = document.documentElement.getAttribute('data-theme');
+		const next = current === 'dark' ? 'light' : 'dark';
+		document.documentElement.setAttribute('data-theme', next);
+		document.documentElement.style.colorScheme = next;
+		localStorage.setItem('theme', next);
+		syncThemeIcon(next);
 	});
 </script>
 
 <style>
-	.theme-toggle {
-		position: fixed;
-		top: 0.85rem;
-		right: max(1rem, calc((100vw - 1120px) / 2 + 1rem));
-		z-index: 20;
-		display: inline-grid;
-		place-items: center;
-		width: 2.35rem;
-		height: 2.35rem;
-		border: 1px solid var(--border-color);
-		border-radius: 999px;
-		background: var(--surface-soft);
-		color: rgb(var(--black));
-		box-shadow: 0 6px 20px rgba(var(--black), 8%);
+	button#theme-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 22px;
+		height: 22px;
+		margin-left: 16px;
+		padding: 0;
+		border: none;
+		outline: none;
+		background: transparent;
+		color: currentColor;
 		cursor: pointer;
-		backdrop-filter: blur(10px);
-		transition:
-			background-color 0.3s ease,
-			border-color 0.3s ease,
-			color 0.3s ease,
-			transform 0.2s ease;
+		opacity: 0.85;
+		transition: opacity 0.2s ease, transform 0.2s ease;
 	}
 
-	.theme-toggle:hover {
-		transform: translateY(-1px);
+	button#theme-toggle:hover {
+		opacity: 1;
+		transform: scale(1.15);
 	}
 
-	.theme-toggle:focus-visible {
+	button#theme-toggle:focus-visible {
 		outline: 3px solid var(--accent);
 		outline-offset: 3px;
 	}
 
-	.theme-toggle__icon {
-		font-size: 1.05rem;
-		line-height: 1;
-	}
-
-	@media (max-width: 720px) {
-		.theme-toggle {
-			top: 0.75rem;
-			right: 0.75rem;
-		}
+	button#theme-toggle svg {
+		flex: none;
 	}
 </style>

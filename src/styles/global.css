@@ -48,7 +48,7 @@
 	}
 }
 
-:root[data-theme='dark'] {
+[data-theme='dark'] {
 	color-scheme: dark;
 	--accent: #8fb3ff;
 	--accent-dark: #c4d7ff;
@@ -69,7 +69,7 @@
 		0 18px 36px rgba(2, 6, 23, 36%);
 }
 
-:root[data-theme='light'] {
+[data-theme='light'] {
 	color-scheme: light;
 }
 

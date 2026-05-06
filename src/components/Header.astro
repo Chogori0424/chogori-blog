@@ -7,13 +7,15 @@ import ThemeToggle from './ThemeToggle.astro';
 <header>
 	<nav aria-label="主导航">
 		<h2><a href="/">{SITE_TITLE}</a></h2>
-		<div class="internal-links">
-			<HeaderLink href="/">首页</HeaderLink>
-			<HeaderLink href="/blog">文章</HeaderLink>
-			<HeaderLink href="/categories">分类</HeaderLink>
-			<HeaderLink href="/about">关于</HeaderLink>
+		<div class="nav-actions">
+			<div class="internal-links">
+				<HeaderLink href="/">首页</HeaderLink>
+				<HeaderLink href="/blog">文章</HeaderLink>
+				<HeaderLink href="/categories">分类</HeaderLink>
+				<HeaderLink href="/about">关于</HeaderLink>
+			</div>
+			<ThemeToggle />
 		</div>
-		<ThemeToggle />
 	</nav>
 </header>
 <style>
@@ -41,6 +43,14 @@ import ThemeToggle from './ThemeToggle.astro';
 		max-width: 1120px;
 		margin: 0 auto;
 	}
+	.nav-actions {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		min-width: 0;
+		margin-left: auto;
+		color: rgb(var(--black));
+	}
 	nav a {
 		padding: 1em 0.5em;
 		color: rgb(var(--black));
@@ -60,12 +70,15 @@ import ThemeToggle from './ThemeToggle.astro';
 	}
 	@media (max-width: 720px) {
 		nav {
-			display: block;
+			flex-wrap: wrap;
 			padding: 0.75rem 0;
+		}
+		.nav-actions {
+			width: 100%;
+			justify-content: flex-start;
 		}
 		.internal-links {
 			justify-content: flex-start;
-			margin-top: 0.25rem;
 		}
 		nav a {
 			padding: 0.45rem 0.25rem;
