@@ -53,7 +53,7 @@ const pageTitle = `${category.name} - ${SITE_TITLE}`;
 			}
 			.post-card {
 				overflow: hidden;
-				border: 1px solid rgb(var(--gray-light));
+				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				background: var(--surface);
 				transition:
@@ -65,7 +65,7 @@ const pageTitle = `${category.name} - ${SITE_TITLE}`;
 				display: grid;
 				grid-template-columns: 240px minmax(0, 1fr);
 				gap: 1rem;
-				color: rgb(var(--gray-dark));
+				color: var(--color-text);
 				text-decoration: none;
 			}
 			.post-card img {
@@ -79,7 +79,7 @@ const pageTitle = `${category.name} - ${SITE_TITLE}`;
 			}
 			.date {
 				margin: 0 0 0.4rem;
-				color: rgb(var(--gray));
+				color: var(--color-text-muted);
 				font-size: 0.85rem;
 			}
 			.post-body h2 {
@@ -91,13 +91,17 @@ const pageTitle = `${category.name} - ${SITE_TITLE}`;
 			}
 			.empty {
 				padding: 1rem;
-				border: 1px solid rgb(var(--gray-light));
+				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				background: var(--surface);
 				transition:
 					background-color 0.3s ease,
 					border-color 0.3s ease,
 					color 0.3s ease;
+			}
+			.post-card:hover,
+			.empty {
+				border-color: var(--color-accent);
 			}
 			@media (max-width: 720px) {
 				.post-card a {

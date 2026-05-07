@@ -38,11 +38,11 @@ const posts = (await getCollection('blog')).sort(
 				margin-top: 1rem;
 			}
 			.category-nav a {
-				border: 1px solid rgb(var(--gray-light));
+				border: 1px solid var(--color-accent);
 				border-radius: 999px;
 				padding: 0.35rem 0.75rem;
-				background: var(--surface);
-				color: rgb(var(--gray-dark));
+				background: var(--color-accent-muted);
+				color: var(--color-text);
 				font-size: 0.9rem;
 				font-weight: 700;
 				text-decoration: none;
@@ -50,6 +50,10 @@ const posts = (await getCollection('blog')).sort(
 					background-color 0.3s ease,
 					border-color 0.3s ease,
 					color 0.3s ease;
+			}
+			.category-nav a:hover {
+				border-color: var(--color-accent-hover);
+				background: var(--color-bg-hover);
 			}
 			.post-grid {
 				display: grid;
@@ -62,7 +66,7 @@ const posts = (await getCollection('blog')).sort(
 			.post-card {
 				overflow: hidden;
 				height: 100%;
-				border: 1px solid rgb(var(--gray-light));
+				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				background: var(--surface);
 				transition:
@@ -73,7 +77,7 @@ const posts = (await getCollection('blog')).sort(
 			.post-card a {
 				display: grid;
 				height: 100%;
-				color: rgb(var(--gray-dark));
+				color: var(--color-text);
 				text-decoration: none;
 			}
 			.post-card img {
@@ -90,16 +94,20 @@ const posts = (await getCollection('blog')).sort(
 				gap: 0.5rem;
 				align-items: center;
 				margin-bottom: 0.75rem;
-				color: rgb(var(--gray));
+				color: var(--color-text-muted);
 				font-size: 0.85rem;
 			}
 			.badge {
 				display: inline-flex;
+				border: 1px solid var(--color-accent);
 				border-radius: 999px;
 				padding: 0.15rem 0.55rem;
-				background: rgb(var(--gray-light));
-				color: rgb(var(--gray-dark));
+				background: var(--color-accent-muted);
+				color: var(--color-text);
 				font-weight: 700;
+			}
+			.post-card:hover {
+				border-color: var(--color-accent);
 			}
 			.post-body h2 {
 				margin: 0 0 0.55rem;

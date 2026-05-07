@@ -44,7 +44,7 @@ const { title, description, pubDate, updatedDate, heroImage, category, tags = []
 				max-width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
-				color: rgb(var(--gray-dark));
+				color: var(--color-text);
 			}
 			.title {
 				margin-bottom: 1em;
@@ -63,16 +63,17 @@ const { title, description, pubDate, updatedDate, heroImage, category, tags = []
 				justify-content: center;
 				align-items: center;
 				margin-bottom: 0.75rem;
-				color: rgb(var(--gray));
+				color: var(--color-text-muted);
 				font-size: 0.9rem;
 			}
 			.badge,
 			.tag {
 				display: inline-flex;
+				border: 1px solid var(--color-accent);
 				border-radius: 999px;
 				padding: 0.15rem 0.55rem;
-				background: rgb(var(--gray-light));
-				color: rgb(var(--gray-dark));
+				background: var(--color-accent-muted);
+				color: var(--color-text);
 				font-weight: 700;
 			}
 			.tags {
@@ -83,7 +84,6 @@ const { title, description, pubDate, updatedDate, heroImage, category, tags = []
 				margin-top: 0.75rem;
 			}
 			.tag {
-				background: rgba(var(--gray-light), 0.65);
 				font-size: 0.78rem;
 			}
 			.last-updated-on {

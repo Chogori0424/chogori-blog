@@ -42,7 +42,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 			}
 			.kicker {
 				margin: 0 0 0.65rem;
-				color: rgb(var(--gray));
+				color: var(--color-text-muted);
 				font-size: 0.9rem;
 				font-weight: 700;
 			}
@@ -64,16 +64,17 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 			.category-card span:first-of-type,
 			.post-category {
 				display: inline-flex;
+				border: 1px solid var(--color-accent);
 				border-radius: 999px;
 				padding: 0.18rem 0.62rem;
-				background: rgb(var(--gray-light));
-				color: rgb(var(--gray-dark));
+				background: var(--color-accent-muted);
+				color: var(--color-text);
 				font-size: 0.82rem;
 				font-weight: 700;
 			}
 			.profile-panel,
 			.site-note {
-				border: 1px solid rgb(var(--gray-light));
+				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				background: var(--surface-soft);
 				padding: 1.1rem;
@@ -95,7 +96,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				grid-area: photo;
 				width: 88px;
 				aspect-ratio: 1;
-				border: 1px solid rgb(var(--gray-light));
+				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				object-fit: cover;
 				object-position: center;
@@ -132,7 +133,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 			.post-card {
 				overflow: hidden;
 				height: 100%;
-				border: 1px solid rgb(var(--gray-light));
+				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				background: var(--surface);
 				transition:
@@ -144,7 +145,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				display: grid;
 				grid-template-columns: 180px minmax(0, 1fr);
 				height: 100%;
-				color: rgb(var(--gray-dark));
+				color: var(--color-text);
 				text-decoration: none;
 			}
 			.post-card img {
@@ -163,7 +164,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				gap: 0.45rem;
 				align-items: center;
 				margin-bottom: 0.65rem;
-				color: rgb(var(--gray));
+				color: var(--color-text-muted);
 				font-size: 0.82rem;
 			}
 			.post-body h3 {
@@ -182,11 +183,11 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 			.category-card {
 				display: grid;
 				gap: 0.55rem;
-				border: 1px solid rgb(var(--gray-light));
+				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				background: var(--surface-soft);
 				padding: 1rem;
-				color: rgb(var(--gray-dark));
+				color: var(--color-text);
 				text-decoration: none;
 				transition:
 					background-color 0.3s ease,
@@ -194,8 +195,12 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 					color 0.3s ease;
 			}
 			.category-card strong {
-				color: rgb(var(--black));
+				color: var(--color-text);
 				font-size: 1.05rem;
+			}
+			.category-card:hover,
+			.post-card:hover {
+				border-color: var(--color-accent);
 			}
 			.category-card p {
 				margin: 0;
