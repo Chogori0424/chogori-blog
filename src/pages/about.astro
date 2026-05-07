@@ -2,7 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_TITLE } from '../consts';
+import { AUTHOR_AVATAR, AUTHOR_NAME, SITE_TITLE } from '../consts';
 ---
 
 <!doctype html>
@@ -14,7 +14,23 @@ import { SITE_TITLE } from '../consts';
 				width: 860px;
 			}
 			.about-head {
+				display: grid;
+				grid-template-columns: 112px minmax(0, 1fr);
+				gap: 1.25rem;
+				align-items: center;
 				margin-bottom: 2rem;
+			}
+			.about-avatar {
+				width: 112px;
+				aspect-ratio: 1;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 12px;
+				object-fit: cover;
+				object-position: center;
+				box-shadow: var(--box-shadow);
+			}
+			.about-copy {
+				min-width: 0;
 			}
 			.kicker {
 				margin: 0 0 0.65rem;
@@ -62,6 +78,12 @@ import { SITE_TITLE } from '../consts';
 				padding-left: 1rem;
 			}
 			@media (max-width: 720px) {
+				.about-head {
+					grid-template-columns: 1fr;
+				}
+				.about-avatar {
+					width: 96px;
+				}
 				.info-grid {
 					grid-template-columns: 1fr;
 				}
@@ -75,11 +97,14 @@ import { SITE_TITLE } from '../consts';
 		<Header />
 		<main>
 			<section class="about-head">
-				<p class="kicker">{SITE_TITLE} / About</p>
-				<h1>Chogori Lee</h1>
-				<p class="summary">
-					模具注塑工艺工程师，关注网络代理配置、工程制造、CAD/UG、音频设备和个人知识管理。
-				</p>
+				<img class="about-avatar" src={AUTHOR_AVATAR} alt={AUTHOR_NAME} width="112" height="112" />
+				<div class="about-copy">
+					<p class="kicker">{SITE_TITLE} / About</p>
+					<h1>{AUTHOR_NAME}</h1>
+					<p class="summary">
+						模具注塑工艺工程师，关注网络代理配置、工程制造、CAD/UG、音频设备和个人知识管理。
+					</p>
+				</div>
 			</section>
 
 			<section class="info-grid">

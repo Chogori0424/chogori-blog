@@ -5,7 +5,14 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
-import { BLOG_CATEGORIES, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../consts';
+import {
+	AUTHOR_AVATAR,
+	AUTHOR_NAME,
+	BLOG_CATEGORIES,
+	SITE_DESCRIPTION,
+	SITE_TITLE,
+	SITE_URL,
+} from '../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -75,16 +82,41 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 					border-color 0.3s ease,
 					color 0.3s ease;
 			}
+			.profile-panel {
+				display: grid;
+				grid-template-columns: 88px minmax(0, 1fr);
+				grid-template-areas:
+					'title title'
+					'photo intro';
+				gap: 0.95rem 1rem;
+				align-items: start;
+			}
+			.profile-photo {
+				grid-area: photo;
+				width: 88px;
+				aspect-ratio: 1;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 8px;
+				object-fit: cover;
+				object-position: center;
+			}
 			.profile-panel h2,
 			.site-note h2,
 			.section-title {
 				margin: 0 0 0.85rem;
 				font-size: 1.35rem;
 			}
+			.profile-panel h2 {
+				grid-area: title;
+				margin-bottom: 0;
+			}
 			.profile-panel p,
 			.site-note p {
 				margin: 0;
 				font-size: 0.95rem;
+			}
+			.profile-panel p {
+				grid-area: intro;
 			}
 			.section {
 				margin-top: 2.5rem;
@@ -203,7 +235,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 					<p class="kicker">chogori.xyz / 个人技术博客</p>
 					<h1>{SITE_TITLE}</h1>
 					<p>
-						我是 Chogori Lee，模具注塑工艺工程师。这里记录网络代理配置、工程制造、CAD/UG、
+						我是 {AUTHOR_NAME}，模具注塑工艺工程师。这里记录网络代理配置、工程制造、CAD/UG、
 						音频设备和个人知识管理相关的实践笔记。
 					</p>
 					<p>
@@ -217,6 +249,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 					</div>
 				</div>
 				<aside class="profile-panel">
+					<img class="profile-photo" src={AUTHOR_AVATAR} alt={AUTHOR_NAME} width="88" height="88" />
 					<h2>个人简介</h2>
 					<p>
 						关注把工程现场经验和日常技术折腾写成可检索、可复盘、可迁移的内容。博客采用 Astro

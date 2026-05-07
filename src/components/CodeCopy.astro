@@ -3,7 +3,7 @@
 	const defaultText = '复制';
 	const resetDelay = 1600;
 
-	const copyText = async (text: string) => {
+	const copyText = async (text) => {
 		if (navigator.clipboard?.writeText && window.isSecureContext) {
 			await navigator.clipboard.writeText(text);
 			return;
@@ -21,7 +21,7 @@
 	};
 
 	const enhanceCodeBlocks = () => {
-		document.querySelectorAll<HTMLElement>('pre > code').forEach((code) => {
+		document.querySelectorAll('pre > code').forEach((code) => {
 			const pre = code.parentElement;
 
 			if (!pre || pre.parentElement?.classList.contains('code-block-wrapper')) {
@@ -45,7 +45,7 @@
 			button.setAttribute('aria-label', '复制代码');
 			wrapper.appendChild(button);
 
-			let resetTimer: number | undefined;
+			let resetTimer;
 
 			button.addEventListener('click', async () => {
 				try {
