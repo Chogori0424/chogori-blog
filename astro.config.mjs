@@ -8,6 +8,13 @@ import { defineConfig, fontProviders } from 'astro/config';
 export default defineConfig({
 	site: 'https://chogori.xyz',
 	integrations: [mdx(), sitemap()],
+	markdown: {
+		shikiConfig: {
+			langAlias: {
+				surge: 'ini',
+			},
+		},
+	},
 	fonts: [
 		{
 			provider: fontProviders.local(),
