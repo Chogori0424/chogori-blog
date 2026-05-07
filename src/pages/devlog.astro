@@ -1,0 +1,189 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import devlogEntries from '../data/devlog.json';
+import { SITE_TITLE } from '../consts';
+
+const typeLabels = {
+	feature: '新增功能',
+	fix: '问题修复',
+	style: '样式调整',
+	content: '内容更新',
+	deploy: '部署配置',
+	refactor: '结构调整',
+} as const;
+
+const entries = [...devlogEntries].sort((a, b) => {
+	const dateOrder = b.date.localeCompare(a.date);
+	return dateOrder === 0 ? devlogEntries.indexOf(a) - devlogEntries.indexOf(b) : dateOrder;
+});
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead
+			title={`开发日志 - ${SITE_TITLE}`}
+			description="记录 chogori.xyz 的功能迭代、样式调整、部署优化和内容系统变化。"
+		/>
+		<style>
+			main {
+				width: 880px;
+			}
+			.page-head {
+				margin-bottom: 2.25rem;
+			}
+			.page-head h1 {
+				margin-bottom: 0.75rem;
+				font-size: clamp(2rem, 5vw, 2.65rem);
+				line-height: 1.15;
+			}
+			.page-head p {
+				max-width: 760px;
+				margin: 0;
+				color: var(--color-text-muted);
+				font-size: 1rem;
+			}
+			.timeline {
+				display: grid;
+				gap: 1rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.log-card {
+				position: relative;
+				display: grid;
+				gap: 0.75rem;
+				border: 1px solid var(--color-card-border);
+				border-radius: 8px;
+				background: var(--surface);
+				padding: 1.1rem;
+				transition:
+					background-color 0.3s ease,
+					border-color 0.3s ease,
+					color 0.3s ease;
+			}
+			.log-card:hover {
+				border-color: var(--color-accent);
+			}
+			.log-meta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+				align-items: center;
+				color: var(--color-text-muted);
+				font-size: 0.84rem;
+				line-height: 1.45;
+			}
+			.type-badge {
+				display: inline-flex;
+				border: 1px solid var(--color-accent);
+				border-radius: 999px;
+				padding: 0.12rem 0.55rem;
+				background: var(--color-accent-muted);
+				color: var(--color-text);
+				font-size: 0.78rem;
+				font-weight: 700;
+			}
+			.log-card h2 {
+				margin: 0;
+				font-size: 1.28rem;
+				line-height: 1.35;
+			}
+			.log-card p {
+				margin: 0;
+				color: var(--color-text);
+				font-size: 0.96rem;
+				line-height: 1.75;
+			}
+			.log-footer {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.45rem 0.7rem;
+				align-items: center;
+				color: var(--color-text-muted);
+				font-size: 0.82rem;
+			}
+			.commit-link {
+				font-family: var(--font-atkinson);
+				font-weight: 700;
+				text-decoration: none;
+			}
+			.tag-list {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.35rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.tag-list li {
+				border: 1px solid var(--color-border);
+				border-radius: 999px;
+				padding: 0.08rem 0.48rem;
+				background: var(--color-bg-secondary);
+				color: var(--color-text-muted);
+				font-size: 0.76rem;
+				line-height: 1.5;
+			}
+			@media (max-width: 720px) {
+				main {
+					width: 100%;
+					max-width: calc(100% - 2em);
+				}
+				.log-card {
+					padding: 0.95rem;
+				}
+				.log-card h2 {
+					font-size: 1.12rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-head">
+				<h1>开发日志</h1>
+				<p>记录 chogori.xyz 的功能迭代、样式调整、部署优化和内容系统变化。</p>
+			</section>
+
+			<ol class="timeline">
+				{
+					entries.map((entry) => (
+						<li>
+							<article class="log-card">
+								<div class="log-meta">
+									<time datetime={entry.date}>{entry.date}</time>
+									<span class="type-badge">{typeLabels[entry.type]}</span>
+								</div>
+								<h2>{entry.title}</h2>
+								<p>{entry.description}</p>
+								<div class="log-footer">
+									{entry.commit && (
+										<a
+											class="commit-link"
+											href={`https://github.com/Chogori0424/chogori-blog/commit/${entry.commit}`}
+										>
+											commit {entry.commit}
+										</a>
+									)}
+									{entry.tags.length > 0 && (
+										<ul class="tag-list" aria-label={`${entry.title} 标签`}>
+											{entry.tags.map((tag) => (
+												<li>{tag}</li>
+											))}
+										</ul>
+									)}
+								</div>
+							</article>
+						</li>
+					))
+				}
+			</ol>
+		</main>
+		<Footer />
+	</body>
+</html>

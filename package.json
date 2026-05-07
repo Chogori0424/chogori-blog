@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "devlog:add": "node scripts/add-devlog.mjs",
+    "devlog:latest": "node scripts/add-devlog.mjs --latest"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.4",

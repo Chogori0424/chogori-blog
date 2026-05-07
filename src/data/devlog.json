@@ -1,0 +1,58 @@
+[
+  {
+    "date": "2026-05-07",
+    "type": "feature",
+    "title": "添加开发日志页面",
+    "description": "新增 /devlog 页面、开发日志数据文件、日志追加脚本和 Codex 项目规则，用于记录本站功能迭代与配置变化。",
+    "commit": null,
+    "tags": ["devlog", "workflow"]
+  },
+  {
+    "date": "2026-05-07",
+    "type": "feature",
+    "title": "添加一键回顶 / 返回阅读进度按钮",
+    "description": "新增全站浮动按钮，支持回到顶部、返回刚才阅读位置，并在用户手动滚动时自动恢复状态。",
+    "commit": "05d159e",
+    "tags": ["ux", "article"]
+  },
+  {
+    "date": "2026-05-07",
+    "type": "fix",
+    "title": "优化文章页字体排版",
+    "description": "收紧文章页内容宽度，降低标题字号，优化中文正文行高、列表、引用块、代码块和表格阅读体验。",
+    "commit": "6308864",
+    "tags": ["typography", "article"]
+  },
+  {
+    "date": "2026-05-05",
+    "type": "feature",
+    "title": "添加可视化文章后台 Decap CMS",
+    "description": "新增 /admin/ 管理后台入口，配置 GitHub 后端、文章集合、媒体目录和上传占位目录。",
+    "commit": "91b4a10",
+    "tags": ["cms", "content"]
+  },
+  {
+    "date": "2026-05-05",
+    "type": "deploy",
+    "title": "添加 sitemap.xml 与 robots.txt",
+    "description": "接入 Astro sitemap 集成，配置站点地址，并新增 robots.txt 指向 sitemap-index.xml。",
+    "commit": "c696f95",
+    "tags": ["seo", "sitemap"]
+  },
+  {
+    "date": "2026-05-07",
+    "type": "deploy",
+    "title": "绑定自定义域名 chogori.xyz",
+    "description": "将 chogori.xyz 与 www.chogori.xyz 绑定到 Vercel 项目，并通过 Cloudflare DNS 指向生产站点。",
+    "commit": null,
+    "tags": ["domain", "vercel", "cloudflare"]
+  },
+  {
+    "date": "2026-05-05",
+    "type": "feature",
+    "title": "初步搭建个人博客站点",
+    "description": "使用 Astro 官方 blog 模板创建 Chogori Blog，初始化文章、分类、SEO、RSS 和基础站点结构。",
+    "commit": "f23fb89",
+    "tags": ["astro", "init"]
+  }
+]
