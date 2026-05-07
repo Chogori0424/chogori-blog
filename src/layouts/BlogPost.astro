@@ -25,46 +25,62 @@ const { title, description, pubDate, updatedDate, heroImage, category, tags = []
 		<BaseHead title={title} description={description} image={heroImage} type="article" />
 		<style>
 			main {
-				width: calc(100% - 2em);
+				width: 100%;
 				max-width: 100%;
 				margin: 0;
+				padding: 0;
+			}
+			.post-article {
+				max-width: 820px;
+				margin: 0 auto;
+				padding: 48px 24px 96px;
 			}
 			.hero-image {
 				width: 100%;
+				margin: 0 0 2rem;
 			}
 			.hero-image img {
 				display: block;
-				width: min(1020px, calc(100% - 2rem));
+				width: 100%;
 				margin: 0 auto;
 				border-radius: 8px;
 				box-shadow: var(--box-shadow);
 			}
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
+				width: 100%;
+				max-width: 100%;
+				margin: 0;
+				padding: 0;
 				color: var(--color-text);
+				font-size: 18px;
+				line-height: 1.85;
+				letter-spacing: 0;
 			}
 			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
+				margin-bottom: 2rem;
+				padding: 0 0 1.25rem;
+				text-align: left;
+				border-bottom: 1px solid var(--color-border);
 			}
 			.title h1 {
-				margin: 0 0 0.5em;
-				font-size: 2.35rem;
+				margin: 0;
+				font-size: clamp(2.25rem, 4vw, 3rem);
+				line-height: 1.18;
+				letter-spacing: -0.02em;
+				overflow-wrap: break-word;
+				text-wrap: balance;
+				line-break: loose;
 			}
 			.meta {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 0.5rem;
-				justify-content: center;
+				justify-content: flex-start;
 				align-items: center;
 				margin-bottom: 0.75rem;
 				color: var(--color-text-muted);
-				font-size: 0.9rem;
+				font-size: 0.82rem;
+				line-height: 1.5;
 			}
 			.badge,
 			.tag {
@@ -74,14 +90,16 @@ const { title, description, pubDate, updatedDate, heroImage, category, tags = []
 				padding: 0.15rem 0.55rem;
 				background: var(--color-accent-muted);
 				color: var(--color-text);
+				font-size: 0.78rem;
 				font-weight: 700;
+				line-height: 1.45;
 			}
 			.tags {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 0.4rem;
-				justify-content: center;
-				margin-top: 0.75rem;
+				justify-content: flex-start;
+				margin-top: 1rem;
 			}
 			.tag {
 				font-size: 0.78rem;
@@ -90,13 +108,105 @@ const { title, description, pubDate, updatedDate, heroImage, category, tags = []
 				width: 100%;
 				font-style: italic;
 			}
+			.title hr {
+				display: none;
+			}
+			:global(.post-article .prose > .title + h1) {
+				display: none;
+			}
+			:global(.post-article .prose p) {
+				margin: 0 0 1.35em;
+			}
+			:global(.post-article .prose h2) {
+				margin: 2.4em 0 0.75em;
+				font-size: 1.65rem;
+				line-height: 1.32;
+				letter-spacing: 0;
+			}
+			:global(.post-article .prose h3) {
+				margin: 2em 0 0.7em;
+				font-size: 1.35rem;
+				line-height: 1.36;
+				letter-spacing: 0;
+			}
+			:global(.post-article .prose h4) {
+				margin: 1.8em 0 0.65em;
+				font-size: 1.15rem;
+				line-height: 1.4;
+			}
+			:global(.post-article .prose ul),
+			:global(.post-article .prose ol) {
+				margin: 0 0 1.35em;
+				padding-left: 1.35em;
+			}
+			:global(.post-article .prose li + li) {
+				margin-top: 0.35em;
+			}
+			:global(.post-article .prose blockquote) {
+				margin: 1.8em 0;
+				padding: 0.1em 0 0.1em 1em;
+				font-size: 1rem;
+				line-height: 1.8;
+				color: var(--color-text-muted);
+			}
+			:global(.post-article .prose pre) {
+				max-width: 100%;
+				margin: 1.5rem 0 1.8rem;
+				overflow-x: auto;
+				font-size: 0.9rem;
+				line-height: 1.7;
+			}
+			:global(.post-article .prose :not(pre) > code) {
+				font-size: 0.92em;
+			}
+			:global(.post-article .prose table) {
+				display: block;
+				max-width: 100%;
+				overflow-x: auto;
+				border-collapse: collapse;
+				font-size: 0.95rem;
+			}
+			:global(.post-article .prose th),
+			:global(.post-article .prose td) {
+				padding: 0.55rem 0.7rem;
+				border: 1px solid var(--color-border);
+				vertical-align: top;
+			}
+			@media (max-width: 720px) {
+				.post-article {
+					padding: 32px 18px 72px;
+				}
+				.prose {
+					font-size: 17px;
+					line-height: 1.82;
+				}
+				.title {
+					margin-bottom: 1.75rem;
+				}
+				.title h1 {
+					font-size: clamp(1.9rem, 8vw, 2.35rem);
+					line-height: 1.2;
+					letter-spacing: -0.01em;
+				}
+				:global(.post-article .prose h2) {
+					font-size: 1.42rem;
+				}
+				:global(.post-article .prose h3) {
+					font-size: 1.2rem;
+				}
+				:global(.post-article .prose pre) {
+					margin-right: -6px;
+					margin-left: -6px;
+					font-size: 0.84rem;
+				}
+			}
 		</style>
 	</head>
 
 	<body>
 		<Header />
 		<main>
-			<article>
+			<article class="post-article">
 				<div class="hero-image">
 					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
 				</div>
