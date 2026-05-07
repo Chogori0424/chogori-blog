@@ -1,0 +1,255 @@
+<button
+	id="scroll-memory-button"
+	type="button"
+	class="scroll-memory-button"
+	aria-label="回到顶部"
+	data-mode="top"
+>
+	<svg
+		class="scroll-memory-icon scroll-memory-icon-top"
+		xmlns="http://www.w3.org/2000/svg"
+		width="22"
+		height="22"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<path d="m18 15-6-6-6 6"></path>
+	</svg>
+	<svg
+		class="scroll-memory-icon scroll-memory-icon-restore"
+		xmlns="http://www.w3.org/2000/svg"
+		width="22"
+		height="22"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<path d="m6 9 6 6 6-6"></path>
+		<path d="M12 15V3"></path>
+		<path d="M5 21h14"></path>
+	</svg>
+</button>
+
+<script>
+	const scrollMemoryButton = document.getElementById('scroll-memory-button');
+
+	if (scrollMemoryButton) {
+		const topThreshold = 240;
+		const manualRestoreThreshold = 80;
+		const scrollEndDelay = 180;
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		let mode = 'top';
+		let previousScrollY = null;
+		let isProgrammaticScrolling = false;
+		let lastScrollY = window.scrollY;
+		let restoreBaselineY = 0;
+		let rafId = null;
+		let scrollEndTimer = null;
+		let pendingScrollComplete = null;
+
+		const setMode = (nextMode) => {
+			mode = nextMode;
+			scrollMemoryButton.dataset.mode = mode;
+			scrollMemoryButton.setAttribute(
+				'aria-label',
+				mode === 'restore' ? '返回阅读进度' : '回到顶部',
+			);
+		};
+
+		const updateVisibility = () => {
+			const shouldShow = mode === 'restore' || window.scrollY > topThreshold;
+			scrollMemoryButton.classList.toggle('is-visible', shouldShow);
+			scrollMemoryButton.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+			scrollMemoryButton.tabIndex = shouldShow ? 0 : -1;
+		};
+
+		const finishProgrammaticScroll = () => {
+			isProgrammaticScrolling = false;
+
+			if (pendingScrollComplete) {
+				const complete = pendingScrollComplete;
+				pendingScrollComplete = null;
+				complete();
+			}
+
+			lastScrollY = window.scrollY;
+			updateVisibility();
+		};
+
+		const scheduleScrollFinish = () => {
+			window.clearTimeout(scrollEndTimer);
+			scrollEndTimer = window.setTimeout(finishProgrammaticScroll, scrollEndDelay);
+		};
+
+		const scrollToY = (targetY, onComplete) => {
+			isProgrammaticScrolling = true;
+			pendingScrollComplete = onComplete;
+			window.clearTimeout(scrollEndTimer);
+
+			window.scrollTo({
+				top: targetY,
+				behavior: prefersReducedMotion ? 'auto' : 'smooth',
+			});
+
+			if (prefersReducedMotion) {
+				window.setTimeout(finishProgrammaticScroll, 0);
+			} else {
+				scheduleScrollFinish();
+			}
+		};
+
+		const clearRestoreState = () => {
+			previousScrollY = null;
+			restoreBaselineY = 0;
+			setMode('top');
+		};
+
+		const handleScroll = () => {
+			rafId = null;
+			const currentY = window.scrollY;
+
+			if (isProgrammaticScrolling) {
+				scheduleScrollFinish();
+				lastScrollY = currentY;
+				updateVisibility();
+				return;
+			}
+
+			if (
+				mode === 'restore' &&
+				previousScrollY !== null &&
+				currentY - restoreBaselineY > manualRestoreThreshold
+			) {
+				clearRestoreState();
+			}
+
+			lastScrollY = currentY;
+			updateVisibility();
+		};
+
+		window.addEventListener(
+			'scroll',
+			() => {
+				if (rafId === null) {
+					rafId = window.requestAnimationFrame(handleScroll);
+				}
+			},
+			{ passive: true },
+		);
+
+		scrollMemoryButton.addEventListener('click', () => {
+			if (mode === 'restore' && previousScrollY !== null) {
+				const targetY = previousScrollY;
+				scrollToY(targetY, () => {
+					clearRestoreState();
+				});
+				return;
+			}
+
+			const currentY = window.scrollY;
+			if (currentY <= topThreshold) {
+				updateVisibility();
+				return;
+			}
+
+			previousScrollY = currentY;
+			scrollToY(0, () => {
+				restoreBaselineY = window.scrollY;
+				setMode('restore');
+			});
+		});
+
+		updateVisibility();
+		lastScrollY = window.scrollY;
+	}
+</script>
+
+<style>
+	.scroll-memory-button {
+		position: fixed;
+		right: 24px;
+		bottom: 32px;
+		z-index: 50;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 46px;
+		height: 46px;
+		padding: 0;
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--color-card-bg) 82%, transparent);
+		color: var(--color-text);
+		box-shadow: 0 10px 28px rgba(0, 0, 0, 18%);
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
+		cursor: pointer;
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(10px) scale(0.96);
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease,
+			background-color 0.2s ease,
+			border-color 0.2s ease,
+			color 0.2s ease;
+	}
+
+	.scroll-memory-button.is-visible {
+		opacity: 0.92;
+		pointer-events: auto;
+		transform: translateY(0) scale(1);
+	}
+
+	.scroll-memory-button:hover,
+	.scroll-memory-button:focus-visible {
+		border-color: var(--color-accent);
+		background: color-mix(in srgb, var(--color-bg-hover) 88%, transparent);
+		color: var(--color-accent);
+		opacity: 1;
+		transform: translateY(-2px) scale(1.02);
+	}
+
+	.scroll-memory-button:focus-visible {
+		outline: 3px solid var(--color-accent-muted);
+		outline-offset: 3px;
+	}
+
+	.scroll-memory-icon {
+		flex: none;
+	}
+
+	.scroll-memory-icon-restore,
+	.scroll-memory-button[data-mode='restore'] .scroll-memory-icon-top {
+		display: none;
+	}
+
+	.scroll-memory-button[data-mode='restore'] .scroll-memory-icon-restore {
+		display: block;
+	}
+
+	@media (max-width: 720px) {
+		.scroll-memory-button {
+			right: 16px;
+			bottom: 20px;
+			width: 44px;
+			height: 44px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scroll-memory-button {
+			transition: none;
+		}
+	}
+</style>
