@@ -1,15 +1,14 @@
 ---
-title: "用 Surge 精确阻断 iOS 更新的蜂窝下载链路"
-description: "分析 iOS 系统更新在 Apple CDN 上的控制面与数据面分离，并用 Surge 子域名规则避免 CDN 级封锁误伤。"
-pubDate: "2026-05-06"
-category: "网络代理"
+title: 用 Surge 精确阻断 iOS 更新的蜂窝下载链路
+pubDate: 2026-05-06
+description: 分析 iOS 系统更新在 Apple CDN 上的控制面与数据面分离，并用 Surge 子域名规则避免 CDN 级封锁误伤。
+category: 网络代理
 tags:
   - Surge
   - iOS
   - Apple CDN
   - Proxy Rules
 ---
-
 # 用 Surge 精确阻断 iOS 更新的蜂窝下载链路
 
 ## 问题
@@ -24,7 +23,7 @@ cdn-apple.com -> 8.48GB
 
 进一步拆分连接日志后，实际承担更新包下载的接口主要是：
 
-```text
+```ini
 updates.cdn-apple.com
 appldnld.apple.com
 ```
@@ -35,12 +34,12 @@ appldnld.apple.com
 
 iOS 更新链路可以按控制面和数据面拆开看：
 
-| 层级 | 域名 | 作用 |
-| --- | --- | --- |
-| 控制面 | `mesu.apple.com` | 检测系统更新 |
-| 控制面 | `gdmf.apple.com` | 获取更新策略与设备匹配信息 |
-| 数据面 | `updates.cdn-apple.com` | 下载系统更新资源 |
-| 数据面 | `appldnld.apple.com` | 下载 Apple 软件包资源 |
+| 层级  | 域名                      | 作用             |
+| --- | ----------------------- | -------------- |
+| 控制面 | `mesu.apple.com`        | 检测系统更新         |
+| 控制面 | `gdmf.apple.com`        | 获取更新策略与设备匹配信息  |
+| 数据面 | `updates.cdn-apple.com` | 下载系统更新资源       |
+| 数据面 | `appldnld.apple.com`    | 下载 Apple 软件包资源 |
 
 如果目标只是防止蜂窝网络继续下载系统更新包，就不应该封锁控制面。控制面保留后，系统仍然可以检测更新；数据面在蜂窝网络下被拦截后，实际大流量下载无法继续。
 
@@ -75,12 +74,12 @@ DOMAIN-SUFFIX,appldnld.apple.com,REJECT,INTERFACE=CELLULAR
 
 这组规则的行为边界很明确：
 
-| 场景 | 结果 |
-| --- | --- |
-| 蜂窝数据检测系统更新 | 允许 |
-| 蜂窝数据下载系统更新包 | 拒绝 |
-| Wi-Fi 下载系统更新包 | 不影响 |
-| 下载 Apple 壁纸资源 | 不影响 |
+| 场景                | 结果    |
+| ----------------- | ----- |
+| 蜂窝数据检测系统更新        | 允许    |
+| 蜂窝数据下载系统更新包       | 拒绝    |
+| Wi-Fi 下载系统更新包     | 不影响   |
+| 下载 Apple 壁纸资源     | 不影响   |
 | 访问其他 Apple CDN 内容 | 尽量不影响 |
 
 关键点有两个：
@@ -96,7 +95,7 @@ DOMAIN-SUFFIX,appldnld.apple.com,REJECT,INTERFACE=CELLULAR
 
 预期结果如下：
 
-```text
+```ini
 updates.cdn-apple.com -> REJECT
 appldnld.apple.com -> REJECT
 ```
