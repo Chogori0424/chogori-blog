@@ -1,22 +1,32 @@
 <div id="qian-pet" class="qian-pet" data-mood="idle" aria-hidden="true">
 	<div class="qian-bubble" role="status" aria-live="polite">我是倩</div>
-	<button class="qian-close" type="button" aria-label="隐藏倩">×</button>
-	<button class="qian-bot" type="button" aria-label="和倩互动">
+	<button class="qian-close" type="button" aria-label="关闭倩">×</button>
+	<button class="qian-bot" type="button" aria-label="倩，小宠物助手">
+		<span class="qian-shadow" aria-hidden="true"></span>
 		<span class="qian-antenna" aria-hidden="true"></span>
 		<span class="qian-head" aria-hidden="true">
+			<span class="qian-ear qian-ear-left"></span>
+			<span class="qian-ear qian-ear-right"></span>
 			<span class="qian-face">
-				<span class="qian-eye"></span>
-				<span class="qian-eye"></span>
+				<span class="qian-eye qian-eye-left"></span>
+				<span class="qian-eye qian-eye-right"></span>
+				<span class="qian-mouth"></span>
+				<span class="qian-blush qian-blush-left"></span>
+				<span class="qian-blush qian-blush-right"></span>
 			</span>
-			<span class="qian-signal"></span>
+			<span class="qian-hairpin"></span>
 		</span>
 		<span class="qian-body" aria-hidden="true">
 			<span class="qian-panel"></span>
+			<span class="qian-core"></span>
 			<span class="qian-arm qian-arm-left"></span>
 			<span class="qian-arm qian-arm-right"></span>
-			<span class="qian-heart">♥</span>
+			<span class="qian-hand qian-hand-left"></span>
+			<span class="qian-hand qian-hand-right"></span>
+			<span class="qian-heart">◆</span>
 		</span>
-		<span class="qian-base" aria-hidden="true"></span>
+		<span class="qian-foot qian-foot-left" aria-hidden="true"></span>
+		<span class="qian-foot qian-foot-right" aria-hidden="true"></span>
 	</button>
 </div>
 
@@ -25,41 +35,113 @@
 
 	if (qianPet) {
 		const storageKey = 'qianPetHidden';
-		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const reduceMotion = reduceMotionQuery.matches;
 		const bot = qianPet.querySelector('.qian-bot');
 		const closeButton = qianPet.querySelector('.qian-close');
 		const bubble = qianPet.querySelector('.qian-bubble');
-		const messages = [
+
+		const greetingMessages = {
+			morning: [
+				'早安，今天也要保持输出',
+				'早上好，要从哪篇开始更新？',
+				'新的一天，继续沉淀一点东西吧',
+			],
+			noon: [
+				'中午好，记得适当休息',
+				'午间巡航中，项目进度还顺利吗？',
+				'吃完饭也可以顺手写一点',
+			],
+			afternoon: [
+				'下午好，适合继续推进功能',
+				'倩已待命，继续迭代吧',
+				'这个时间段很适合优化细节',
+			],
+			evening: [
+				'晚上好，适合慢慢打磨内容',
+				'今晚也要继续写点什么吗？',
+				'这个时段很适合整理思路',
+			],
+			night: [
+				'夜深了，也别太辛苦',
+				'深夜模式已开启，注意休息',
+				'如果还在折腾，记得保存进度',
+			],
+		};
+
+		const generalMessages = [
 			'我是倩',
-			'今天也要保持输出',
 			'继续写点什么吧',
-			'我在看着部署状态',
-			'这篇文章可以再打磨一下',
-			'规则、代码、文章，都可以沉淀',
+			'今天也要保持输出',
 			'已在后台待命',
 			'别忘了更新开发日志',
+			'规则、代码、文章，都可以沉淀',
+			'这篇文章还可以再打磨一下',
+			'我在看着部署状态',
 		];
-		const moods = ['blink', 'heart', 'jump', 'shake'];
-		const idleMoods = ['blink', 'breathe', 'shake'];
+
+		const interactionMoods = ['blink', 'heart', 'jump', 'shake', 'wave'];
+		const idleMoods = ['blink', 'breathe', 'tilt'];
 
 		let moodTimer = null;
 		let bubbleTimer = null;
 		let idleTimer = null;
+		let touchTimer = null;
 		let lastMessage = '';
+		let lastBubbleAt = 0;
+		let lastInteractionAt = 0;
 
 		const randomItem = (items) => items[Math.floor(Math.random() * items.length)];
+
+		const getGreetingType = () => {
+			const hour = new Date().getHours();
+
+			if (hour >= 5 && hour <= 10) return 'morning';
+			if (hour >= 11 && hour <= 13) return 'noon';
+			if (hour >= 14 && hour <= 18) return 'afternoon';
+			if (hour >= 19 && hour <= 23) return 'evening';
+			return 'night';
+		};
+
+		const getMessagePool = (kind = 'general') => {
+			if (kind === 'greeting') {
+				return greetingMessages[getGreetingType()] || greetingMessages.afternoon;
+			}
+
+			if (kind === 'mixed') {
+				return [...generalMessages, ...getMessagePool('greeting')];
+			}
+
+			return generalMessages;
+		};
+
+		const pickMessage = (kind = 'mixed') => {
+			const pool = getMessagePool(kind);
+			let nextMessage = randomItem(pool);
+
+			if (pool.length > 1 && nextMessage === lastMessage) {
+				nextMessage = randomItem(pool.filter((item) => item !== lastMessage));
+			}
+
+			lastMessage = nextMessage;
+			return nextMessage;
+		};
 
 		const setFocusable = (enabled) => {
 			if (bot) bot.tabIndex = enabled ? 0 : -1;
 			if (closeButton) closeButton.tabIndex = enabled ? 0 : -1;
 		};
 
-		const showBubble = (message = randomItem(messages), delay = 2600) => {
+		const showBubble = (message = pickMessage('mixed'), delay = 3200, force = false) => {
 			if (!bubble) return;
 
-			const nextMessage = message === lastMessage ? randomItem(messages) : message;
-			lastMessage = nextMessage;
-			bubble.textContent = nextMessage;
+			const now = Date.now();
+			const cooldown = force ? 900 : 4800;
+
+			if (!force && now - lastBubbleAt < cooldown) return;
+
+			lastBubbleAt = now;
+			bubble.textContent = message;
 			qianPet.classList.add('has-bubble');
 
 			window.clearTimeout(bubbleTimer);
@@ -74,19 +156,29 @@
 
 			moodTimer = window.setTimeout(() => {
 				qianPet.dataset.mood = 'idle';
-			}, duration);
+			}, reduceMotion ? 180 : duration);
 		};
 
 		const scheduleIdle = () => {
+			window.clearTimeout(idleTimer);
 			if (reduceMotion) return;
 
-			window.clearTimeout(idleTimer);
 			idleTimer = window.setTimeout(
 				() => {
-					setMood(randomItem(idleMoods), 900);
+					if (document.hidden) {
+						scheduleIdle();
+						return;
+					}
+
+					setMood(randomItem(idleMoods), 850);
+
+					if (Date.now() - lastBubbleAt > 24000 && Math.random() > 0.62) {
+						showBubble(pickMessage('general'), 2600);
+					}
+
 					scheduleIdle();
 				},
-				8000 + Math.floor(Math.random() * 7000),
+				10000 + Math.floor(Math.random() * 8000),
 			);
 		};
 
@@ -94,7 +186,24 @@
 			qianPet.hidden = false;
 			qianPet.removeAttribute('aria-hidden');
 			setFocusable(true);
+
+			window.setTimeout(() => {
+				showBubble(pickMessage('greeting'), 3600, true);
+			}, 900);
+
 			scheduleIdle();
+		};
+
+		const hideForSession = () => {
+			localStorage.setItem(storageKey, 'true');
+			qianPet.hidden = true;
+			qianPet.setAttribute('aria-hidden', 'true');
+			qianPet.classList.remove('has-bubble', 'is-touch-ready');
+			setFocusable(false);
+			window.clearTimeout(moodTimer);
+			window.clearTimeout(bubbleTimer);
+			window.clearTimeout(idleTimer);
+			window.clearTimeout(touchTimer);
 		};
 
 		if (localStorage.getItem(storageKey) === 'true') {
@@ -105,27 +214,37 @@
 		}
 
 		qianPet.addEventListener('mouseenter', () => {
-			showBubble(randomItem(messages), 2200);
+			showBubble(pickMessage('mixed'), 2800);
 		});
 
 		qianPet.addEventListener('focusin', () => {
-			showBubble('我是倩', 2200);
+			showBubble('我是倩', 2600, true);
+		});
+
+		qianPet.addEventListener('pointerdown', (event) => {
+			if (event.pointerType !== 'touch') return;
+
+			qianPet.classList.add('is-touch-ready');
+			showBubble(pickMessage('mixed'), 3000, true);
+
+			window.clearTimeout(touchTimer);
+			touchTimer = window.setTimeout(() => {
+				qianPet.classList.remove('is-touch-ready');
+			}, 4200);
 		});
 
 		bot?.addEventListener('click', () => {
-			setMood(randomItem(moods), 1000);
-			showBubble(randomItem(messages), 3000);
+			const now = Date.now();
+			if (now - lastInteractionAt < 420) return;
+
+			lastInteractionAt = now;
+			setMood(randomItem(interactionMoods), 1050);
+			showBubble(pickMessage('mixed'), 3600, true);
 		});
 
 		closeButton?.addEventListener('click', (event) => {
 			event.stopPropagation();
-			localStorage.setItem(storageKey, 'true');
-			qianPet.hidden = true;
-			qianPet.setAttribute('aria-hidden', 'true');
-			setFocusable(false);
-			window.clearTimeout(moodTimer);
-			window.clearTimeout(bubbleTimer);
-			window.clearTimeout(idleTimer);
+			hideForSession();
 		});
 	}
 </script>
@@ -133,16 +252,24 @@
 <style>
 	.qian-pet {
 		--qian-accent: #22d3ee;
-		--qian-accent-soft: rgba(34, 211, 238, 0.18);
-		--qian-bg: rgba(15, 23, 42, 0.82);
-		--qian-border: rgba(34, 211, 238, 0.35);
+		--qian-accent-strong: #67e8f9;
+		--qian-pink: #f9a8d4;
+		--qian-pink-soft: rgba(249, 168, 212, 0.72);
+		--qian-shell: #2d5bea;
+		--qian-shell-deep: #1e40af;
+		--qian-bg: rgba(15, 23, 42, 0.84);
+		--qian-border: rgba(34, 211, 238, 0.38);
 		--qian-text: #e5e7eb;
+		--qian-pixel-shadow:
+			0 0 0 1px rgba(34, 211, 238, 0.2),
+			4px 4px 0 rgba(6, 10, 24, 0.28);
+		--qian-scale: 1;
 		position: fixed;
 		left: 20px;
 		bottom: 24px;
 		z-index: 45;
-		width: 104px;
-		height: 128px;
+		width: 112px;
+		height: 140px;
 		color: var(--qian-text);
 		pointer-events: none;
 	}
@@ -158,189 +285,375 @@
 
 	.qian-bot {
 		position: absolute;
-		left: 7px;
+		left: 8px;
 		bottom: 0;
-		width: 90px;
-		height: 108px;
+		width: 96px;
+		height: 118px;
 		padding: 0;
 		border: 0;
 		background: transparent;
 		color: inherit;
 		cursor: pointer;
 		transform-origin: 50% 100%;
-		filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.3));
+		transform: scale(var(--qian-scale));
+		transition:
+			filter 0.2s ease,
+			transform 0.24s ease;
+		filter:
+			drop-shadow(0 15px 24px rgba(0, 0, 0, 0.34))
+			drop-shadow(0 0 14px rgba(34, 211, 238, 0.12));
 	}
 
 	.qian-bot:focus-visible {
 		outline: 3px solid var(--color-accent-muted);
-		outline-offset: 5px;
-		border-radius: 22px;
+		outline-offset: 6px;
+		border-radius: 24px;
+	}
+
+	.qian-shadow {
+		position: absolute;
+		left: 23px;
+		bottom: 0;
+		width: 52px;
+		height: 9px;
+		border-radius: 999px;
+		background: rgba(34, 211, 238, 0.2);
+		box-shadow: 0 0 18px rgba(34, 211, 238, 0.18);
 	}
 
 	.qian-antenna {
 		position: absolute;
-		left: 43px;
+		left: 48px;
 		top: 0;
-		width: 2px;
+		width: 4px;
 		height: 14px;
-		background: linear-gradient(var(--qian-accent), rgba(34, 211, 238, 0.1));
+		border-radius: 2px 2px 0 0;
+		background: linear-gradient(var(--qian-accent-strong), rgba(34, 211, 238, 0.06));
+		box-shadow: 3px 0 0 rgba(15, 23, 42, 0.24);
 	}
 
 	.qian-antenna::before {
 		position: absolute;
-		top: -5px;
-		left: -4px;
-		width: 10px;
+		top: -6px;
+		left: -5px;
+		width: 14px;
 		height: 10px;
-		border-radius: 999px;
-		background: var(--qian-accent);
-		box-shadow: 0 0 16px var(--qian-accent);
+		border-radius: 6px 6px 8px 8px;
+		background:
+			linear-gradient(90deg, rgba(255, 255, 255, 0.22), transparent 48%),
+			var(--qian-pink);
+		box-shadow:
+			0 0 16px rgba(249, 168, 212, 0.55),
+			var(--qian-pixel-shadow);
 		content: '';
 	}
 
 	.qian-head {
 		position: absolute;
-		left: 13px;
-		top: 14px;
-		width: 64px;
-		height: 54px;
-		border: 1px solid var(--qian-border);
-		border-radius: 18px;
+		left: 11px;
+		top: 15px;
+		width: 74px;
+		height: 62px;
+		border: 2px solid rgba(103, 232, 249, 0.36);
+		border-radius: 19px 19px 17px 17px;
 		background:
-			linear-gradient(135deg, rgba(34, 211, 238, 0.16), transparent 42%),
-			var(--qian-bg);
+			linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 28%),
+			linear-gradient(180deg, #4775ff 0%, var(--qian-shell) 52%, var(--qian-shell-deep) 100%);
 		box-shadow:
-			inset 0 0 22px rgba(34, 211, 238, 0.08),
-			0 0 24px rgba(34, 211, 238, 0.14);
-		backdrop-filter: blur(14px);
-		-webkit-backdrop-filter: blur(14px);
+			inset -4px -5px 0 rgba(8, 18, 56, 0.16),
+			inset 3px 3px 0 rgba(255, 255, 255, 0.12),
+			0 0 22px rgba(34, 211, 238, 0.16),
+			var(--qian-pixel-shadow);
+	}
+
+	.qian-head::before,
+	.qian-head::after {
+		position: absolute;
+		top: 8px;
+		width: 8px;
+		height: 8px;
+		background: rgba(255, 255, 255, 0.2);
+		box-shadow: 0 10px 0 rgba(255, 255, 255, 0.1);
+		content: '';
+	}
+
+	.qian-head::before {
+		left: 7px;
+	}
+
+	.qian-head::after {
+		right: 7px;
+	}
+
+	.qian-ear {
+		position: absolute;
+		top: 18px;
+		width: 9px;
+		height: 20px;
+		border: 1px solid rgba(103, 232, 249, 0.36);
+		background: linear-gradient(180deg, #5a7cff, #2449d8);
+		box-shadow: 0 0 10px rgba(34, 211, 238, 0.18);
+	}
+
+	.qian-ear-left {
+		left: -8px;
+		border-radius: 7px 2px 2px 7px;
+	}
+
+	.qian-ear-right {
+		right: -8px;
+		border-radius: 2px 7px 7px 2px;
 	}
 
 	.qian-face {
 		position: absolute;
-		left: 12px;
-		top: 20px;
-		display: flex;
-		gap: 13px;
-		align-items: center;
-		justify-content: center;
-		width: 40px;
+		left: 11px;
+		top: 17px;
+		width: 52px;
+		height: 31px;
+		border: 2px solid rgba(10, 15, 36, 0.68);
+		border-radius: 10px;
+		background:
+			linear-gradient(180deg, rgba(34, 211, 238, 0.14), transparent 72%),
+			rgba(7, 13, 29, 0.88);
+		box-shadow:
+			inset 0 0 18px rgba(34, 211, 238, 0.12),
+			0 0 16px rgba(34, 211, 238, 0.2);
 	}
 
 	.qian-eye {
-		width: 11px;
+		position: absolute;
+		top: 10px;
+		width: 12px;
 		height: 8px;
-		border-radius: 999px;
-		background: var(--qian-accent);
+		background: var(--qian-accent-strong);
 		box-shadow:
-			0 0 10px var(--qian-accent),
-			0 0 20px rgba(34, 211, 238, 0.55);
+			0 0 8px var(--qian-accent),
+			0 0 16px rgba(34, 211, 238, 0.7);
 		transition:
 			height 0.18s ease,
 			filter 0.18s ease,
 			transform 0.18s ease;
 	}
 
-	.qian-signal {
+	.qian-eye::before {
 		position: absolute;
+		left: 2px;
+		top: 2px;
+		width: 3px;
+		height: 3px;
+		background: rgba(255, 255, 255, 0.62);
+		content: '';
+	}
+
+	.qian-eye-left {
+		left: 9px;
+		border-radius: 2px 6px 6px 2px;
+	}
+
+	.qian-eye-left::after {
+		position: absolute;
+		left: -4px;
+		top: 1px;
+		width: 3px;
+		height: 3px;
+		border-top: 2px solid var(--qian-accent-strong);
+		border-left: 2px solid var(--qian-accent-strong);
+		content: '';
+		transform: rotate(-45deg);
+	}
+
+	.qian-eye-right {
 		right: 9px;
-		bottom: 9px;
-		width: 16px;
-		height: 2px;
-		border-radius: 999px;
-		background: rgba(229, 231, 235, 0.36);
+		border-radius: 6px 2px 2px 6px;
+	}
+
+	.qian-eye-right::after {
+		position: absolute;
+		right: -4px;
+		top: 1px;
+		width: 3px;
+		height: 3px;
+		border-top: 2px solid var(--qian-accent-strong);
+		border-right: 2px solid var(--qian-accent-strong);
+		content: '';
+		transform: rotate(45deg);
+	}
+
+	.qian-mouth {
+		position: absolute;
+		left: 23px;
+		top: 21px;
+		width: 7px;
+		height: 3px;
+		background: rgba(103, 232, 249, 0.72);
+		box-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+	}
+
+	.qian-blush {
+		position: absolute;
+		top: 20px;
+		width: 7px;
+		height: 4px;
+		background: var(--qian-pink-soft);
+		opacity: 0.78;
+		box-shadow: 0 0 10px rgba(249, 168, 212, 0.45);
+	}
+
+	.qian-blush-left {
+		left: 4px;
+	}
+
+	.qian-blush-right {
+		right: 4px;
+	}
+
+	.qian-hairpin {
+		position: absolute;
+		right: 7px;
+		top: 7px;
+		width: 15px;
+		height: 7px;
+		border-radius: 2px;
+		background: var(--qian-pink);
 		box-shadow:
-			-7px -7px 0 -1px rgba(34, 211, 238, 0.45),
-			-2px -7px 0 -1px rgba(34, 211, 238, 0.22);
+			0 0 12px rgba(249, 168, 212, 0.45),
+			-11px 6px 0 -2px rgba(103, 232, 249, 0.72);
 	}
 
 	.qian-body {
 		position: absolute;
-		left: 22px;
-		top: 66px;
-		width: 46px;
+		left: 24px;
+		top: 75px;
+		width: 50px;
 		height: 32px;
-		border: 1px solid var(--qian-border);
-		border-radius: 10px 10px 14px 14px;
+		border: 2px solid rgba(103, 232, 249, 0.34);
+		border-radius: 10px 10px 13px 13px;
 		background:
-			linear-gradient(180deg, rgba(34, 211, 238, 0.13), transparent),
-			rgba(15, 23, 42, 0.72);
+			linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 32%),
+			linear-gradient(180deg, #4c6fff, #2449d8);
+		box-shadow:
+			inset -3px -4px 0 rgba(8, 18, 56, 0.18),
+			var(--qian-pixel-shadow);
 	}
 
 	.qian-panel {
 		position: absolute;
-		left: 13px;
-		top: 9px;
-		width: 20px;
+		left: 14px;
+		top: 8px;
+		width: 22px;
 		height: 8px;
+		background: rgba(7, 13, 29, 0.64);
+		box-shadow:
+			inset 0 0 8px rgba(34, 211, 238, 0.18),
+			0 0 0 1px rgba(34, 211, 238, 0.35);
+	}
+
+	.qian-core {
+		position: absolute;
+		left: 22px;
+		top: 19px;
+		width: 6px;
+		height: 6px;
 		border-radius: 999px;
-		background: linear-gradient(90deg, var(--qian-accent), rgba(34, 211, 238, 0.12));
-		opacity: 0.82;
+		background: var(--qian-accent);
+		box-shadow: 0 0 12px var(--qian-accent);
 	}
 
 	.qian-arm {
 		position: absolute;
-		top: 8px;
-		width: 18px;
-		height: 5px;
-		border-radius: 999px;
-		background: rgba(229, 231, 235, 0.52);
+		top: 10px;
+		width: 19px;
+		height: 7px;
+		border-radius: 5px;
+		background: linear-gradient(180deg, #5f80ff, #2449d8);
+		box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.28);
 		transform-origin: center;
 		transition: transform 0.24s ease;
 	}
 
 	.qian-arm-left {
-		left: -15px;
-		transform: rotate(-22deg);
+		left: -17px;
+		transform: rotate(-25deg);
 	}
 
 	.qian-arm-right {
-		right: -15px;
-		transform: rotate(22deg);
+		right: -17px;
+		transform: rotate(25deg);
+	}
+
+	.qian-hand {
+		position: absolute;
+		top: 17px;
+		width: 8px;
+		height: 8px;
+		border-radius: 3px;
+		background: var(--qian-accent-strong);
+		box-shadow: 0 0 10px rgba(34, 211, 238, 0.42);
+	}
+
+	.qian-hand-left {
+		left: -19px;
+	}
+
+	.qian-hand-right {
+		right: -19px;
 	}
 
 	.qian-heart {
 		position: absolute;
 		left: 50%;
 		top: -12px;
-		color: #fb7185;
-		font-size: 16px;
+		color: var(--qian-pink);
+		font-size: 17px;
+		line-height: 1;
 		opacity: 0;
-		text-shadow: 0 0 14px rgba(251, 113, 133, 0.75);
-		transform: translateX(-50%) scale(0.2);
+		text-shadow: 0 0 14px rgba(249, 168, 212, 0.76);
+		transform: translateX(-50%) rotate(45deg) scale(0.2);
 	}
 
-	.qian-base {
+	.qian-foot {
 		position: absolute;
-		left: 28px;
-		bottom: 4px;
-		width: 34px;
-		height: 8px;
-		border-radius: 999px;
-		background: rgba(34, 211, 238, 0.22);
-		box-shadow: 0 0 18px rgba(34, 211, 238, 0.22);
+		bottom: 5px;
+		width: 15px;
+		height: 12px;
+		border-radius: 5px 5px 7px 7px;
+		background: linear-gradient(180deg, #5f80ff, #2449d8);
+		box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.24);
+	}
+
+	.qian-foot-left {
+		left: 31px;
+		transform: rotate(8deg);
+	}
+
+	.qian-foot-right {
+		right: 31px;
+		transform: rotate(-8deg);
 	}
 
 	.qian-close {
 		position: absolute;
 		top: 0;
-		right: 0;
+		right: 1px;
 		z-index: 2;
 		display: grid;
 		place-items: center;
-		width: 23px;
-		height: 23px;
-		border: 1px solid var(--qian-border);
-		border-radius: 999px;
-		background: rgba(15, 23, 42, 0.68);
-		color: rgba(229, 231, 235, 0.82);
+		width: 24px;
+		height: 24px;
+		border: 1px solid rgba(103, 232, 249, 0.34);
+		border-radius: 7px;
+		background: rgba(15, 23, 42, 0.78);
+		color: rgba(229, 231, 235, 0.78);
 		font: inherit;
-		font-size: 15px;
+		font-size: 16px;
 		line-height: 1;
 		cursor: pointer;
-		opacity: 0.58;
+		opacity: 0;
+		pointer-events: none;
 		backdrop-filter: blur(10px);
 		-webkit-backdrop-filter: blur(10px);
+		box-shadow: var(--qian-pixel-shadow);
 		transition:
 			opacity 0.2s ease,
 			border-color 0.2s ease,
@@ -348,12 +661,19 @@
 			transform 0.2s ease;
 	}
 
+	.qian-pet:hover .qian-close,
+	.qian-pet:focus-within .qian-close,
+	.qian-pet.is-touch-ready .qian-close {
+		opacity: 0.86;
+		pointer-events: auto;
+	}
+
 	.qian-close:hover,
 	.qian-close:focus-visible {
-		border-color: var(--qian-accent);
-		color: var(--qian-accent);
+		border-color: var(--qian-accent-strong);
+		color: var(--qian-accent-strong);
 		opacity: 1;
-		transform: scale(1.06);
+		transform: translateY(-1px);
 	}
 
 	.qian-close:focus-visible {
@@ -363,15 +683,19 @@
 
 	.qian-bubble {
 		position: absolute;
-		left: 10px;
-		bottom: 118px;
-		max-width: min(240px, calc(100vw - 32px));
+		left: 8px;
+		bottom: 129px;
+		max-width: min(268px, calc(100vw - 32px));
 		border: 1px solid var(--qian-border);
 		border-radius: 8px;
-		padding: 0.48rem 0.62rem;
-		background: rgba(15, 23, 42, 0.9);
+		padding: 0.5rem 0.66rem;
+		background:
+			linear-gradient(135deg, rgba(34, 211, 238, 0.11), transparent 42%),
+			rgba(15, 23, 42, 0.92);
 		color: var(--qian-text);
-		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+		box-shadow:
+			0 12px 28px rgba(0, 0, 0, 0.24),
+			var(--qian-pixel-shadow);
 		font-size: 0.78rem;
 		line-height: 1.45;
 		white-space: nowrap;
@@ -391,7 +715,7 @@
 		height: 10px;
 		border-right: 1px solid var(--qian-border);
 		border-bottom: 1px solid var(--qian-border);
-		background: rgba(15, 23, 42, 0.9);
+		background: rgba(15, 23, 42, 0.92);
 		content: '';
 		transform: rotate(45deg);
 	}
@@ -405,8 +729,10 @@
 
 	.qian-pet:hover .qian-bot,
 	.qian-pet:focus-within .qian-bot {
-		animation-play-state: paused;
-		transform: translateY(-4px) rotate(-2deg);
+		transform: translateY(-5px) rotate(-2deg) scale(var(--qian-scale));
+		filter:
+			drop-shadow(0 18px 28px rgba(0, 0, 0, 0.38))
+			drop-shadow(0 0 20px rgba(34, 211, 238, 0.22));
 	}
 
 	.qian-pet:hover .qian-eye,
@@ -419,7 +745,7 @@
 	}
 
 	.qian-pet[data-mood='breathe'] .qian-head {
-		animation: qian-breathe 0.9s ease-in-out;
+		animation: qian-breathe 0.85s ease-in-out;
 	}
 
 	.qian-pet[data-mood='jump'] .qian-bot {
@@ -430,21 +756,31 @@
 		animation: qian-shake 0.8s ease-in-out;
 	}
 
+	.qian-pet[data-mood='tilt'] .qian-bot {
+		animation: qian-tilt 0.9s ease-in-out;
+	}
+
+	.qian-pet[data-mood='wave'] .qian-arm-right,
+	.qian-pet[data-mood='wave'] .qian-hand-right {
+		animation: qian-wave 0.82s ease-in-out;
+		transform-origin: left center;
+	}
+
 	.qian-pet[data-mood='heart'] .qian-arm-left {
-		transform: translate(8px, -7px) rotate(38deg);
+		transform: translate(9px, -8px) rotate(38deg);
 	}
 
 	.qian-pet[data-mood='heart'] .qian-arm-right {
-		transform: translate(-8px, -7px) rotate(-38deg);
+		transform: translate(-9px, -8px) rotate(-38deg);
 	}
 
 	.qian-pet[data-mood='heart'] .qian-heart {
-		animation: qian-heart-pop 0.9s ease-out;
+		animation: qian-heart-pop 0.95s ease-out;
 	}
 
 	@keyframes qian-blink {
 		0%,
-		35%,
+		34%,
 		100% {
 			height: 8px;
 		}
@@ -458,58 +794,85 @@
 		0%,
 		100% {
 			box-shadow:
-				inset 0 0 22px rgba(34, 211, 238, 0.08),
-				0 0 24px rgba(34, 211, 238, 0.14);
+				inset -4px -5px 0 rgba(8, 18, 56, 0.16),
+				inset 3px 3px 0 rgba(255, 255, 255, 0.12),
+				0 0 22px rgba(34, 211, 238, 0.16),
+				var(--qian-pixel-shadow);
 		}
 		50% {
 			box-shadow:
-				inset 0 0 26px rgba(34, 211, 238, 0.18),
-				0 0 32px rgba(34, 211, 238, 0.28);
+				inset -4px -5px 0 rgba(8, 18, 56, 0.16),
+				inset 3px 3px 0 rgba(255, 255, 255, 0.12),
+				0 0 34px rgba(34, 211, 238, 0.32),
+				var(--qian-pixel-shadow);
 		}
 	}
 
 	@keyframes qian-jump {
 		0%,
 		100% {
-			transform: translateY(0);
+			transform: translateY(0) scale(var(--qian-scale));
 		}
 		42% {
-			transform: translateY(-12px) rotate(2deg);
+			transform: translateY(-12px) rotate(2deg) scale(var(--qian-scale));
 		}
 		72% {
-			transform: translateY(1px);
+			transform: translateY(1px) scale(var(--qian-scale));
 		}
 	}
 
 	@keyframes qian-shake {
 		0%,
 		100% {
-			transform: rotate(0deg);
+			transform: rotate(0deg) scale(var(--qian-scale));
 		}
 		25% {
-			transform: rotate(-5deg);
+			transform: rotate(-5deg) scale(var(--qian-scale));
 		}
 		55% {
-			transform: rotate(4deg);
+			transform: rotate(4deg) scale(var(--qian-scale));
 		}
 		75% {
-			transform: rotate(-2deg);
+			transform: rotate(-2deg) scale(var(--qian-scale));
+		}
+	}
+
+	@keyframes qian-tilt {
+		0%,
+		100% {
+			transform: rotate(0deg) scale(var(--qian-scale));
+		}
+		50% {
+			transform: rotate(-3deg) translateY(-2px) scale(var(--qian-scale));
+		}
+	}
+
+	@keyframes qian-wave {
+		0%,
+		100% {
+			transform: rotate(25deg);
+		}
+		35% {
+			transform: translateY(-6px) rotate(-38deg);
+		}
+		68% {
+			transform: translateY(-4px) rotate(-18deg);
 		}
 	}
 
 	@keyframes qian-heart-pop {
 		0% {
 			opacity: 0;
-			transform: translateX(-50%) translateY(6px) scale(0.2);
+			transform: translateX(-50%) translateY(6px) rotate(45deg) scale(0.2);
 		}
 		35%,
 		70% {
 			opacity: 1;
-			transform: translateX(-50%) translateY(-8px) scale(1);
+			transform: translateX(-50%) translateY(-8px) rotate(45deg) scale(1);
 		}
 		100% {
 			opacity: 0;
-			transform: translateX(-50%) translateY(-18px) scale(0.7);
+			transform: translateX(-50%) translateY(-20px) rotate(45deg) scale(0.72);
 		}
 	}
 
@@ -517,42 +880,48 @@
 		.qian-pet {
 			left: 14px;
 			bottom: 18px;
-			width: 84px;
-			height: 106px;
+			--qian-scale: 0.84;
+			width: 88px;
+			height: 116px;
 		}
 
 		.qian-bot {
-			left: 4px;
-			width: 76px;
-			height: 92px;
-			transform: scale(0.88);
+			left: -4px;
+			bottom: -5px;
 			transform-origin: 50% 100%;
 		}
 
 		.qian-close {
-			width: 22px;
-			height: 22px;
+			width: 23px;
+			height: 23px;
 		}
 
 		.qian-bubble {
 			left: 0;
-			bottom: 98px;
+			bottom: 108px;
 			font-size: 0.72rem;
+		}
+
+		.qian-pet:hover .qian-bot,
+		.qian-pet:focus-within .qian-bot {
+			transform: translateY(-3px) scale(var(--qian-scale));
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
 		.qian-bot,
-		.qian-pet[data-mood] .qian-bot,
-		.qian-pet[data-mood] .qian-eye,
-		.qian-pet[data-mood] .qian-head,
-		.qian-pet[data-mood] .qian-heart {
-			animation: none;
+		.qian-eye,
+		.qian-head,
+		.qian-heart,
+		.qian-arm,
+		.qian-hand {
+			animation: none !important;
+			transition-duration: 0.01ms !important;
 		}
 
 		.qian-pet:hover .qian-bot,
 		.qian-pet:focus-within .qian-bot {
-			transform: none;
+			transform: scale(var(--qian-scale));
 		}
 	}
 </style>

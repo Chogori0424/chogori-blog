@@ -2,6 +2,19 @@
   {
     "date": "2026-05-08",
     "type": "feature",
+    "title": "升级小宠物「倩」形象与互动",
+    "description": "基于参考图细化倩的造型，加入轻微像素风、可爱女性化设计、自动问候文案，以及仅在 hover/focus 时显示的关闭按钮。",
+    "commit": null,
+    "tags": [
+      "pet",
+      "interaction",
+      "pixel",
+      "ux"
+    ]
+  },
+  {
+    "date": "2026-05-08",
+    "type": "feature",
     "title": "添加小宠物「倩」",
     "description": "新增全站浮动机器人宠物，支持点击互动、眨眼、比心、气泡提示和关闭记忆。",
     "commit": null,
