@@ -2,22 +2,30 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import devlogEntries from '../data/devlog.json';
+import changelogGroups from '../data/devlog.json';
 import { SITE_TITLE } from '../consts';
 
-const typeLabels = {
-	feature: '新增功能',
-	fix: '问题修复',
-	style: '样式调整',
-	content: '内容更新',
-	deploy: '部署配置',
-	refactor: '结构调整',
+const categoryOrder = ['added', 'improved', 'fixed', 'removed', 'docs', 'style'] as const;
+
+const categoryLabels = {
+	added: '新增',
+	improved: '优化',
+	fixed: '修复',
+	removed: '删除',
+	docs: '文档',
+	style: '样式',
 } as const;
 
-const entries = [...devlogEntries].sort((a, b) => {
-	const dateOrder = b.date.localeCompare(a.date);
-	return dateOrder === 0 ? devlogEntries.indexOf(a) - devlogEntries.indexOf(b) : dateOrder;
-});
+const changelog = [...changelogGroups].sort((a, b) => b.date.localeCompare(a.date));
+
+const getSections = (group: (typeof changelog)[number]) =>
+	categoryOrder
+		.map((key) => ({
+			key,
+			label: categoryLabels[key],
+			items: (group.items?.[key] ?? []) as string[],
+		}))
+		.filter((section) => section.items.length > 0);
 ---
 
 <!doctype html>
@@ -29,10 +37,10 @@ const entries = [...devlogEntries].sort((a, b) => {
 		/>
 		<style>
 			main {
-				width: 880px;
+				width: 900px;
 			}
 			.page-head {
-				margin-bottom: 2.25rem;
+				margin-bottom: 2.5rem;
 			}
 			.page-head h1 {
 				margin-bottom: 0.75rem;
@@ -44,100 +52,137 @@ const entries = [...devlogEntries].sort((a, b) => {
 				margin: 0;
 				color: var(--color-text-muted);
 				font-size: 1rem;
+				line-height: 1.7;
 			}
-			.timeline {
+			.changelog {
 				display: grid;
-				gap: 1rem;
+				gap: 1.2rem;
 				margin: 0;
 				padding: 0;
 				list-style: none;
 			}
-			.log-card {
+			.date-group {
 				position: relative;
-				display: grid;
-				gap: 0.75rem;
+			}
+			.date-card {
 				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				background: var(--surface);
-				padding: 1.1rem;
+				padding: 1.25rem;
 				transition:
 					background-color 0.3s ease,
 					border-color 0.3s ease,
 					color 0.3s ease;
 			}
-			.log-card:hover {
-				border-color: var(--color-accent);
+			.date-card:hover {
+				border-color: color-mix(in srgb, var(--color-accent) 70%, var(--color-card-border));
 			}
-			.log-meta {
+			.date-head {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 0.5rem;
-				align-items: center;
-				color: var(--color-text-muted);
-				font-size: 0.84rem;
-				line-height: 1.45;
+				gap: 0.45rem 0.85rem;
+				align-items: baseline;
+				justify-content: space-between;
+				border-bottom: 1px solid var(--color-border);
+				padding-bottom: 0.85rem;
+				margin-bottom: 1rem;
 			}
-			.type-badge {
-				display: inline-flex;
-				border: 1px solid var(--color-accent);
-				border-radius: 999px;
-				padding: 0.12rem 0.55rem;
-				background: var(--color-accent-muted);
+			.date-head time {
 				color: var(--color-text);
-				font-size: 0.78rem;
-				font-weight: 700;
+				font-size: 1.35rem;
+				font-weight: 800;
+				letter-spacing: 0;
 			}
-			.log-card h2 {
-				margin: 0;
-				font-size: 1.28rem;
-				line-height: 1.35;
-			}
-			.log-card p {
-				margin: 0;
-				color: var(--color-text);
-				font-size: 0.96rem;
-				line-height: 1.75;
-			}
-			.log-footer {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.45rem 0.7rem;
-				align-items: center;
+			.change-count {
 				color: var(--color-text-muted);
 				font-size: 0.82rem;
 			}
-			.commit-link {
-				font-family: var(--font-atkinson);
-				font-weight: 700;
-				text-decoration: none;
+			.change-sections {
+				display: grid;
+				gap: 1rem;
 			}
-			.tag-list {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.35rem;
+			.change-section {
+				display: grid;
+				grid-template-columns: 5.5rem minmax(0, 1fr);
+				gap: 0.9rem;
+				align-items: start;
+			}
+			.change-section h2 {
+				display: inline-flex;
+				gap: 0.42rem;
+				align-items: center;
+				margin: 0;
+				color: var(--color-text);
+				font-size: 0.9rem;
+				line-height: 1.5;
+			}
+			.category-dot {
+				width: 0.45rem;
+				height: 0.45rem;
+				border-radius: 999px;
+				background: var(--color-accent);
+				box-shadow: 0 0 0 4px var(--color-accent-muted);
+			}
+			.change-list {
+				display: grid;
+				gap: 0.48rem;
 				margin: 0;
 				padding: 0;
 				list-style: none;
 			}
-			.tag-list li {
-				border: 1px solid var(--color-border);
+			.change-list li {
+				position: relative;
+				margin: 0;
+				padding-left: 1rem;
+				color: var(--color-text);
+				font-size: 0.96rem;
+				line-height: 1.75;
+			}
+			.change-list li::before {
+				position: absolute;
+				left: 0;
+				top: 0.78em;
+				width: 0.32rem;
+				height: 0.32rem;
 				border-radius: 999px;
-				padding: 0.08rem 0.48rem;
-				background: var(--color-bg-secondary);
-				color: var(--color-text-muted);
-				font-size: 0.76rem;
-				line-height: 1.5;
+				background: var(--color-text-muted);
+				content: '';
+			}
+			.change-section-added .category-dot {
+				background: var(--color-accent);
+			}
+			.change-section-improved .category-dot {
+				background: #7ab7f5;
+			}
+			.change-section-fixed .category-dot {
+				background: #f59e0b;
+			}
+			.change-section-removed .category-dot {
+				background: #e06c75;
+			}
+			.change-section-docs .category-dot {
+				background: #a78bfa;
+			}
+			.change-section-style .category-dot {
+				background: #f9a8d4;
 			}
 			@media (max-width: 720px) {
 				main {
 					width: 100%;
 					max-width: calc(100% - 2em);
 				}
-				.log-card {
-					padding: 0.95rem;
+				.date-card {
+					padding: 1rem;
 				}
-				.log-card h2 {
-					font-size: 1.12rem;
+				.date-head time {
+					font-size: 1.15rem;
+				}
+				.change-section {
+					grid-template-columns: 1fr;
+					gap: 0.35rem;
+				}
+				.change-section h2 {
+					font-size: 0.86rem;
 				}
 			}
 		</style>
@@ -147,40 +192,42 @@ const entries = [...devlogEntries].sort((a, b) => {
 		<main>
 			<section class="page-head">
 				<h1>开发日志</h1>
-				<p>记录 chogori.xyz 的功能迭代、样式调整、部署优化和内容系统变化。</p>
+				<p>记录 chogori.xyz 的功能迭代、样式调整、部署优化和内容系统变化。按日期聚合，保留对公开读者有价值的更新摘要。</p>
 			</section>
 
-			<ol class="timeline">
+			<ol class="changelog">
 				{
-					entries.map((entry) => (
-						<li>
-							<article class="log-card">
-								<div class="log-meta">
-									<time datetime={entry.date}>{entry.date}</time>
-									<span class="type-badge">{typeLabels[entry.type]}</span>
-								</div>
-								<h2>{entry.title}</h2>
-								<p>{entry.description}</p>
-								<div class="log-footer">
-									{entry.commit && (
-										<a
-											class="commit-link"
-											href={`https://github.com/Chogori0424/chogori-blog/commit/${entry.commit}`}
-										>
-											commit {entry.commit}
-										</a>
-									)}
-									{entry.tags.length > 0 && (
-										<ul class="tag-list" aria-label={`${entry.title} 标签`}>
-											{entry.tags.map((tag) => (
-												<li>{tag}</li>
-											))}
-										</ul>
-									)}
-								</div>
-							</article>
-						</li>
-					))
+					changelog.map((group) => {
+						const sections = getSections(group);
+						const itemCount = sections.reduce((total, section) => total + section.items.length, 0);
+
+						return (
+							<li class="date-group">
+								<article class="date-card">
+									<header class="date-head">
+										<time datetime={group.date}>{group.date}</time>
+										<span class="change-count">{itemCount} 项更新</span>
+									</header>
+
+									<div class="change-sections">
+										{sections.map((section) => (
+											<section class={`change-section change-section-${section.key}`}>
+												<h2>
+													<span class="category-dot" aria-hidden="true"></span>
+													{section.label}
+												</h2>
+												<ul class="change-list">
+													{section.items.map((item) => (
+														<li>{item}</li>
+													))}
+												</ul>
+											</section>
+										))}
+									</div>
+								</article>
+							</li>
+						);
+					})
 				}
 			</ol>
 		</main>

@@ -1,144 +1,68 @@
 [
   {
     "date": "2026-05-09",
-    "type": "fix",
-    "title": "修复小宠物「倩」升级后不可见",
-    "description": "为倩增加版本化 localStorage 迁移，清理旧隐藏状态和旧拖动坐标，避免升级后仍因历史关闭记录不可见。",
-    "commit": null,
-    "tags": [
-      "pet",
-      "fix",
-      "ux"
-    ]
+    "items": {
+      "added": [],
+      "improved": [
+        "重构开发日志展示：开发日志改为按日期聚合，并按新增、优化、修复、删除、文档、样式分类展示。"
+      ],
+      "fixed": [
+        "恢复升级后小宠物「倩」的可见性，清理旧隐藏状态与旧拖动坐标。"
+      ],
+      "removed": [],
+      "docs": [],
+      "style": []
+    }
   },
   {
     "date": "2026-05-08",
-    "type": "style",
-    "title": "优化小宠物「倩」造型与微表情",
-    "description": "参考当前形象优化倩的偏置发卡、一体化手臂、腿脚比例和微表情动作，让拖动、比心、眨眼与闲置动作更自然。",
-    "commit": null,
-    "tags": [
-      "pet",
-      "style",
-      "motion",
-      "ux"
-    ]
-  },
-  {
-    "date": "2026-05-08",
-    "type": "feature",
-    "title": "升级小宠物「倩」的形象与拖动交互",
-    "description": "将倩从坐姿改为站立，优化身体连接与 UI 风格眼睛，加入拖动与行走动作、时间精神状态系统，并细化比心互动。",
-    "commit": null,
-    "tags": [
-      "pet",
-      "interaction",
-      "drag",
-      "motion",
-      "ux"
-    ]
-  },
-  {
-    "date": "2026-05-08",
-    "type": "feature",
-    "title": "升级小宠物「倩」形象与互动",
-    "description": "基于参考图细化倩的造型，加入轻微像素风、可爱女性化设计、自动问候文案，以及仅在 hover/focus 时显示的关闭按钮。",
-    "commit": null,
-    "tags": [
-      "pet",
-      "interaction",
-      "pixel",
-      "ux"
-    ]
-  },
-  {
-    "date": "2026-05-08",
-    "type": "feature",
-    "title": "添加小宠物「倩」",
-    "description": "新增全站浮动机器人宠物，支持点击互动、眨眼、比心、气泡提示和关闭记忆。",
-    "commit": null,
-    "tags": [
-      "pet",
-      "interaction",
-      "ux"
-    ]
+    "items": {
+      "added": [
+        "上线全站小宠物「倩」，支持互动气泡、关闭记忆、拖动位置记忆与行走反馈。"
+      ],
+      "improved": [
+        "为「倩」加入时间精神状态、自动问候、UI 符号眼睛和更自然的 idle 动作。"
+      ],
+      "fixed": [],
+      "removed": [],
+      "docs": [],
+      "style": [
+        "优化「倩」的像素风外观、偏置发卡、一体化手臂、腿脚比例、比心效果和微表情。"
+      ]
+    }
   },
   {
     "date": "2026-05-07",
-    "type": "feature",
-    "title": "添加开发日志页面",
-    "description": "新增 /devlog 页面、开发日志数据文件、日志追加脚本和 Codex 项目规则，用于记录本站功能迭代与配置变化。",
-    "commit": null,
-    "tags": [
-      "devlog",
-      "workflow"
-    ]
-  },
-  {
-    "date": "2026-05-07",
-    "type": "feature",
-    "title": "添加一键回顶 / 返回阅读进度按钮",
-    "description": "新增全站浮动按钮，支持回到顶部、返回刚才阅读位置，并在用户手动滚动时自动恢复状态。",
-    "commit": "05d159e",
-    "tags": [
-      "ux",
-      "article"
-    ]
-  },
-  {
-    "date": "2026-05-07",
-    "type": "fix",
-    "title": "优化文章页字体排版",
-    "description": "收紧文章页内容宽度，降低标题字号，优化中文正文行高、列表、引用块、代码块和表格阅读体验。",
-    "commit": "6308864",
-    "tags": [
-      "typography",
-      "article"
-    ]
+    "items": {
+      "added": [
+        "新增开发日志页面和日志追加脚本。",
+        "新增一键回顶 / 返回阅读进度按钮。"
+      ],
+      "improved": [
+        "完成自定义域名 chogori.xyz 的 Vercel 与 Cloudflare DNS 访问配置。"
+      ],
+      "fixed": [
+        "优化文章页排版，收紧内容宽度并改善中文阅读体验。"
+      ],
+      "removed": [],
+      "docs": [],
+      "style": []
+    }
   },
   {
     "date": "2026-05-05",
-    "type": "feature",
-    "title": "添加可视化文章后台 Decap CMS",
-    "description": "新增 /admin/ 管理后台入口，配置 GitHub 后端、文章集合、媒体目录和上传占位目录。",
-    "commit": "91b4a10",
-    "tags": [
-      "cms",
-      "content"
-    ]
-  },
-  {
-    "date": "2026-05-05",
-    "type": "deploy",
-    "title": "添加 sitemap.xml 与 robots.txt",
-    "description": "接入 Astro sitemap 集成，配置站点地址，并新增 robots.txt 指向 sitemap-index.xml。",
-    "commit": "c696f95",
-    "tags": [
-      "seo",
-      "sitemap"
-    ]
-  },
-  {
-    "date": "2026-05-07",
-    "type": "deploy",
-    "title": "绑定自定义域名 chogori.xyz",
-    "description": "将 chogori.xyz 与 www.chogori.xyz 绑定到 Vercel 项目，并通过 Cloudflare DNS 指向生产站点。",
-    "commit": null,
-    "tags": [
-      "domain",
-      "vercel",
-      "cloudflare"
-    ]
-  },
-  {
-    "date": "2026-05-05",
-    "type": "feature",
-    "title": "初步搭建个人博客站点",
-    "description": "使用 Astro 官方 blog 模板创建 Chogori Blog，初始化文章、分类、SEO、RSS 和基础站点结构。",
-    "commit": "f23fb89",
-    "tags": [
-      "astro",
-      "init"
-    ]
+    "items": {
+      "added": [
+        "初步搭建 Chogori Blog，完成 Astro 基础站点、文章、分类、SEO 与 RSS。",
+        "新增 Decap CMS 可视化文章后台。"
+      ],
+      "improved": [],
+      "fixed": [],
+      "removed": [],
+      "docs": [
+        "添加 sitemap 与 robots.txt，明确搜索引擎抓取入口。"
+      ],
+      "style": []
+    }
   }
 ]
