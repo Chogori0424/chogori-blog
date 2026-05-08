@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-05-09",
+    "type": "fix",
+    "title": "修复小宠物「倩」升级后不可见",
+    "description": "为倩增加版本化 localStorage 迁移，清理旧隐藏状态和旧拖动坐标，避免升级后仍因历史关闭记录不可见。",
+    "commit": null,
+    "tags": [
+      "pet",
+      "fix",
+      "ux"
+    ]
+  },
+  {
     "date": "2026-05-08",
     "type": "style",
     "title": "优化小宠物「倩」造型与微表情",

@@ -41,6 +41,8 @@
 		const hiddenKey = 'qianPetHidden';
 		const positionKey = 'qianPetPosition';
 		const moodKey = 'qianPetMood';
+		const versionKey = 'qianPetVersion';
+		const currentVersion = '2026-05-09-visibility-reset';
 		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		const bot = qianPet.querySelector('.qian-bot');
 		const closeButton = qianPet.querySelector('.qian-close');
@@ -99,6 +101,14 @@
 		let lastInteractionAt = 0;
 
 		const randomItem = (items) => items[Math.floor(Math.random() * items.length)];
+
+		const migrateStoredState = () => {
+			if (localStorage.getItem(versionKey) === currentVersion) return;
+
+			localStorage.removeItem(hiddenKey);
+			localStorage.removeItem(positionKey);
+			localStorage.setItem(versionKey, currentVersion);
+		};
 
 		const getSpirit = () => {
 			const hour = new Date().getHours();
@@ -321,6 +331,8 @@
 
 			dragState = null;
 		};
+
+		migrateStoredState();
 
 		if (localStorage.getItem(hiddenKey) === 'true') {
 			qianPet.hidden = true;
