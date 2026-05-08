@@ -1,0 +1,558 @@
+<div id="qian-pet" class="qian-pet" data-mood="idle" aria-hidden="true">
+	<div class="qian-bubble" role="status" aria-live="polite">我是倩</div>
+	<button class="qian-close" type="button" aria-label="隐藏倩">×</button>
+	<button class="qian-bot" type="button" aria-label="和倩互动">
+		<span class="qian-antenna" aria-hidden="true"></span>
+		<span class="qian-head" aria-hidden="true">
+			<span class="qian-face">
+				<span class="qian-eye"></span>
+				<span class="qian-eye"></span>
+			</span>
+			<span class="qian-signal"></span>
+		</span>
+		<span class="qian-body" aria-hidden="true">
+			<span class="qian-panel"></span>
+			<span class="qian-arm qian-arm-left"></span>
+			<span class="qian-arm qian-arm-right"></span>
+			<span class="qian-heart">♥</span>
+		</span>
+		<span class="qian-base" aria-hidden="true"></span>
+	</button>
+</div>
+
+<script>
+	const qianPet = document.getElementById('qian-pet');
+
+	if (qianPet) {
+		const storageKey = 'qianPetHidden';
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const bot = qianPet.querySelector('.qian-bot');
+		const closeButton = qianPet.querySelector('.qian-close');
+		const bubble = qianPet.querySelector('.qian-bubble');
+		const messages = [
+			'我是倩',
+			'今天也要保持输出',
+			'继续写点什么吧',
+			'我在看着部署状态',
+			'这篇文章可以再打磨一下',
+			'规则、代码、文章，都可以沉淀',
+			'已在后台待命',
+			'别忘了更新开发日志',
+		];
+		const moods = ['blink', 'heart', 'jump', 'shake'];
+		const idleMoods = ['blink', 'breathe', 'shake'];
+
+		let moodTimer = null;
+		let bubbleTimer = null;
+		let idleTimer = null;
+		let lastMessage = '';
+
+		const randomItem = (items) => items[Math.floor(Math.random() * items.length)];
+
+		const setFocusable = (enabled) => {
+			if (bot) bot.tabIndex = enabled ? 0 : -1;
+			if (closeButton) closeButton.tabIndex = enabled ? 0 : -1;
+		};
+
+		const showBubble = (message = randomItem(messages), delay = 2600) => {
+			if (!bubble) return;
+
+			const nextMessage = message === lastMessage ? randomItem(messages) : message;
+			lastMessage = nextMessage;
+			bubble.textContent = nextMessage;
+			qianPet.classList.add('has-bubble');
+
+			window.clearTimeout(bubbleTimer);
+			bubbleTimer = window.setTimeout(() => {
+				qianPet.classList.remove('has-bubble');
+			}, delay);
+		};
+
+		const setMood = (mood, duration = 900) => {
+			window.clearTimeout(moodTimer);
+			qianPet.dataset.mood = mood;
+
+			moodTimer = window.setTimeout(() => {
+				qianPet.dataset.mood = 'idle';
+			}, duration);
+		};
+
+		const scheduleIdle = () => {
+			if (reduceMotion) return;
+
+			window.clearTimeout(idleTimer);
+			idleTimer = window.setTimeout(
+				() => {
+					setMood(randomItem(idleMoods), 900);
+					scheduleIdle();
+				},
+				8000 + Math.floor(Math.random() * 7000),
+			);
+		};
+
+		const reveal = () => {
+			qianPet.hidden = false;
+			qianPet.removeAttribute('aria-hidden');
+			setFocusable(true);
+			scheduleIdle();
+		};
+
+		if (localStorage.getItem(storageKey) === 'true') {
+			qianPet.hidden = true;
+			setFocusable(false);
+		} else {
+			reveal();
+		}
+
+		qianPet.addEventListener('mouseenter', () => {
+			showBubble(randomItem(messages), 2200);
+		});
+
+		qianPet.addEventListener('focusin', () => {
+			showBubble('我是倩', 2200);
+		});
+
+		bot?.addEventListener('click', () => {
+			setMood(randomItem(moods), 1000);
+			showBubble(randomItem(messages), 3000);
+		});
+
+		closeButton?.addEventListener('click', (event) => {
+			event.stopPropagation();
+			localStorage.setItem(storageKey, 'true');
+			qianPet.hidden = true;
+			qianPet.setAttribute('aria-hidden', 'true');
+			setFocusable(false);
+			window.clearTimeout(moodTimer);
+			window.clearTimeout(bubbleTimer);
+			window.clearTimeout(idleTimer);
+		});
+	}
+</script>
+
+<style>
+	.qian-pet {
+		--qian-accent: #22d3ee;
+		--qian-accent-soft: rgba(34, 211, 238, 0.18);
+		--qian-bg: rgba(15, 23, 42, 0.82);
+		--qian-border: rgba(34, 211, 238, 0.35);
+		--qian-text: #e5e7eb;
+		position: fixed;
+		left: 20px;
+		bottom: 24px;
+		z-index: 45;
+		width: 104px;
+		height: 128px;
+		color: var(--qian-text);
+		pointer-events: none;
+	}
+
+	.qian-pet[hidden] {
+		display: none;
+	}
+
+	.qian-bot,
+	.qian-close {
+		pointer-events: auto;
+	}
+
+	.qian-bot {
+		position: absolute;
+		left: 7px;
+		bottom: 0;
+		width: 90px;
+		height: 108px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+		transform-origin: 50% 100%;
+		filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.3));
+	}
+
+	.qian-bot:focus-visible {
+		outline: 3px solid var(--color-accent-muted);
+		outline-offset: 5px;
+		border-radius: 22px;
+	}
+
+	.qian-antenna {
+		position: absolute;
+		left: 43px;
+		top: 0;
+		width: 2px;
+		height: 14px;
+		background: linear-gradient(var(--qian-accent), rgba(34, 211, 238, 0.1));
+	}
+
+	.qian-antenna::before {
+		position: absolute;
+		top: -5px;
+		left: -4px;
+		width: 10px;
+		height: 10px;
+		border-radius: 999px;
+		background: var(--qian-accent);
+		box-shadow: 0 0 16px var(--qian-accent);
+		content: '';
+	}
+
+	.qian-head {
+		position: absolute;
+		left: 13px;
+		top: 14px;
+		width: 64px;
+		height: 54px;
+		border: 1px solid var(--qian-border);
+		border-radius: 18px;
+		background:
+			linear-gradient(135deg, rgba(34, 211, 238, 0.16), transparent 42%),
+			var(--qian-bg);
+		box-shadow:
+			inset 0 0 22px rgba(34, 211, 238, 0.08),
+			0 0 24px rgba(34, 211, 238, 0.14);
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
+	}
+
+	.qian-face {
+		position: absolute;
+		left: 12px;
+		top: 20px;
+		display: flex;
+		gap: 13px;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+	}
+
+	.qian-eye {
+		width: 11px;
+		height: 8px;
+		border-radius: 999px;
+		background: var(--qian-accent);
+		box-shadow:
+			0 0 10px var(--qian-accent),
+			0 0 20px rgba(34, 211, 238, 0.55);
+		transition:
+			height 0.18s ease,
+			filter 0.18s ease,
+			transform 0.18s ease;
+	}
+
+	.qian-signal {
+		position: absolute;
+		right: 9px;
+		bottom: 9px;
+		width: 16px;
+		height: 2px;
+		border-radius: 999px;
+		background: rgba(229, 231, 235, 0.36);
+		box-shadow:
+			-7px -7px 0 -1px rgba(34, 211, 238, 0.45),
+			-2px -7px 0 -1px rgba(34, 211, 238, 0.22);
+	}
+
+	.qian-body {
+		position: absolute;
+		left: 22px;
+		top: 66px;
+		width: 46px;
+		height: 32px;
+		border: 1px solid var(--qian-border);
+		border-radius: 10px 10px 14px 14px;
+		background:
+			linear-gradient(180deg, rgba(34, 211, 238, 0.13), transparent),
+			rgba(15, 23, 42, 0.72);
+	}
+
+	.qian-panel {
+		position: absolute;
+		left: 13px;
+		top: 9px;
+		width: 20px;
+		height: 8px;
+		border-radius: 999px;
+		background: linear-gradient(90deg, var(--qian-accent), rgba(34, 211, 238, 0.12));
+		opacity: 0.82;
+	}
+
+	.qian-arm {
+		position: absolute;
+		top: 8px;
+		width: 18px;
+		height: 5px;
+		border-radius: 999px;
+		background: rgba(229, 231, 235, 0.52);
+		transform-origin: center;
+		transition: transform 0.24s ease;
+	}
+
+	.qian-arm-left {
+		left: -15px;
+		transform: rotate(-22deg);
+	}
+
+	.qian-arm-right {
+		right: -15px;
+		transform: rotate(22deg);
+	}
+
+	.qian-heart {
+		position: absolute;
+		left: 50%;
+		top: -12px;
+		color: #fb7185;
+		font-size: 16px;
+		opacity: 0;
+		text-shadow: 0 0 14px rgba(251, 113, 133, 0.75);
+		transform: translateX(-50%) scale(0.2);
+	}
+
+	.qian-base {
+		position: absolute;
+		left: 28px;
+		bottom: 4px;
+		width: 34px;
+		height: 8px;
+		border-radius: 999px;
+		background: rgba(34, 211, 238, 0.22);
+		box-shadow: 0 0 18px rgba(34, 211, 238, 0.22);
+	}
+
+	.qian-close {
+		position: absolute;
+		top: 0;
+		right: 0;
+		z-index: 2;
+		display: grid;
+		place-items: center;
+		width: 23px;
+		height: 23px;
+		border: 1px solid var(--qian-border);
+		border-radius: 999px;
+		background: rgba(15, 23, 42, 0.68);
+		color: rgba(229, 231, 235, 0.82);
+		font: inherit;
+		font-size: 15px;
+		line-height: 1;
+		cursor: pointer;
+		opacity: 0.58;
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		transition:
+			opacity 0.2s ease,
+			border-color 0.2s ease,
+			color 0.2s ease,
+			transform 0.2s ease;
+	}
+
+	.qian-close:hover,
+	.qian-close:focus-visible {
+		border-color: var(--qian-accent);
+		color: var(--qian-accent);
+		opacity: 1;
+		transform: scale(1.06);
+	}
+
+	.qian-close:focus-visible {
+		outline: 3px solid var(--color-accent-muted);
+		outline-offset: 3px;
+	}
+
+	.qian-bubble {
+		position: absolute;
+		left: 10px;
+		bottom: 118px;
+		max-width: min(240px, calc(100vw - 32px));
+		border: 1px solid var(--qian-border);
+		border-radius: 8px;
+		padding: 0.48rem 0.62rem;
+		background: rgba(15, 23, 42, 0.9);
+		color: var(--qian-text);
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+		font-size: 0.78rem;
+		line-height: 1.45;
+		white-space: nowrap;
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(6px) scale(0.96);
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease;
+	}
+
+	.qian-bubble::after {
+		position: absolute;
+		left: 24px;
+		bottom: -6px;
+		width: 10px;
+		height: 10px;
+		border-right: 1px solid var(--qian-border);
+		border-bottom: 1px solid var(--qian-border);
+		background: rgba(15, 23, 42, 0.9);
+		content: '';
+		transform: rotate(45deg);
+	}
+
+	.qian-pet.has-bubble .qian-bubble,
+	.qian-pet:hover .qian-bubble,
+	.qian-pet:focus-within .qian-bubble {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+
+	.qian-pet:hover .qian-bot,
+	.qian-pet:focus-within .qian-bot {
+		animation-play-state: paused;
+		transform: translateY(-4px) rotate(-2deg);
+	}
+
+	.qian-pet:hover .qian-eye,
+	.qian-pet:focus-within .qian-eye {
+		filter: brightness(1.35);
+	}
+
+	.qian-pet[data-mood='blink'] .qian-eye {
+		animation: qian-blink 0.72s ease-in-out;
+	}
+
+	.qian-pet[data-mood='breathe'] .qian-head {
+		animation: qian-breathe 0.9s ease-in-out;
+	}
+
+	.qian-pet[data-mood='jump'] .qian-bot {
+		animation: qian-jump 0.72s ease-out;
+	}
+
+	.qian-pet[data-mood='shake'] .qian-bot {
+		animation: qian-shake 0.8s ease-in-out;
+	}
+
+	.qian-pet[data-mood='heart'] .qian-arm-left {
+		transform: translate(8px, -7px) rotate(38deg);
+	}
+
+	.qian-pet[data-mood='heart'] .qian-arm-right {
+		transform: translate(-8px, -7px) rotate(-38deg);
+	}
+
+	.qian-pet[data-mood='heart'] .qian-heart {
+		animation: qian-heart-pop 0.9s ease-out;
+	}
+
+	@keyframes qian-blink {
+		0%,
+		35%,
+		100% {
+			height: 8px;
+		}
+		50%,
+		64% {
+			height: 2px;
+		}
+	}
+
+	@keyframes qian-breathe {
+		0%,
+		100% {
+			box-shadow:
+				inset 0 0 22px rgba(34, 211, 238, 0.08),
+				0 0 24px rgba(34, 211, 238, 0.14);
+		}
+		50% {
+			box-shadow:
+				inset 0 0 26px rgba(34, 211, 238, 0.18),
+				0 0 32px rgba(34, 211, 238, 0.28);
+		}
+	}
+
+	@keyframes qian-jump {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		42% {
+			transform: translateY(-12px) rotate(2deg);
+		}
+		72% {
+			transform: translateY(1px);
+		}
+	}
+
+	@keyframes qian-shake {
+		0%,
+		100% {
+			transform: rotate(0deg);
+		}
+		25% {
+			transform: rotate(-5deg);
+		}
+		55% {
+			transform: rotate(4deg);
+		}
+		75% {
+			transform: rotate(-2deg);
+		}
+	}
+
+	@keyframes qian-heart-pop {
+		0% {
+			opacity: 0;
+			transform: translateX(-50%) translateY(6px) scale(0.2);
+		}
+		35%,
+		70% {
+			opacity: 1;
+			transform: translateX(-50%) translateY(-8px) scale(1);
+		}
+		100% {
+			opacity: 0;
+			transform: translateX(-50%) translateY(-18px) scale(0.7);
+		}
+	}
+
+	@media (max-width: 720px) {
+		.qian-pet {
+			left: 14px;
+			bottom: 18px;
+			width: 84px;
+			height: 106px;
+		}
+
+		.qian-bot {
+			left: 4px;
+			width: 76px;
+			height: 92px;
+			transform: scale(0.88);
+			transform-origin: 50% 100%;
+		}
+
+		.qian-close {
+			width: 22px;
+			height: 22px;
+		}
+
+		.qian-bubble {
+			left: 0;
+			bottom: 98px;
+			font-size: 0.72rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.qian-bot,
+		.qian-pet[data-mood] .qian-bot,
+		.qian-pet[data-mood] .qian-eye,
+		.qian-pet[data-mood] .qian-head,
+		.qian-pet[data-mood] .qian-heart {
+			animation: none;
+		}
+
+		.qian-pet:hover .qian-bot,
+		.qian-pet:focus-within .qian-bot {
+			transform: none;
+		}
+	}
+</style>
