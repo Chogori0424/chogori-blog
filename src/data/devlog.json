@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-05-10",
+    "items": {
+      "added": [],
+      "improved": [
+        "合并同日开发日志内容：同一天同分类的日志会合并为一条摘要，避免公开 changelog 出现流水账式列表。"
+      ],
+      "fixed": [],
+      "removed": [],
+      "docs": [],
+      "style": []
+    }
+  },
+  {
     "date": "2026-05-09",
     "items": {
       "added": [],
@@ -35,8 +48,7 @@
     "date": "2026-05-07",
     "items": {
       "added": [
-        "新增开发日志页面和日志追加脚本。",
-        "新增一键回顶 / 返回阅读进度按钮。"
+        "新增开发日志页面、日志追加脚本，以及一键回顶 / 返回阅读进度按钮。"
       ],
       "improved": [
         "完成自定义域名 chogori.xyz 的 Vercel 与 Cloudflare DNS 访问配置。"
@@ -53,8 +65,7 @@
     "date": "2026-05-05",
     "items": {
       "added": [
-        "初步搭建 Chogori Blog，完成 Astro 基础站点、文章、分类、SEO 与 RSS。",
-        "新增 Decap CMS 可视化文章后台。"
+        "初步搭建 Chogori Blog，完成 Astro 基础站点、文章、分类、SEO、RSS，以及 Decap CMS 可视化文章后台。"
       ],
       "improved": [],
       "fixed": [],

@@ -78,10 +78,10 @@ function normalizeGroups(data) {
 	if (Array.isArray(data) && data.every((group) => group.items)) {
 		return data.map((group) => ({
 			date: group.date,
-			items: {
+			items: mergeGroupItems({
 				...createEmptyItems(),
 				...group.items,
-			},
+			}),
 		}));
 	}
 
@@ -107,6 +107,20 @@ function normalizeGroups(data) {
 	return [...groups.values()].sort((a, b) => b.date.localeCompare(a.date));
 }
 
+function mergeItems(items) {
+	const cleaned = items.map((item) => String(item || '').trim()).filter(Boolean);
+
+	if (cleaned.length <= 1) {
+		return cleaned;
+	}
+
+	return [cleaned.join('；')];
+}
+
+function mergeGroupItems(items) {
+	return Object.fromEntries(categoryOrder.map((category) => [category, mergeItems(items[category] || [])]));
+}
+
 function readDevlog() {
 	return normalizeGroups(JSON.parse(readFileSync(devlogPath, 'utf8')));
 }
@@ -115,10 +129,10 @@ function writeDevlog(groups) {
 	const normalized = groups
 		.map((group) => ({
 			date: group.date,
-			items: {
+			items: mergeGroupItems({
 				...createEmptyItems(),
 				...group.items,
-			},
+			}),
 		}))
 		.sort((a, b) => b.date.localeCompare(a.date));
 
@@ -185,6 +199,10 @@ if (Object.values(group.items).some((items) => items.some((existing) => existing
 	process.exit(0);
 }
 
-group.items[category].push(item);
+if (group.items[category].length > 0) {
+	group.items[category] = mergeItems([...group.items[category], item]);
+} else {
+	group.items[category].push(item);
+}
 writeDevlog(groups);
 console.log(`Added changelog item: ${date} ${categoryLabels[category]} - ${title}`);
