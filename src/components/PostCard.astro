@@ -1,0 +1,245 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+
+const title = post?.data?.title || 'Untitled';
+const description = post?.data?.description?.trim();
+const category = post?.data?.category;
+const image = post?.data?.heroImage;
+const href = `/blog/${post.id}/`;
+const dateValue = post?.data?.pubDate;
+const date = dateValue instanceof Date ? dateValue : dateValue ? new Date(dateValue) : null;
+const formattedDate = date && !Number.isNaN(date.valueOf()) ? date.toISOString().slice(0, 10) : '';
+const hasMeta = Boolean(category || formattedDate);
+---
+
+<article class="post-card">
+	<a class="post-card-cover" href={href} aria-label={title}>
+		{
+			image ? (
+				<Image
+					width={720}
+					height={405}
+					src={image}
+					alt={title}
+					loading="lazy"
+					class="post-card-image"
+				/>
+			) : (
+				<div class="post-card-fallback" aria-hidden="true">
+					<span>Chogori Blog</span>
+				</div>
+			)
+		}
+	</a>
+
+	<div class="post-card-content">
+		{
+			hasMeta && (
+				<div class="post-card-meta">
+					{category && <span class="post-card-category">{category}</span>}
+					{formattedDate && (
+						<time datetime={formattedDate} class="post-card-date">
+							{formattedDate}
+						</time>
+					)}
+				</div>
+			)
+		}
+
+		<h3 class="post-card-title">
+			<a href={href}>{title}</a>
+		</h3>
+
+		{
+			description && (
+				<p class="post-card-excerpt">
+					{description}
+				</p>
+			)
+		}
+
+		<a class="post-card-more" href={href} aria-label={`阅读全文：${title}`}>
+			阅读全文 →
+		</a>
+	</div>
+</article>
+
+<style>
+	.post-card {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		min-width: 0;
+		overflow: hidden;
+		border: 1px solid color-mix(in srgb, var(--color-card-border) 78%, transparent);
+		border-radius: 12px;
+		background: color-mix(in srgb, var(--surface) 88%, var(--color-bg-secondary));
+		transition:
+			background-color 0.2s ease,
+			border-color 0.2s ease,
+			color 0.2s ease;
+	}
+
+	.post-card:hover {
+		border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-card-border));
+		background: color-mix(in srgb, var(--surface) 72%, var(--color-bg-hover));
+	}
+
+	.post-card-cover {
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: #18181b;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.post-card-image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border-radius: 0;
+		object-fit: cover;
+		transition: transform 0.3s ease;
+	}
+
+	.post-card:hover .post-card-image {
+		transform: scale(1.03);
+	}
+
+	.post-card-fallback {
+		display: flex;
+		width: 100%;
+		height: 100%;
+		align-items: center;
+		justify-content: center;
+		background:
+			linear-gradient(135deg, rgba(8, 51, 68, 0.95), rgba(24, 24, 27, 0.98) 54%, rgba(23, 37, 84, 0.95));
+	}
+
+	.post-card-fallback span {
+		color: color-mix(in srgb, var(--color-accent-hover) 62%, transparent);
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+	}
+
+	.post-card-content {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		min-width: 0;
+		padding: 1.25rem;
+	}
+
+	.post-card-meta {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		color: var(--color-text-muted);
+		font-size: 0.78rem;
+		line-height: 1.4;
+	}
+
+	.post-card-category {
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.post-card-date {
+		flex-shrink: 0;
+	}
+
+	.post-card-title {
+		margin: 0.75rem 0 0;
+		color: var(--color-text);
+		font-size: 1.15rem;
+		font-weight: 700;
+		line-height: 1.35;
+		overflow-wrap: anywhere;
+	}
+
+	.post-card-title a {
+		display: -webkit-box;
+		min-width: 0;
+		overflow: hidden;
+		color: inherit;
+		text-decoration: none;
+		overflow-wrap: anywhere;
+		transition: color 0.2s ease;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		word-break: break-all;
+	}
+
+	.post-card-title a:hover,
+	.post-card-title a:focus-visible {
+		color: var(--color-accent-hover);
+	}
+
+	.post-card-title a,
+	.post-card-excerpt {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+	}
+
+	.post-card-excerpt {
+		margin: 0.75rem 0 0;
+		color: var(--color-text-muted);
+		font-size: 0.92rem;
+		line-height: 1.65;
+		overflow-wrap: anywhere;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+	}
+
+	.post-card-more {
+		margin-top: auto;
+		padding-top: 1.25rem;
+		color: color-mix(in srgb, var(--color-accent-hover) 82%, var(--color-text));
+		font-size: 0.92rem;
+		font-weight: 700;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.post-card-more:hover,
+	.post-card-more:focus-visible {
+		color: var(--color-accent-hover);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.post-card,
+		.post-card-image,
+		.post-card-title a,
+		.post-card-more {
+			transition: none;
+		}
+
+		.post-card:hover .post-card-image {
+			transform: none;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.post-card-meta {
+			align-items: flex-start;
+			flex-direction: column;
+			gap: 0.35rem;
+		}
+	}
+</style>
