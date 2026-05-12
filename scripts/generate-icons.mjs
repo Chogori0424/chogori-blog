@@ -1,7 +1,8 @@
 import { writeFile } from 'node:fs/promises';
 import sharp from 'sharp';
 
-const source = 'public/images/avatar.webp';
+const sourceImage = 'scripts/assets/avatar-source.png';
+const avatarPath = 'public/images/avatar.webp';
 const zoom = 1.08;
 
 function circleMask(size) {
@@ -11,11 +12,69 @@ function circleMask(size) {
 	);
 }
 
+function isCheckerPixel(r, g, b) {
+	const max = Math.max(r, g, b);
+	const min = Math.min(r, g, b);
+	return r >= 224 && g >= 224 && b >= 224 && max - min <= 18;
+}
+
+async function createTransparentAvatar() {
+	const { data, info } = await sharp(sourceImage)
+		.ensureAlpha()
+		.raw()
+		.toBuffer({ resolveWithObject: true });
+	const { width, height } = info;
+	const background = new Uint8Array(width * height);
+	const queue = [];
+
+	function visit(x, y) {
+		if (x < 0 || y < 0 || x >= width || y >= height) return;
+
+		const index = y * width + x;
+		if (background[index]) return;
+
+		const offset = index * 4;
+		if (!isCheckerPixel(data[offset], data[offset + 1], data[offset + 2])) return;
+
+		background[index] = 1;
+		queue.push(index);
+	}
+
+	for (let x = 0; x < width; x++) {
+		visit(x, 0);
+		visit(x, height - 1);
+	}
+	for (let y = 0; y < height; y++) {
+		visit(0, y);
+		visit(width - 1, y);
+	}
+
+	for (let head = 0; head < queue.length; head++) {
+		const index = queue[head];
+		const x = index % width;
+		const y = Math.floor(index / width);
+		visit(x + 1, y);
+		visit(x - 1, y);
+		visit(x, y + 1);
+		visit(x, y - 1);
+	}
+
+	const output = Buffer.from(data);
+	for (let index = 0; index < background.length; index++) {
+		if (background[index]) output[index * 4 + 3] = 0;
+	}
+
+	await sharp(output, { raw: { width, height, channels: 4 } })
+		.resize(640, 640, { fit: 'cover', position: 'center' })
+		.webp({ quality: 92, effort: 6, alphaQuality: 100 })
+		.toFile(avatarPath);
+}
+
 async function renderCircularIcon(size) {
 	const enlarged = Math.ceil(size * zoom);
 	const offset = Math.floor((enlarged - size) / 2);
 
-	return sharp(source)
+	return sharp(avatarPath)
 		.resize(enlarged, enlarged, { fit: 'cover', position: 'center' })
 		.extract({ left: offset, top: offset, width: size, height: size })
 		.ensureAlpha()
@@ -58,6 +117,8 @@ const iconSizes = [
 	['public/android-chrome-192x192.png', 192],
 	['public/android-chrome-512x512.png', 512],
 ];
+
+await createTransparentAvatar();
 
 const rendered = new Map();
 for (const [path, size] of iconSizes) {

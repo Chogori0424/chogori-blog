@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-05-13",
+    "items": {
+      "added": [],
+      "improved": [],
+      "fixed": [],
+      "removed": [],
+      "docs": [],
+      "style": [
+        "更换透明头像资源：将全站头像替换为透明抠图资源，移除头像边框，并重新生成 favicon、Apple touch icon 和 PWA 图标。"
+      ]
+    }
+  },
+  {
     "date": "2026-05-12",
     "items": {
       "added": [],
