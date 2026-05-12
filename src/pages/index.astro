@@ -1,11 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
+import Avatar from '../components/Avatar.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import PostCard from '../components/PostCard.astro';
 import {
-	AUTHOR_AVATAR,
 	AUTHOR_NAME,
 	BLOG_CATEGORIES,
 	SITE_DESCRIPTION,
@@ -60,15 +60,6 @@ const categories = BLOG_CATEGORIES.map((category) => {
 				gap: 1rem;
 				align-items: center;
 				margin-bottom: 1rem;
-			}
-			.hero-avatar {
-				width: 72px;
-				height: 72px;
-				flex: 0 0 auto;
-				border: 1px solid var(--color-card-border);
-				border-radius: var(--radius-pill);
-				object-fit: cover;
-				object-position: center;
 			}
 			.hero h1 {
 				margin: 0;
@@ -282,10 +273,6 @@ const categories = BLOG_CATEGORIES.map((category) => {
 				.hero-title-row {
 					gap: 0.75rem;
 				}
-				.hero-avatar {
-					width: 56px;
-					height: 56px;
-				}
 				.hero h1 {
 					font-size: 2rem;
 				}
@@ -310,7 +297,7 @@ const categories = BLOG_CATEGORIES.map((category) => {
 				<div class="hero-copy">
 					<p class="kicker">chogori.xyz / 个人技术博客</p>
 					<div class="hero-title-row">
-						<img class="hero-avatar" src={AUTHOR_AVATAR} alt={AUTHOR_NAME} width="72" height="72" />
+						<Avatar variant="hero" />
 						<h1>{SITE_TITLE}</h1>
 					</div>
 					<p>

@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "icons:generate": "node scripts/generate-icons.mjs",
     "devlog:add": "node scripts/add-devlog.mjs",
     "devlog:latest": "node scripts/add-devlog.mjs --latest"
   },

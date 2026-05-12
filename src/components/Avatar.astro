@@ -1,0 +1,45 @@
+---
+import { AUTHOR_AVATAR, AUTHOR_NAME } from '../consts';
+
+type AvatarVariant = 'site' | 'hero' | 'about';
+type ImageLoading = 'eager' | 'lazy';
+type ImageDecoding = 'sync' | 'async' | 'auto';
+type FetchPriority = 'high' | 'low' | 'auto';
+
+interface Props {
+	variant?: AvatarVariant;
+	alt?: string;
+	class?: string;
+	loading?: ImageLoading;
+	decoding?: ImageDecoding;
+	fetchpriority?: FetchPriority;
+}
+
+const {
+	variant = 'hero',
+	alt = AUTHOR_NAME,
+	class: className = '',
+	loading = 'eager',
+	decoding = 'sync',
+	fetchpriority = 'high',
+} = Astro.props;
+
+const dimensions: Record<AvatarVariant, { width: number; height: number }> = {
+	site: { width: 32, height: 32 },
+	hero: { width: 72, height: 72 },
+	about: { width: 112, height: 112 },
+};
+const { width, height } = dimensions[variant];
+const avatarClass = ['avatar', `avatar--${variant}`, className].filter(Boolean).join(' ');
+---
+
+<img
+	class={avatarClass}
+	src={AUTHOR_AVATAR}
+	alt={alt}
+	width={width}
+	height={height}
+	loading={loading}
+	decoding={decoding}
+	fetchpriority={fetchpriority}
+/>

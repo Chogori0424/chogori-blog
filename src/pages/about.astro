@@ -1,8 +1,9 @@
 ---
+import Avatar from '../components/Avatar.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { AUTHOR_AVATAR, AUTHOR_NAME, SITE_TITLE } from '../consts';
+import { AUTHOR_NAME, SITE_TITLE } from '../consts';
 ---
 
 <!doctype html>
@@ -19,15 +20,6 @@ import { AUTHOR_AVATAR, AUTHOR_NAME, SITE_TITLE } from '../consts';
 				gap: 1.25rem;
 				align-items: center;
 				margin-bottom: 2rem;
-			}
-			.about-avatar {
-				width: 112px;
-				aspect-ratio: 1;
-				border: 1px solid var(--color-card-border);
-				border-radius: var(--radius-pill);
-				object-fit: cover;
-				object-position: center;
-				box-shadow: var(--box-shadow);
 			}
 			.about-copy {
 				min-width: 0;
@@ -81,9 +73,6 @@ import { AUTHOR_AVATAR, AUTHOR_NAME, SITE_TITLE } from '../consts';
 				.about-head {
 					grid-template-columns: 1fr;
 				}
-				.about-avatar {
-					width: 96px;
-				}
 				.info-grid {
 					grid-template-columns: 1fr;
 				}
@@ -97,7 +86,7 @@ import { AUTHOR_AVATAR, AUTHOR_NAME, SITE_TITLE } from '../consts';
 		<Header />
 		<main>
 			<section class="about-head">
-				<img class="about-avatar" src={AUTHOR_AVATAR} alt={AUTHOR_NAME} width="112" height="112" />
+				<Avatar variant="about" />
 				<div class="about-copy">
 					<p class="kicker">{SITE_TITLE} / About</p>
 					<h1>{AUTHOR_NAME}</h1>

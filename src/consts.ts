@@ -4,7 +4,7 @@ export const SITE_TITLE = 'Chogori Blog';
 export const SITE_DESCRIPTION = 'Chogori Lee 的个人技术博客';
 export const SITE_URL = 'https://chogori.xyz';
 export const AUTHOR_NAME = 'Chogori Lee';
-export const AUTHOR_AVATAR = '/avatar.jpg';
+export const AUTHOR_AVATAR = '/images/avatar.webp';
 export const SITE_IMAGE = AUTHOR_AVATAR;
 
 export const BLOG_CATEGORIES = [

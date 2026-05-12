@@ -265,6 +265,33 @@ img {
 	height: auto;
 	border-radius: var(--radius-container);
 }
+.avatar {
+	display: block;
+	flex: none;
+	box-sizing: border-box;
+	width: var(--avatar-size, 72px);
+	height: var(--avatar-size, 72px);
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	object-position: center 42%;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: var(--avatar-radius, 24px);
+	background: #050505;
+	box-shadow: 0 12px 32px rgba(0, 0, 0, 32%);
+}
+.avatar--site {
+	--avatar-size: 32px;
+	--avatar-radius: 10px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 28%);
+}
+.avatar--hero {
+	--avatar-size: 72px;
+	--avatar-radius: 24px;
+}
+.avatar--about {
+	--avatar-size: 112px;
+	--avatar-radius: 28px;
+}
 code {
 	padding: 2px 5px;
 	background-color: var(--color-inline-code-bg);
@@ -299,6 +326,11 @@ hr {
 }
 html {
 	scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar);
+}
+:root.theme-init *,
+:root.theme-init *::before,
+:root.theme-init *::after {
+	transition: none !important;
 }
 ::selection {
 	background: var(--color-accent-muted);
@@ -337,6 +369,16 @@ button:not(#theme-toggle):focus-visible {
 	}
 	main {
 		padding: 1em;
+	}
+	.avatar--about {
+		--avatar-size: 96px;
+		--avatar-radius: 24px;
+	}
+}
+@media (max-width: 520px) {
+	.avatar--hero {
+		--avatar-size: 56px;
+		--avatar-radius: 18px;
 	}
 }
 

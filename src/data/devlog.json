@@ -4,7 +4,9 @@
     "items": {
       "added": [],
       "improved": [],
-      "fixed": [],
+      "fixed": [
+        "统一头像资源并优化首屏加载：将全站头像切换到统一 WebP 资源和 Avatar 组件，并为首屏头像预加载、固定尺寸与主题首帧过渡防闪烁做处理。；修复站点图标圆形头像裁切：重新生成 favicon、Apple touch icon 和 PWA 图标，改用头像 cover 裁切与圆形 mask，避免旧图标出现圆形背景中嵌小方图。"
+      ],
       "removed": [],
       "docs": [],
       "style": [
