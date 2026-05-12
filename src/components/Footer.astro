@@ -5,23 +5,109 @@ const today = new Date();
 ---
 
 <footer>
-	<p>&copy; {today.getFullYear()} Chogori Lee. All rights reserved.</p>
-	<p>
-		<a href={SITE_URL}>{SITE_TITLE}</a> / 个人技术博客
-	</p>
+	<div class="footer-inner">
+		<section class="footer-note" aria-labelledby="footer-note-title">
+			<h2 id="footer-note-title">站点说明</h2>
+			<p>
+				{SITE_URL} 当前是静态优先的个人博客，不使用 WordPress、不接入数据库、不引入复杂 CMS。
+				内容文件保存在仓库中，所有变更都可以通过 Git diff 审阅。
+			</p>
+			<p>
+				<a href="/rss.xml">RSS</a> 可用于订阅更新，<a href="/sitemap-index.xml">sitemap</a>
+				用于帮助搜索引擎发现公开页面。
+			</p>
+		</section>
+
+		<nav class="footer-nav" aria-label="页脚导航">
+			<a href="/blog">文章</a>
+			<a href="/categories">分类</a>
+			<a href="/about">关于</a>
+			<a class="footer-devlog-link" href="/devlog">
+				<span>开发日志</span>
+				<small>记录博客本身的搭建与迭代过程</small>
+			</a>
+			<a href="/rss.xml">RSS</a>
+			<a href="/sitemap-index.xml">Sitemap</a>
+		</nav>
+
+		<div class="footer-meta">
+			<p>&copy; {today.getFullYear()} Chogori Lee. All rights reserved.</p>
+			<p>
+				<a href={SITE_URL}>{SITE_TITLE}</a> / 个人技术博客
+			</p>
+		</div>
+	</div>
 </footer>
 <style>
 	footer {
-		padding: 2em 1em 6em;
+		padding: 2.5em 1em 6em;
 		background: linear-gradient(var(--gray-gradient)) no-repeat;
 		color: var(--color-text-muted);
-		text-align: center;
+	}
+	.footer-inner {
+		display: grid;
+		gap: 1.5rem;
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+	.footer-note {
+		border: 1px solid var(--color-card-border);
+		border-radius: 8px;
+		background: var(--surface-soft);
+		padding: 1rem;
+		text-align: left;
+	}
+	.footer-note h2 {
+		margin: 0 0 0.65rem;
+		color: var(--color-text);
+		font-size: 1.15rem;
+	}
+	.footer-note p {
+		margin: 0.45rem 0;
+		font-size: 0.95rem;
+	}
+	.footer-nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem 1rem;
+		align-items: center;
+	}
+	.footer-nav a {
+		color: var(--color-link);
+		font-weight: 700;
+		text-decoration: none;
+	}
+	.footer-devlog-link {
+		display: inline-grid;
+		gap: 0.1rem;
+	}
+	.footer-devlog-link small {
+		color: var(--color-text-muted);
+		font-size: 0.78rem;
+		font-weight: 400;
+	}
+	.footer-meta {
+		display: grid;
+		gap: 0.25rem;
+		border-top: 1px solid var(--color-border);
+		padding-top: 1rem;
+		text-align: left;
 	}
 	footer p {
-		margin: 0.25rem 0;
+		margin: 0;
 	}
 	footer a {
 		color: var(--color-link);
 		text-decoration: none;
+	}
+	footer a:hover,
+	footer a:focus-visible {
+		color: var(--color-link-hover);
+	}
+	@media (max-width: 720px) {
+		.footer-nav {
+			align-items: flex-start;
+			flex-direction: column;
+		}
 	}
 </style>

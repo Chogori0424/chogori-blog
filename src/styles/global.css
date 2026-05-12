@@ -304,8 +304,7 @@ html {
 .badge,
 .tag,
 .post-category,
-.profile-meta span,
-.category-card span:first-of-type {
+.profile-meta span {
 	border: 1px solid var(--color-accent);
 	background: var(--color-accent-muted);
 	color: var(--color-text);

@@ -10,7 +10,6 @@ import {
 	BLOG_CATEGORIES,
 	SITE_DESCRIPTION,
 	SITE_TITLE,
-	SITE_URL,
 } from '../consts';
 
 const posts = (await getCollection('blog')).sort(
@@ -18,10 +17,17 @@ const posts = (await getCollection('blog')).sort(
 );
 const latestPosts = posts.slice(0, 4);
 
-const categories = BLOG_CATEGORIES.map((category) => ({
-	...category,
-	count: posts.filter((post) => post.data.category === category.name).length,
-}));
+const categories = BLOG_CATEGORIES.map((category) => {
+	const categoryPosts = posts
+		.filter((post) => post.data.category === category.name)
+		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+	return {
+		...category,
+		count: categoryPosts.length,
+		latestPost: categoryPosts[0],
+	};
+});
 ---
 
 <!doctype html>
@@ -31,6 +37,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 		<style>
 			main {
 				width: 1080px;
+				max-width: calc(100% - 2rem);
 			}
 			.hero {
 				display: grid;
@@ -39,15 +46,34 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				align-items: start;
 				margin-bottom: 2.5rem;
 			}
+			.hero-copy {
+				min-width: 0;
+			}
 			.kicker {
 				margin: 0 0 0.65rem;
 				color: var(--color-text-muted);
 				font-size: 0.9rem;
 				font-weight: 700;
 			}
+			.hero-title-row {
+				display: flex;
+				gap: 1rem;
+				align-items: center;
+				margin-bottom: 1rem;
+			}
+			.hero-avatar {
+				width: 72px;
+				height: 72px;
+				flex: 0 0 auto;
+				border: 1px solid var(--color-card-border);
+				border-radius: 999px;
+				object-fit: cover;
+				object-position: center;
+			}
 			.hero h1 {
-				margin: 0 0 1rem;
+				margin: 0;
 				font-size: 3rem;
+				line-height: 1.08;
 			}
 			.hero p {
 				max-width: 760px;
@@ -59,8 +85,7 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				gap: 0.5rem;
 				margin-top: 1.25rem;
 			}
-			.profile-meta span,
-			.category-card span:first-of-type {
+			.profile-meta span {
 				display: inline-flex;
 				border: 1px solid var(--color-accent);
 				border-radius: 999px;
@@ -70,8 +95,9 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				font-size: 0.82rem;
 				font-weight: 700;
 			}
-			.profile-panel,
-			.site-note {
+			.hero-cta,
+			.category-card,
+			.rss-cta {
 				border: 1px solid var(--color-card-border);
 				border-radius: 8px;
 				background: var(--surface-soft);
@@ -79,43 +105,72 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				transition:
 					background-color 0.3s ease,
 					border-color 0.3s ease,
-					color 0.3s ease;
+					color 0.3s ease,
+					transform 0.2s ease;
 			}
-			.profile-panel {
+			.hero-cta {
 				display: grid;
-				grid-template-columns: 88px minmax(0, 1fr);
-				grid-template-areas:
-					'title title'
-					'photo intro';
-				gap: 0.95rem 1rem;
-				align-items: start;
+				gap: 0.85rem;
+				align-content: start;
 			}
-			.profile-photo {
-				grid-area: photo;
-				width: 88px;
-				aspect-ratio: 1;
-				border: 1px solid var(--color-card-border);
-				border-radius: 8px;
-				object-fit: cover;
-				object-position: center;
+			.hero-cta:hover,
+			.category-card:hover,
+			.rss-cta:hover {
+				border-color: var(--color-accent);
 			}
-			.profile-panel h2,
-			.site-note h2,
-			.section-title {
+			.cta-eyebrow {
+				margin: 0;
+				color: var(--color-text-muted);
+				font-size: 0.85rem;
+				font-weight: 800;
+			}
+			.hero-cta h2 {
+				margin: 0;
+				font-size: 1.5rem;
+				line-height: 1.35;
+			}
+			.primary-cta,
+			.rss-cta-button {
+				display: inline-flex;
+				width: fit-content;
+				align-items: center;
+				justify-content: center;
+				border: 1px solid var(--color-accent);
+				border-radius: 999px;
+				background: var(--color-accent);
+				color: var(--color-bg);
+				font-weight: 800;
+				line-height: 1;
+				text-decoration: none;
+				transition:
+					background-color 0.2s ease,
+					border-color 0.2s ease,
+					color 0.2s ease,
+					transform 0.2s ease;
+			}
+			.primary-cta {
+				padding: 0.8rem 1rem;
+			}
+			.rss-cta-button {
+				padding: 0.75rem 0.95rem;
+				white-space: nowrap;
+			}
+			.primary-cta:hover,
+			.rss-cta-button:hover {
+				transform: translateY(-2px);
+			}
+			.rss-subtle-link {
+				width: fit-content;
+				color: var(--color-text-muted);
+				font-size: 0.92rem;
+				font-weight: 800;
+				text-decoration-color: var(--color-accent);
+				text-underline-offset: 0.2em;
+			}
+			.section-title,
+			.rss-cta h2 {
 				margin: 0 0 0.85rem;
 				font-size: 1.35rem;
-			}
-			.profile-panel h2 {
-				grid-area: title;
-				margin-bottom: 0;
-			}
-			.profile-panel p,
-			.site-note p {
-				margin: 0;
-				font-size: 0.95rem;
-			}
-			.profile-panel p {
-				grid-area: intro;
 			}
 			.section {
 				margin-top: 2.5rem;
@@ -140,35 +195,66 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 			}
 			.category-card {
 				display: grid;
+				align-content: start;
 				gap: 0.55rem;
-				border: 1px solid var(--color-card-border);
-				border-radius: 8px;
-				background: var(--surface-soft);
-				padding: 1rem;
 				color: var(--color-text);
-				text-decoration: none;
-				transition:
-					background-color 0.3s ease,
-					border-color 0.3s ease,
-					color 0.3s ease;
 			}
-			.category-card strong {
-				color: var(--color-text);
+			.category-card h3 {
+				margin: 0;
 				font-size: 1.05rem;
 			}
-			.category-card:hover {
-				border-color: var(--color-accent);
+			.category-card a {
+				color: var(--color-text);
+				font-weight: 800;
+				text-decoration-color: var(--color-accent);
+				text-underline-offset: 0.2em;
+			}
+			.category-count {
+				margin: 0 0 0.1rem;
+				color: var(--color-accent);
+				font-size: 2.5rem;
+				font-weight: 900;
+				line-height: 1;
 			}
 			.category-card p {
 				margin: 0;
 				font-size: 0.92rem;
 			}
-			.site-note {
-				display: grid;
-				gap: 0.75rem;
+			.latest-post {
+				border-top: 1px solid var(--color-card-border);
+				padding-top: 0.75rem;
+				color: var(--color-text-muted);
 			}
-			.site-note a {
-				font-weight: 700;
+			.latest-post span {
+				font-weight: 800;
+			}
+			.latest-post a {
+				color: var(--color-text);
+			}
+			.rss-cta {
+				display: grid;
+				grid-template-columns: auto minmax(0, 1fr) auto;
+				gap: 1rem;
+				align-items: center;
+			}
+			.rss-icon {
+				display: inline-flex;
+				width: 3rem;
+				height: 3rem;
+				align-items: center;
+				justify-content: center;
+				border: 1px solid var(--color-accent);
+				border-radius: 999px;
+				background: var(--color-accent-muted);
+				color: var(--color-accent);
+			}
+			.rss-cta h2 {
+				margin-bottom: 0.35rem;
+			}
+			.rss-cta p {
+				margin: 0;
+				color: var(--color-text-muted);
+				font-size: 0.95rem;
 			}
 			@media (min-width: 768px) {
 				.latest-list {
@@ -180,8 +266,34 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				.direction-grid {
 					grid-template-columns: 1fr;
 				}
+				.rss-cta {
+					grid-template-columns: 1fr;
+				}
 				.hero h1 {
 					font-size: 2.25rem;
+				}
+			}
+			@media (max-width: 520px) {
+				.hero-title-row {
+					gap: 0.75rem;
+				}
+				.hero-avatar {
+					width: 56px;
+					height: 56px;
+				}
+				.hero h1 {
+					font-size: 2rem;
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				.primary-cta,
+				.rss-cta-button,
+				.category-card {
+					transition: none;
+				}
+				.primary-cta:hover,
+				.rss-cta-button:hover {
+					transform: none;
 				}
 			}
 		</style>
@@ -190,9 +302,12 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 		<Header />
 		<main>
 			<section class="hero">
-				<div>
+				<div class="hero-copy">
 					<p class="kicker">chogori.xyz / 个人技术博客</p>
-					<h1>{SITE_TITLE}</h1>
+					<div class="hero-title-row">
+						<img class="hero-avatar" src={AUTHOR_AVATAR} alt={AUTHOR_NAME} width="72" height="72" />
+						<h1>{SITE_TITLE}</h1>
+					</div>
 					<p>
 						我是 {AUTHOR_NAME}，模具注塑工艺工程师。这里记录网络代理配置、工程制造、CAD/UG、
 						音频设备和个人知识管理相关的实践笔记。
@@ -207,13 +322,11 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 						<span>音频设备</span>
 					</div>
 				</div>
-				<aside class="profile-panel">
-					<img class="profile-photo" src={AUTHOR_AVATAR} alt={AUTHOR_NAME} width="88" height="88" />
-					<h2>个人简介</h2>
-					<p>
-						关注把工程现场经验和日常技术折腾写成可检索、可复盘、可迁移的内容。博客采用 Astro
-						静态站点方案，文章以 Markdown/MDX 管理。
-					</p>
+				<aside class="hero-cta" aria-label="文章入口">
+					<p class="cta-eyebrow">从文章开始</p>
+					<h2>按时间查看技术记录，或用 RSS 跟进后续更新。</h2>
+					<a class="primary-cta" href="/blog">查看所有文章 →</a>
+					<a class="rss-subtle-link" href="/rss.xml">RSS 订阅</a>
 				</aside>
 			</section>
 
@@ -229,26 +342,53 @@ const categories = BLOG_CATEGORIES.map((category) => ({
 				<div class="direction-grid">
 					{
 						categories.map((category) => (
-							<a class="category-card" href={`/categories/${category.slug}/`}>
-								<span>{category.count} 篇</span>
-								<strong>{category.name}</strong>
+							<article class="category-card">
+								<div>
+									<p class="category-count" aria-label={`${category.count} 篇文章`}>
+										{category.count}
+									</p>
+									<h3>
+										<a href={`/categories/${category.slug}/`}>{category.name}</a>
+									</h3>
+								</div>
 								<p>{category.description}</p>
-							</a>
+								<p class="latest-post">
+									{category.latestPost ? (
+										<>
+											<span>最新：</span>
+											<a href={`/blog/${category.latestPost.id}/`}>{category.latestPost.data.title}</a>
+										</>
+									) : (
+										<span>最新：待整理</span>
+									)}
+								</p>
+							</article>
 						))
 					}
 				</div>
 			</section>
 
-			<section class="section site-note">
-				<h2>站点说明</h2>
-				<p>
-					{SITE_URL} 当前是静态优先的个人博客，不使用 WordPress、不接入数据库、不引入复杂 CMS。
-					内容文件保存在仓库中，所有变更都可以通过 Git diff 审阅。
-				</p>
-				<p>
-					<a href="/rss.xml">RSS</a> 可用于订阅更新，<a href="/sitemap-index.xml">sitemap</a>
-					用于帮助搜索引擎发现公开页面。
-				</p>
+			<section class="section rss-cta" aria-labelledby="rss-cta-title">
+				<div class="rss-icon" aria-hidden="true">
+					<svg
+						viewBox="0 0 24 24"
+						width="26"
+						height="26"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+					>
+						<path d="M4 11a9 9 0 0 1 9 9" />
+						<path d="M4 4a16 16 0 0 1 16 16" />
+						<circle cx="5" cy="19" r="1" />
+					</svg>
+				</div>
+				<div>
+					<h2 id="rss-cta-title">订阅 RSS，获取最新文章更新</h2>
+					<p>新文章发布后可通过 RSS 阅读器跟进，适合长期保存和跨设备同步。</p>
+				</div>
+				<a class="rss-cta-button" href="/rss.xml">订阅 RSS</a>
 			</section>
 		</main>
 		<Footer />

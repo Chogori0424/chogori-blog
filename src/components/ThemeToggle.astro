@@ -1,4 +1,10 @@
-<button id="theme-toggle" type="button" aria-label="切换深色模式" aria-pressed="false">
+<button
+	id="theme-toggle"
+	type="button"
+	aria-label="切换深色模式"
+	aria-pressed="false"
+	title="切换深色/浅色主题"
+>
 	<svg
 		id="icon-moon"
 		xmlns="http://www.w3.org/2000/svg"
@@ -51,6 +57,7 @@
 			iconMoon.style.display = isDark ? 'none' : 'block';
 			btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
 			btn.setAttribute('aria-label', isDark ? '切换浅色模式' : '切换深色模式');
+			btn.setAttribute('title', '切换深色/浅色主题');
 		}
 	};
 
