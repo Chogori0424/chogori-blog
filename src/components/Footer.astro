@@ -22,9 +22,12 @@ const today = new Date();
 			<a href="/blog">文章</a>
 			<a href="/categories">分类</a>
 			<a href="/about">关于</a>
-			<a class="footer-devlog-link" href="/devlog">
-				<span>开发日志</span>
-				<small>记录博客本身的搭建与迭代过程</small>
+			<a
+				href="/devlog"
+				title="记录博客本身的搭建与迭代过程"
+				aria-label="开发日志：记录博客本身的搭建与迭代过程"
+			>
+				开发日志
 			</a>
 			<a href="/rss.xml">RSS</a>
 			<a href="/sitemap-index.xml">Sitemap</a>
@@ -76,15 +79,6 @@ const today = new Date();
 		color: var(--color-link);
 		font-weight: 700;
 		text-decoration: none;
-	}
-	.footer-devlog-link {
-		display: inline-grid;
-		gap: 0.1rem;
-	}
-	.footer-devlog-link small {
-		color: var(--color-text-muted);
-		font-size: 0.78rem;
-		font-weight: 400;
 	}
 	.footer-meta {
 		display: grid;
