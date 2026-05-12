@@ -73,7 +73,7 @@ const coverLabel = category || 'Chogori Blog';
 		min-width: 0;
 		overflow: hidden;
 		border: 1px solid color-mix(in srgb, var(--color-card-border) 78%, transparent);
-		border-radius: 12px;
+		border-radius: var(--radius-card);
 		background: color-mix(in srgb, var(--surface) 88%, var(--color-bg-secondary));
 		transition:
 			transform 0.2s ease,
@@ -109,7 +109,7 @@ const coverLabel = category || 'Chogori Blog';
 
 	.post-card-gradient span {
 		border: 1px solid color-mix(in srgb, #ffffff 48%, transparent);
-		border-radius: 999px;
+		border-radius: var(--radius-pill);
 		background: color-mix(in srgb, #ffffff 18%, transparent);
 		color: #ffffff;
 		padding: 0.35rem 0.85rem;

@@ -66,7 +66,7 @@ const categories = BLOG_CATEGORIES.map((category) => {
 				height: 72px;
 				flex: 0 0 auto;
 				border: 1px solid var(--color-card-border);
-				border-radius: 999px;
+				border-radius: var(--radius-pill);
 				object-fit: cover;
 				object-position: center;
 			}
@@ -88,7 +88,7 @@ const categories = BLOG_CATEGORIES.map((category) => {
 			.profile-meta span {
 				display: inline-flex;
 				border: 1px solid var(--color-accent);
-				border-radius: 999px;
+				border-radius: var(--radius-pill);
 				padding: 0.18rem 0.62rem;
 				background: var(--color-accent-muted);
 				color: var(--color-text);
@@ -99,7 +99,7 @@ const categories = BLOG_CATEGORIES.map((category) => {
 			.category-card,
 			.rss-cta {
 				border: 1px solid var(--color-card-border);
-				border-radius: 8px;
+				border-radius: var(--radius-card);
 				background: var(--surface-soft);
 				padding: 1.1rem;
 				transition:
@@ -137,7 +137,7 @@ const categories = BLOG_CATEGORIES.map((category) => {
 				align-items: center;
 				justify-content: center;
 				border: 1px solid var(--color-accent);
-				border-radius: 999px;
+				border-radius: var(--radius-pill);
 				background: var(--color-accent);
 				color: var(--color-bg);
 				font-weight: 800;
@@ -198,6 +198,7 @@ const categories = BLOG_CATEGORIES.map((category) => {
 				display: grid;
 				align-content: start;
 				gap: 0.55rem;
+				border-radius: var(--radius-container);
 				color: var(--color-text);
 			}
 			.category-card h3 {
@@ -245,7 +246,7 @@ const categories = BLOG_CATEGORIES.map((category) => {
 				align-items: center;
 				justify-content: center;
 				border: 1px solid var(--color-accent);
-				border-radius: 999px;
+				border-radius: var(--radius-pill);
 				background: var(--color-accent-muted);
 				color: var(--color-accent);
 			}
