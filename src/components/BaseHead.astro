@@ -28,10 +28,10 @@ const imageURL = new URL(typeof image === 'string' ? image : image.src, siteURL)
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 			const theme = saved === 'dark' || saved === 'light' ? saved : prefersDark ? 'dark' : 'light';
 			root.setAttribute('data-theme', theme);
-			root.style.colorScheme = 'dark';
+			root.style.colorScheme = theme;
 		} catch {
 			root.setAttribute('data-theme', 'light');
-			root.style.colorScheme = 'dark';
+			root.style.colorScheme = 'light';
 		} finally {
 			const clearThemeInit = () => root.classList.remove('theme-init');
 			if ('requestAnimationFrame' in window) {
