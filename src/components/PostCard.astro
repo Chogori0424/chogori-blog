@@ -20,6 +20,7 @@ const categoryClassMap: Record<string, string> = {
 	网络代理: 'is-network-proxy',
 	工程制造: 'is-engineering',
 	音频设备: 'is-audio',
+	'AI 工具': 'is-ai-tools',
 	个人日志: 'is-personal',
 };
 const categoryClass = category ? categoryClassMap[category] || 'is-default' : 'is-default';
@@ -129,6 +130,10 @@ const coverLabel = category || 'Chogori Blog';
 
 	.post-card-gradient.is-audio {
 		background: linear-gradient(135deg, #475569 0%, #0891b2 100%);
+	}
+
+	.post-card-gradient.is-ai-tools {
+		background: linear-gradient(135deg, #047857 0%, #2563eb 52%, #7c3aed 100%);
 	}
 
 	.post-card-gradient.is-personal {

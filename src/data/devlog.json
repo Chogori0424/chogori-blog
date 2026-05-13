@@ -8,7 +8,9 @@
         "修复 Chrome 快捷方式图标缩放：将 PWA 与 Apple touch 图标改为适合快捷方式的满画布图标，避免透明圆形头像被 Chrome 或系统二次缩小。；强制刷新快捷方式图标路径：为 Chrome 与 Apple 快捷方式图标新增版本化路径，并让 manifest 指向新图标，避免旧快捷方式图标缓存继续复用。"
       ],
       "removed": [],
-      "docs": [],
+      "docs": [
+        "新增 NotebookLM 使用指南：加入 AI 工具分类、中文优先内容规则，以及简历优化、氛围式 AI 编程和智能体学习文章"
+      ],
       "style": [
         "更换透明头像资源：将全站头像替换为透明抠图资源，移除头像边框，并重新生成 favicon、Apple touch icon 和 PWA 图标。"
       ]

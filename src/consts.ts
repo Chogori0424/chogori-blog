@@ -24,6 +24,11 @@ export const BLOG_CATEGORIES = [
 		description: '耳机、播放器、桌面链路和个人听感记录。',
 	},
 	{
+		name: 'AI 工具',
+		slug: 'ai-tools',
+		description: 'NotebookLM、AI 编程、智能体学习和个人知识工作流。',
+	},
+	{
 		name: '个人日志',
 		slug: 'personal-log',
 		description: '技术折腾、写作复盘和长期输出计划。',

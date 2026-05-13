@@ -10,7 +10,7 @@ const blog = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
-			category: z.enum(['网络代理', '工程制造', '音频设备', '个人日志']),
+			category: z.enum(['网络代理', '工程制造', '音频设备', 'AI 工具', '个人日志']),
 			tags: z.array(z.string()).default([]),
 			// Transform string to Date object
 			pubDate: z.coerce.date(),
