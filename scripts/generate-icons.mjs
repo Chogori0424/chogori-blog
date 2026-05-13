@@ -1,4 +1,4 @@
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import sharp from 'sharp';
 
 const sourceImage = 'scripts/assets/avatar-source.png';
@@ -146,6 +146,12 @@ const shortcutSizes = [
 	['public/android-chrome-512x512.png', 512],
 ];
 
+const versionedShortcutSizes = [
+	['public/icons/apple-touch-icon-v2.png', 180],
+	['public/icons/chrome-shortcut-192-v2.png', 192],
+	['public/icons/chrome-shortcut-512-v2.png', 512],
+];
+
 await createTransparentAvatar();
 
 const renderedFavicons = new Map();
@@ -155,7 +161,8 @@ for (const [path, size] of faviconSizes) {
 	await writeFile(path, buffer);
 }
 
-for (const [path, size] of shortcutSizes) {
+await mkdir('public/icons', { recursive: true });
+for (const [path, size] of [...shortcutSizes, ...versionedShortcutSizes]) {
 	await writeFile(path, await renderShortcutIcon(size));
 }
 
