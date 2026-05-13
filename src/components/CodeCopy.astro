@@ -84,8 +84,18 @@
 	}
 
 	.code-block-wrapper pre {
+		overflow: hidden !important;
+		overflow-x: hidden !important;
+		overflow-wrap: anywhere;
+		white-space: pre-wrap;
 		padding-right: 5.5rem;
-		overflow-x: auto;
+	}
+
+	.code-block-wrapper pre > code {
+		display: block;
+		overflow-wrap: inherit;
+		white-space: inherit;
+		word-break: inherit;
 	}
 
 	.code-copy-button {
@@ -103,6 +113,8 @@
 		font-weight: 700;
 		line-height: 1.4;
 		cursor: pointer;
+		opacity: 0;
+		pointer-events: none;
 		backdrop-filter: blur(10px);
 		transition:
 			background-color 0.2s ease,
@@ -111,9 +123,15 @@
 			opacity 0.2s ease;
 	}
 
-	.code-copy-button:hover,
+	.code-block-wrapper:hover .code-copy-button,
+	.code-block-wrapper:focus-within .code-copy-button,
 	.code-copy-button:focus-visible {
 		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.code-copy-button:hover,
+	.code-copy-button:focus-visible {
 		border-color: var(--color-accent-hover);
 		background: var(--color-bg-hover);
 		color: var(--color-text);
