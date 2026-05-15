@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-05-16",
+    "items": {
+      "added": [
+        "新增公开分身页面：添加公开 BOT 聊天页和 Vercel 公共 API，访客模式只使用公开人格提示，不接入私密记忆检索。"
+      ],
+      "improved": [],
+      "fixed": [],
+      "removed": [],
+      "docs": [],
+      "style": []
+    }
+  },
+  {
     "date": "2026-05-14",
     "items": {
       "added": [],
