@@ -156,7 +156,7 @@ Expected: 最新 2026-05-17 条目包含“补充香港一日游经典照片”�
 - Validate: `src/content/blog/2026-05-17-hong-kong-one-day-plan.mdx`
 - Validate: `public/uploads/*.jpg`
 
-- [ ] **Step 1: 构建验证**
+- [x] **Step 1: 构建验证**
 
 Run:
 
@@ -166,7 +166,7 @@ npm run build
 
 Expected: Astro build exits 0 and article route builds.
 
-- [ ] **Step 2: 现有测试验证**
+- [x] **Step 2: 现有测试验证**
 
 Run:
 
@@ -176,7 +176,7 @@ node --test tests\bot-public-profile.test.mjs
 
 Expected: 7 tests pass, 0 fail.
 
-- [ ] **Step 3: 检查图片引用**
+- [x] **Step 3: 检查图片引用**
 
 Run:
 
@@ -186,7 +186,7 @@ Select-String -Path dist\blog\2026-05-17-hong-kong-one-day-plan\index.html -Patt
 
 Expected: 输出包含四张图片和 `classic-photo`。
 
-- [ ] **Step 4: 提交并推送**
+- [x] **Step 4: 提交并推送**
 
 Run:
 
