@@ -88,6 +88,9 @@ export default async function handler(req, res) {
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'Request failed.';
 		const statusCode = /Message is required|Message is too long|Invalid JSON/.test(message) ? 400 : 502;
+		if (statusCode === 502) {
+			console.error('Public bot upstream request failed:', message);
+		}
 		sendJson(res, statusCode, {
 			error: statusCode === 400 ? message : 'Public bot request failed.',
 		});
