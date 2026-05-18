@@ -173,6 +173,18 @@
 		0 16px 32px rgba(var(--gray), 18%);
 }
 
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	max-width: 100%;
+	overflow-x: hidden;
+}
+
 body {
 	font-family: var(--font-atkinson);
 	margin: 0;
