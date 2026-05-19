@@ -1,0 +1,122 @@
+<h2>分身聊天界面方向</h2>
+<p class="subtitle">请重点看双方区分、输入区效率、移动端可读性。点击你偏好的方案也可以。</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#151515;border:1px solid #343434;border-radius:18px;padding:18px;min-height:330px;color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:16px;margin-bottom:18px;">
+          <div>
+            <div style="font-size:24px;font-weight:900;line-height:1.1;">公开分身</div>
+            <div style="color:#b3b3b3;font-size:13px;margin-top:6px;">访客模式 · 公开人格回应</div>
+          </div>
+          <div style="border:1px solid #343434;border-radius:999px;padding:3px;background:#202020;font-size:12px;">
+            <span style="display:inline-block;background:#339cff;color:#111;border-radius:999px;padding:7px 12px;font-weight:800;">访客</span>
+            <span style="display:inline-block;color:#777;padding:7px 10px;font-weight:800;">本人</span>
+          </div>
+        </div>
+        <div style="display:grid;gap:13px;background:#202020;border:1px solid #343434;border-radius:16px;padding:16px;min-height:220px;">
+          <div style="display:flex;gap:9px;align-items:end;max-width:82%;">
+            <div style="width:28px;height:28px;border-radius:10px;background:#2a2a2a;display:grid;place-items:center;font-weight:900;color:#9fcdff;">分</div>
+            <div>
+              <div style="font-size:11px;color:#9fcdff;margin:0 0 4px 2px;">公开分身</div>
+              <div style="background:#2a2a2a;border:1px solid #3a3a3a;border-radius:14px 14px 14px 5px;padding:10px 12px;font-size:13px;">直接问就行。</div>
+            </div>
+          </div>
+          <div style="justify-self:end;display:flex;gap:9px;align-items:end;max-width:82%;">
+            <div>
+              <div style="text-align:right;font-size:11px;color:#9aa;margin:0 2px 4px 0;">你</div>
+              <div style="background:#339cff;color:#101010;border-radius:14px 14px 5px 14px;padding:10px 12px;font-size:13px;font-weight:700;">你好</div>
+            </div>
+            <div style="width:28px;height:28px;border-radius:999px;background:#339cff;color:#111;display:grid;place-items:center;font-size:12px;font-weight:900;">你</div>
+          </div>
+          <div style="display:flex;gap:9px;align-items:end;max-width:82%;">
+            <div style="width:28px;height:28px;border-radius:10px;background:#2a2a2a;display:grid;place-items:center;font-weight:900;color:#9fcdff;">分</div>
+            <div>
+              <div style="font-size:11px;color:#9fcdff;margin:0 0 4px 2px;">公开分身</div>
+              <div style="background:#2a2a2a;border:1px solid #3a3a3a;border-radius:14px 14px 14px 5px;padding:10px 12px;font-size:13px;">你好，很高兴见到你。</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin-top:12px;">
+          <div style="border:1px solid #339cff;border-radius:14px;padding:10px 12px;color:#8b8b8b;font-size:13px;">输入一句想让分身回应的话</div>
+          <div style="background:#339cff;color:#111;border-radius:999px;padding:10px 16px;font-weight:900;font-size:13px;">发送</div>
+        </div>
+        <div style="color:#8b8b8b;font-size:11px;margin-top:7px;">Enter 发送 · Shift+Enter 换行</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 气泡对话（推荐）</h3>
+      <p>左右气泡、头像/角色标签、输入快捷提示，最像真实聊天，双方边界最清楚。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#151515;border:1px solid #343434;border-radius:18px;padding:18px;min-height:330px;color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+        <div style="display:grid;grid-template-columns:1fr 160px;gap:14px;">
+          <div>
+            <div style="font-size:24px;font-weight:900;">公开分身</div>
+            <div style="color:#b3b3b3;font-size:13px;margin-top:6px;">访客模式</div>
+          </div>
+          <div style="border:1px solid #343434;border-radius:14px;background:#202020;padding:12px;font-size:12px;color:#b3b3b3;">
+            <div style="font-weight:800;color:#fff;margin-bottom:8px;">会话身份</div>
+            <div>访客：你</div>
+            <div>分身：公开人格</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+          <div style="background:#202020;border:1px solid #343434;border-radius:14px;padding:14px;min-height:185px;">
+            <div style="font-size:12px;color:#9fcdff;font-weight:800;margin-bottom:10px;">公开分身</div>
+            <div style="font-size:13px;margin-bottom:12px;">直接问就行。</div>
+            <div style="font-size:13px;">你好，很高兴见到你。</div>
+          </div>
+          <div style="background:#162536;border:1px solid #339cff;border-radius:14px;padding:14px;min-height:185px;">
+            <div style="font-size:12px;color:#9fcdff;font-weight:800;margin-bottom:10px;">访客</div>
+            <div style="font-size:13px;margin-bottom:12px;">你好</div>
+            <div style="font-size:13px;">今天吃了什么</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin-top:12px;">
+          <div style="border:1px solid #343434;border-radius:14px;padding:10px 12px;color:#8b8b8b;font-size:13px;">输入问题</div>
+          <div style="background:#339cff;color:#111;border-radius:12px;padding:10px 16px;font-weight:900;font-size:13px;">发送</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 双栏身份区</h3>
+      <p>身份非常明确，适合解释“访客/本人”模式，但移动端会变成上下堆叠，聊天感弱。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#151515;border:1px solid #343434;border-radius:18px;padding:18px;min-height:330px;color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+        <div style="font-size:24px;font-weight:900;">公开分身</div>
+        <div style="color:#b3b3b3;font-size:13px;margin-top:6px;">访客模式</div>
+        <div style="background:#202020;border:1px solid #343434;border-radius:16px;padding:8px 16px;margin-top:18px;min-height:220px;">
+          <div style="border-bottom:1px solid #343434;padding:13px 0;">
+            <div style="color:#9fcdff;font-size:11px;font-weight:900;margin-bottom:5px;">分身</div>
+            <div style="font-size:14px;">直接问就行。</div>
+          </div>
+          <div style="border-bottom:1px solid #343434;padding:13px 0;">
+            <div style="color:#b3b3b3;font-size:11px;font-weight:900;margin-bottom:5px;">访客</div>
+            <div style="font-size:14px;">你好</div>
+          </div>
+          <div style="padding:13px 0;">
+            <div style="color:#9fcdff;font-size:11px;font-weight:900;margin-bottom:5px;">分身</div>
+            <div style="font-size:14px;">你好，很高兴见到你。</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin-top:12px;">
+          <div style="border:1px solid #343434;border-radius:10px;padding:10px 12px;color:#8b8b8b;font-size:13px;">输入一句话</div>
+          <div style="background:#339cff;color:#111;border-radius:10px;padding:10px 16px;font-weight:900;font-size:13px;">发送</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 日志式列表</h3>
+      <p>最克制、最像博客正文，但用户和分身的视觉差异较弱，长对话时扫读成本高。</p>
+    </div>
+  </div>
+</div>
