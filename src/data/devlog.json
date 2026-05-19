@@ -1,5 +1,31 @@
 [
   {
+    "date": "2026-05-20",
+    "items": {
+      "added": [],
+      "improved": [],
+      "fixed": [],
+      "removed": [],
+      "docs": [],
+      "style": [
+        "优化公开分身聊天界面：将公开分身页面调整为左右气泡对话，增加 Enter 发送和 Shift+Enter 换行提示，强化访客与分身消息区分。"
+      ]
+    }
+  },
+  {
+    "date": "2026-05-19",
+    "items": {
+      "added": [],
+      "improved": [],
+      "fixed": [],
+      "removed": [],
+      "docs": [],
+      "style": [
+        "统一 Codex 中文工作语言规则：在项目 AGENTS.md 中明确 Codex 沟通、设计文档、实施计划、开发日志、总结和审查结论默认全部使用中文。"
+      ]
+    }
+  },
+  {
     "date": "2026-05-18",
     "items": {
       "added": [],
