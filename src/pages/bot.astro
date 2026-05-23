@@ -294,12 +294,18 @@ import Header from '../components/Header.astro';
 		</main>
 		<Footer />
 		<script>
+			import {
+				shouldSubmitChatBeforeInput,
+				shouldSubmitChatKeydown,
+			} from '../lib/bot/keyboardSubmit.js';
+
 			const form = document.getElementById('composer');
 			const input = document.getElementById('message-input');
 			const messages = document.getElementById('messages');
 			const sendButton = document.getElementById('send-button');
 			const statusLine = document.getElementById('status-line');
 			let isComposing = false;
+			let allowNextLineBreak = false;
 
 			const roleMeta = {
 				assistant: {
@@ -345,6 +351,19 @@ import Header from '../components/Header.astro';
 				messages.scrollTop = messages.scrollHeight;
 			}
 
+			function canSubmitMessage() {
+				return !sendButton.disabled && Boolean(input.value.trim());
+			}
+
+			function submitComposer() {
+				if (typeof form.requestSubmit === 'function') {
+					form.requestSubmit(sendButton);
+					return;
+				}
+
+				sendButton.click();
+			}
+
 			input.addEventListener('compositionstart', () => {
 				isComposing = true;
 			});
@@ -354,22 +373,44 @@ import Header from '../components/Header.astro';
 			});
 
 			input.addEventListener('keydown', (event) => {
-				if (event.key !== 'Enter' || event.shiftKey || event.isComposing || isComposing) {
+				if (event.key === 'Enter' && event.shiftKey && !event.isComposing && !isComposing) {
+					allowNextLineBreak = true;
+					window.setTimeout(() => {
+						allowNextLineBreak = false;
+					}, 0);
 					return;
 				}
 
-				if (sendButton.disabled || !input.value.trim()) {
+				if (
+					!shouldSubmitChatKeydown(event, {
+						canSubmit: canSubmitMessage(),
+						isComposing,
+					})
+				) {
 					return;
 				}
 
 				event.preventDefault();
+				submitComposer();
+			});
 
-				if (typeof form.requestSubmit === 'function') {
-					form.requestSubmit(sendButton);
+			input.addEventListener('beforeinput', (event) => {
+				if (
+					!shouldSubmitChatBeforeInput(event, {
+						allowLineBreak: allowNextLineBreak,
+						canSubmit: canSubmitMessage(),
+						isComposing,
+					})
+				) {
+					if (event.inputType === 'insertLineBreak') {
+						allowNextLineBreak = false;
+					}
 					return;
 				}
 
-				sendButton.click();
+				event.preventDefault();
+				allowNextLineBreak = false;
+				submitComposer();
 			});
 
 			form.addEventListener('submit', async (event) => {

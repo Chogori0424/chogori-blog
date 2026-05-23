@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-05-23",
+    "items": {
+      "added": [],
+      "improved": [],
+      "fixed": [
+        "修复公开分身软键盘发送：为公开分身输入框增加 beforeinput 兜底，兼容手机软键盘和输入法触发的 Enter 发送，同时保留 Shift+Enter 换行。"
+      ],
+      "removed": [],
+      "docs": [],
+      "style": []
+    }
+  },
+  {
     "date": "2026-05-20",
     "items": {
       "added": [],
