@@ -5,19 +5,27 @@ WidgetMetadata = {
     title: "豆瓣片单（精准版）",
     requiresWebView: false,
     functionName: "loadDoubanExactList",
+    sectionMode: true,
     cacheDuration: 300,
     params: [
       {
         name: "url",
         title: "片单地址",
         type: "input",
-        description: "支持豆瓣 subject_collection 地址和 App 分享链接；自动读取完整片单"
+        description: "支持豆瓣 subject_collection 地址和 App 分享链接；按 Forward 分段模式自动加载完整片单"
+      },
+      {
+        name: "page",
+        title: "页码",
+        type: "page",
+        description: "由 Forward 自动分页加载",
+        value: "1"
       }
     ]
   }],
-  version: "1.0.1",
+  version: "1.0.2",
   requiredVersion: "0.0.1",
-  description: "直接使用豆瓣 Subject ID，并自动翻页读取完整片单，避免 TMDB 同名误匹配和只显示前 20 条",
+  description: "直接使用豆瓣 Subject ID，并通过 Forward sectionMode 分页加载完整片单，避免 TMDB 同名误匹配和 30 条展示截断",
   author: "Chogori0424"
 };
 
@@ -56,25 +64,17 @@ async function fetchCollectionPage(listId, start, count) {
 
 async function loadDoubanExactList(params = {}) {
   const listId = getCollectionId(params.url);
+  const page = Math.max(1, Number(params.page) || 1);
+
+  // 豆瓣 subject_collection 每批 20 条最稳定；
+  // Forward 的 sectionMode 会在需要时继续传入 page=2、3...。
   const count = 20;
-  const maxPages = 100;
-  const allItems = [];
+  const start = (page - 1) * count;
+  const pageItems = await fetchCollectionPage(listId, start, count);
 
-  // 豆瓣 subject_collection 接口每次最多稳定返回 20 条，
-  // 因此由 Widget 主动连续翻页，直到完整读取整个片单。
-  for (let pageIndex = 0; pageIndex < maxPages; pageIndex++) {
-    const start = pageIndex * count;
-    const pageItems = await fetchCollectionPage(listId, start, count);
-
-    if (!pageItems.length) break;
-    allItems.push(...pageItems);
-
-    if (pageItems.length < count) break;
-  }
-
-  // 保留豆瓣原始排序，仅按 Subject ID 去重。
+  // 单页内保留豆瓣原始排序，仅按 Subject ID 去重。
   const seen = new Set();
-  return allItems
+  return pageItems
     .map(item => item?.id)
     .filter(id => id != null)
     .map(id => String(id))
