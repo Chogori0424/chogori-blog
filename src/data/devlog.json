@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-09-21",
+    "items": {
+      "added": [],
+      "improved": [],
+      "fixed": [],
+      "removed": [],
+      "docs": [
+        "新增家庭媒体服务器架构定稿文章：记录从 Windows 常驻链路迁移到 SV7 Linux 小主机的设计，明确 115、MoviePilot、OpenClaw、Codex、P115StrmHelper、独立 NFO/Artwork 与 Emby 的职责边界。"
+      ],
+      "style": []
+    }
+  },
+  {
     "date": "2026-05-23",
     "items": {
       "added": [],
