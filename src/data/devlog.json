@@ -7,7 +7,7 @@
       "fixed": [],
       "removed": [],
       "docs": [
-        "新增家庭媒体服务器架构定稿文章：记录从 Windows 常驻链路迁移到 SV7 Linux 小主机的设计，明确 115、MoviePilot、OpenClaw、Codex、P115StrmHelper、独立 NFO/Artwork 与 Emby 的职责边界。"
+        "新增家庭媒体服务器架构定稿文章：记录从 Windows 常驻链路迁移到 SV7 Linux 小主机的设计，明确 115、MoviePilot、OpenClaw、Codex、P115StrmHelper、独立 NFO/Artwork 与 Emby 的职责边界。；新增 MoviePilot、Symedia 与 CloudMediaSync（CMS）详细对比文章：结合 115、Emby、STRM、OpenList、CloudDrive2、Telegram、MCP 与 Codex 的实际需求，记录以 MoviePilot V3 为主控、Symedia 作为候选整理层、暂不引入 CMS 的取舍。"
       ],
       "style": []
     }
