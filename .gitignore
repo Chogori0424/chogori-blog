@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# 完整手机清单、分析及实机日志只留本地
+surge/inventory/*
+!surge/inventory/support-matrix.csv
+surge/private/
+**/iphone-apps*.csv

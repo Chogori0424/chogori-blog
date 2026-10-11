@@ -1,68 +1,46 @@
-// Chogori Startup Ads Lite
-// Scope: Xianyu splash (request), JD and Meituan Waimai splash (responses).
-// No external dependencies, persistent storage, telemetry, or network requests.
+// 京东开屏候选。来源和状态见 rules/jd.json；无网络、存储或日志。
 (() => {
-  const url = ($request && $request.url) || "";
-
-  // Xianyu: return a small, successful empty ad payload without a network round trip.
-  if (typeof $response === "undefined") {
-    if (/^https:\/\/iyes\.youku\.com\/uts\/v1\/start\//.test(url)) {
-      $done({
-        response: {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-          body: "{}"
-        }
-      });
-    } else {
-      $done({});
-    }
-    return;
-  }
-
-  // Fail open: unrecognized payloads and malformed JSON are passed through untouched.
-  if (typeof $response.body !== "string") {
-    $done({});
-    return;
-  }
+  let result = {};
   try {
-    const payload = JSON.parse($response.body);
-    let modified = false;
-
-    if (/^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=start(?:&|$)/.test(url)) {
-      if (payload && Array.isArray(payload.images)) {
-        payload.images.forEach((group) => {
-          if (!Array.isArray(group)) return;
-          group.forEach((item) => {
-            if (!item || typeof item !== "object" || !("showTimes" in item)) return;
-            item.showTimes = 0;
-            item.onlineTime = "2030-12-24 00:00:00";
-            item.referralsTime = "2030-12-25 00:00:00";
-            item.time = 0;
-            modified = true;
-          });
-        });
-        if ("showTimesDaily" in payload) {
-          payload.showTimesDaily = 0;
-          modified = true;
-        }
-      }
-    } else if (/^https?:\/\/wmapi\.meituan\.com\/api\/v\d+\/loadInfo(?:\?|$)/.test(url)) {
-      const startpicture = payload && payload.data && payload.data.startpicture;
-      if (startpicture && typeof startpicture === "object" && !Array.isArray(startpicture)) {
-        if (Array.isArray(startpicture.ad)) {
-          startpicture.ad = [];
-          modified = true;
-        }
-        if (Array.isArray(startpicture.mk)) {
-          startpicture.mk = [];
-          modified = true;
+    if (typeof $request === "undefined" || typeof $response === "undefined") {
+      $done(result);
+      return;
+    }
+    const match = /^https:\/\/api\.m\.jd\.com\/client\.action\?([^#]+)$/.exec($request.url || "");
+    const params = match ? match[1].split("&") : [];
+    const ids = params.filter(p => /^functionId=/.test(p));
+    if (ids.length !== 1 || ids[0] !== "functionId=start" ||
+        !/^(GET|POST)$/.test($request.method || "") ||
+        $response.status !== 200 || typeof $response.body !== "string") {
+      $done(result);
+      return;
+    }
+    const obj = JSON.parse($response.body);
+    const record = x => x !== null && typeof x === "object" && !Array.isArray(x);
+    const own = (x, k) => Object.prototype.hasOwnProperty.call(x, k);
+    // 结构变化、部分坏数据、业务错误均原样放行。
+    if (!record(obj) || !Array.isArray(obj.images) ||
+        (own(obj, "code") && obj.code !== 0 && obj.code !== "0") ||
+        !obj.images.every(g => Array.isArray(g) && g.every(record))) {
+      $done(result);
+      return;
+    }
+    let changed = false;
+    for (const group of obj.images) {
+      for (const item of group) {
+        if (typeof item.showTimes === "number" && Number.isFinite(item.showTimes) && item.showTimes > 0) {
+          item.showTimes = 0;
+          if (typeof item.time === "number" && Number.isFinite(item.time)) item.time = 0;
+          changed = true;
         }
       }
     }
-
-    $done(modified ? { body: JSON.stringify(payload) } : {});
+    if (changed) {
+      if (typeof obj.showTimesDaily === "number" && Number.isFinite(obj.showTimesDaily)) obj.showTimesDaily = 0;
+      result = { body: JSON.stringify(obj) };
+    }
   } catch (_) {
-    $done({});
+    // 不记录 URL、响应或异常详情。
   }
+  $done(result);
 })();
