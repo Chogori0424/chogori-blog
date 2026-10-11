@@ -1,0 +1,644 @@
+{
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-11"
+  },
+  "apps": [
+    {
+      "app": "百度贴吧",
+      "sections": {
+        "[Rule]": [
+          961
+        ],
+        "[Script]": [
+          8633
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "哔哩哔哩",
+      "sections": {
+        "[Rule]": [
+          1047
+        ],
+        "[Header Rewrite]": [
+          3909
+        ],
+        "[Body Rewrite]": [
+          5476
+        ],
+        "[Map Local]": [
+          5992
+        ],
+        "[Script]": [
+          8650
+        ]
+      },
+      "startup_evidence": [
+        5483
+      ]
+    },
+    {
+      "app": "懂车帝",
+      "sections": {
+        "[Rule]": [
+          1178
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "抖音",
+      "sections": {
+        "[Rule]": [
+          1186
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "豆瓣",
+      "sections": {
+        "[Rule]": [
+          1196
+        ],
+        "[URL Rewrite]": [
+          4280
+        ],
+        "[Map Local]": [
+          6281
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "高德地图",
+      "sections": {
+        "[Rule]": [
+          1312
+        ],
+        "[URL Rewrite]": [
+          4377
+        ],
+        "[Map Local]": [
+          6364
+        ]
+      },
+      "startup_evidence": [
+        4380
+      ]
+    },
+    {
+      "app": "虎扑",
+      "sections": {
+        "[Rule]": [
+          1466
+        ],
+        "[URL Rewrite]": [
+          4466
+        ],
+        "[Map Local]": [
+          6509
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "虎牙直播",
+      "sections": {
+        "[Rule]": [
+          1474
+        ],
+        "[URL Rewrite]": [
+          4477
+        ],
+        "[Map Local]": [
+          6519
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "京东",
+      "sections": {
+        "[Rule]": [
+          1628
+        ],
+        "[URL Rewrite]": [
+          4549
+        ],
+        "[Script]": [
+          8802
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "美团",
+      "sections": {
+        "[Rule]": [
+          2081
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "咪咕视频",
+      "sections": {
+        "[Rule]": [
+          2125
+        ],
+        "[Map Local]": [
+          6935
+        ],
+        "[Script]": [
+          8924
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "米家",
+      "sections": {
+        "[Rule]": [
+          2136
+        ],
+        "[Map Local]": [
+          6952
+        ]
+      },
+      "startup_evidence": [
+        6954,
+        6956
+      ]
+    },
+    {
+      "app": "网易云音乐",
+      "sections": {
+        "[Rule]": [
+          2432,
+          3196
+        ],
+        "[Map Local]": [
+          7169,
+          7734
+        ],
+        "[Script]": [
+          8972,
+          9220
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "闲鱼",
+      "sections": {
+        "[Rule]": [
+          2440,
+          3272
+        ],
+        "[URL Rewrite]": [
+          4876,
+          5218
+        ],
+        "[Body Rewrite]": [
+          5615,
+          5702
+        ],
+        "[Map Local]": [
+          7181,
+          7865
+        ],
+        "[Script]": [
+          8992,
+          9251
+        ]
+      },
+      "startup_evidence": [
+        7193,
+        7882
+      ]
+    },
+    {
+      "app": "小红书",
+      "sections": {
+        "[Rule]": [
+          2445,
+          3281
+        ],
+        "[Map Local]": [
+          7195,
+          7924
+        ],
+        "[Script]": [
+          9015,
+          9277
+        ]
+      },
+      "startup_evidence": [
+        9027,
+        9289
+      ]
+    },
+    {
+      "app": "知乎",
+      "sections": {
+        "[Rule]": [
+          2459,
+          3762
+        ],
+        "[URL Rewrite]": [
+          4881,
+          5400
+        ],
+        "[Body Rewrite]": [
+          5626,
+          5750
+        ],
+        "[Map Local]": [
+          7215,
+          8335
+        ],
+        "[Script]": [
+          9046,
+          9368
+        ]
+      },
+      "startup_evidence": [
+        7218,
+        8338
+      ]
+    },
+    {
+      "app": "QQ音乐",
+      "sections": {
+        "[Rule]": [
+          2471
+        ],
+        "[URL Rewrite]": [
+          4902
+        ],
+        "[Map Local]": [
+          7251
+        ]
+      },
+      "startup_evidence": [
+        4905,
+        4906,
+        4907
+      ]
+    },
+    {
+      "app": "什么值得买",
+      "sections": {
+        "[Rule]": [
+          2534
+        ],
+        "[Map Local]": [
+          7335
+        ],
+        "[Script]": [
+          9115
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "淘宝",
+      "sections": {
+        "[Rule]": [
+          2735
+        ],
+        "[Map Local]": [
+          7486
+        ],
+        "[Script]": [
+          9185
+        ]
+      },
+      "startup_evidence": [
+        7494,
+        9187
+      ]
+    },
+    {
+      "app": "云闪付",
+      "sections": {
+        "[Rule]": [
+          3696
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "中国联通",
+      "sections": {
+        "[Rule]": [
+          3812
+        ],
+        "[Map Local]": [
+          8394
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "中国移动",
+      "sections": {
+        "[Rule]": [
+          3823
+        ],
+        "[URL Rewrite]": [
+          5427
+        ],
+        "[Map Local]": [
+          8426
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "百度网盘",
+      "sections": {
+        "[URL Rewrite]": [
+          4090
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "必胜客",
+      "sections": {
+        "[URL Rewrite]": [
+          4130
+        ],
+        "[Map Local]": [
+          5988
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "大众点评",
+      "sections": {
+        "[URL Rewrite]": [
+          4200
+        ],
+        "[Map Local]": [
+          6154
+        ],
+        "[Script]": [
+          8695
+        ]
+      },
+      "startup_evidence": [
+        4205
+      ]
+    },
+    {
+      "app": "得物",
+      "sections": {
+        "[URL Rewrite]": [
+          4224
+        ],
+        "[Map Local]": [
+          6177
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "国家医保服务平台",
+      "sections": {
+        "[URL Rewrite]": [
+          4405
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "航旅纵横",
+      "sections": {
+        "[URL Rewrite]": [
+          4435
+        ],
+        "[Script]": [
+          8771
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "华住会",
+      "sections": {
+        "[URL Rewrite]": [
+          4490
+        ],
+        "[Map Local]": [
+          6553
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "京东金融",
+      "sections": {
+        "[URL Rewrite]": [
+          4554
+        ],
+        "[Map Local]": [
+          6654
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "肯德基",
+      "sections": {
+        "[URL Rewrite]": [
+          4572
+        ],
+        "[Map Local]": [
+          6678
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "拼多多",
+      "sections": {
+        "[URL Rewrite]": [
+          4776
+        ],
+        "[Body Rewrite]": [
+          5597
+        ],
+        "[Map Local]": [
+          7038
+        ]
+      },
+      "startup_evidence": [
+        4778
+      ]
+    },
+    {
+      "app": "前程无忧51Job",
+      "sections": {
+        "[URL Rewrite]": [
+          4839
+        ],
+        "[Map Local]": [
+          7128
+        ],
+        "[Script]": [
+          8961
+        ]
+      },
+      "startup_evidence": [
+        4841,
+        4846
+      ]
+    },
+    {
+      "app": "山姆会员商店",
+      "sections": {
+        "[URL Rewrite]": [
+          4935
+        ],
+        "[Map Local]": [
+          7293
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "识货",
+      "sections": {
+        "[URL Rewrite]": [
+          4951
+        ],
+        "[Map Local]": [
+          7348
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "Spotify",
+      "sections": {
+        "[URL Rewrite]": [
+          5005
+        ],
+        "[Map Local]": [
+          7471
+        ],
+        "[Script]": [
+          9178
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "笑容加",
+      "sections": {
+        "[URL Rewrite]": [
+          5279
+        ],
+        "[Map Local]": [
+          8019
+        ],
+        "[Script]": [
+          9319
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "猎聘",
+      "sections": {
+        "[Map Local]": [
+          6748
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "麦当劳",
+      "sections": {
+        "[Map Local]": [
+          6865
+        ]
+      },
+      "startup_evidence": [
+        6867
+      ]
+    },
+    {
+      "app": "全民生活",
+      "sections": {
+        "[Map Local]": [
+          6964
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "YouTube",
+      "sections": {
+        "[Map Local]": [
+          8260
+        ],
+        "[Script]": [
+          9351
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "铁路12306",
+      "sections": {
+        "[Script]": [
+          8548
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "IT之家",
+      "sections": {
+        "[Script]": [
+          8788
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "酷安",
+      "sections": {
+        "[Script]": [
+          8813
+        ]
+      },
+      "startup_evidence": []
+    },
+    {
+      "app": "Reddit",
+      "sections": {
+        "[Script]": [
+          9108
+        ]
+      },
+      "startup_evidence": []
+    }
+  ]
+}

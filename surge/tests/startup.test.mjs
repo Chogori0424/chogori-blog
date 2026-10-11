@@ -1,52 +1,48 @@
+import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import vm from 'node:vm';
-import test from 'node:test';
-import {generate} from '../scripts/generate.mjs';
-const source = fs.readFileSync(new URL('../scripts/startup-lite.js', import.meta.url), 'utf8');
-const rule = JSON.parse(fs.readFileSync(new URL('../rules/jd.json', import.meta.url)));
-const url = 'https://api.m.jd.com/client.action?functionId=start';
-const fixture = {code:0,images:[[{showTimes:2,time:5,onlineTime:'original',other:7},{showTimes:0,time:9}]],showTimesDaily:3,countdown:6,business:{keep:true}};
-function run(u=url, body=JSON.stringify(fixture), options={}) {
-  const results=[];
-  const context={$request:{url:u,method:options.method||'GET'},$done:r=>results.push(r)};
-  if (!options.requestOnly) context.$response={status:options.status??200,body};
-  vm.runInNewContext(source, context, {timeout:100});
-  assert.equal(results.length,1,'必须只调用一次 $done');
-  return JSON.parse(JSON.stringify(results[0]));
-}
-test('精确 URL 正反例和主机/路径/参数边界', () => {
-  const regex = new RegExp(rule.pattern);
-  for (const u of [url,url+'&x=1','https://api.m.jd.com/client.action?x=1&functionId=start']) assert.equal(regex.test(u),true,u);
-  for (const u of ['http://api.m.jd.com/client.action?functionId=start',url+'Other',url+'#frag',url.replace('jd.com','jd.com.evil'),url.replace('client.action','clientXaction'),url.replace('start','login'),url.replace('start','%73tart'),'https://media.example/video.m3u8','https://app.bilibili.com/x/v2/splash/list','https://115.com/start','https://iyes.youku.com/uts/v1/start/']) {
-    assert.equal(regex.test(u),false,u);assert.deepEqual(run(u),{},u);
-  }
+import {manifest,generate} from '../scripts/generate.mjs';
+const root = new URL('../',import.meta.url);
+const excluded = ['YouTube','YouTube Music','虎扑','酷安','Spotify','哔哩哔哩'];
+test('只有三条已人工审查的原生规则，无脚本/业务分流',()=>{
+ assert.equal(manifest.rules.length,3);
+ assert.equal(new Set(manifest.rules.map(r=>r.hostname)).size,3);
+ assert.ok(manifest.rules.every(r=>!excluded.includes(r.app) && r.status==='candidate' && r.source_review==='accepted'));
+ const output=generate();
+ for(const forbidden of ['[Script]','[Rule]','[General]','[Proxy','[DNS]','PROCESS-NAME','reject-200','reject-dict'])assert.ok(!output.includes(forbidden));
+ assert.equal(output,fs.readFileSync(new URL('StartupAds-Lite.sgmodule',root),'utf8'));
+ assert.ok(!manifest.rules.some(r=>r.hostname.includes('*')));
 });
-test('只改广告计次和时长，保留业务、日期、countdown、零计次项', () => {
-  const obj=JSON.parse(run().body);
-  const expected=structuredClone(fixture);expected.images[0][0].showTimes=0;expected.images[0][0].time=0;expected.showTimesDaily=0;
-  assert.deepEqual(obj,expected);
-  assert.deepEqual(run(url+'&functionId=login'),{});
-  assert.deepEqual(run(url+'&functionId=start'),{});
+test('目标路径正例、业务/登录/播放/其他域名反例及交叉重复',()=>{
+ const negatives=['https://api.mcd.cn/bff/portal/home/menu','https://api.mcd.cn/login','https://home.mi.com/cgi-op/api/v1/resource/realtime/deviceList','https://home.mi.com/login','https://y.gtimg.cn/music/common/upload/album/image.jpg','https://music.y.qq.com/stream','https://api.bilibili.com/x/v2/splash/list','https://cdnfhnfile.115cdn.net/video.mp4','https://api.mcd.cn.example.org/bff/portal/home/splash','https://example.com/cgi-op/api/v1/resource/realtime/openingBanner'];
+ for(const rule of manifest.rules){
+  const regex = new RegExp(rule.line.split(' ')[0]);
+  assert.ok(regex.test(rule.positive));assert.ok(!regex.test(rule.negative));
+  for(const url of negatives)assert.ok(!regex.test(url),url);
+  for(const other of manifest.rules.filter(r=>r!==rule))assert.ok(!regex.test(other.positive));
+  // 原始前缀语义明确保留，不声称不存在扩展路径误匹配。
+  if(rule.section==='Map Local')assert.ok(regex.test(rule.positive.split('?')[0]+'Suffix'));
+ }
 });
-test('未知结构、坏 JSON、错误响应、错误方法、请求阶段均放行', () => {
-  for (const body of ['{','null','[]','{}','<html>error</html>',undefined,JSON.stringify({...fixture,code:401}),JSON.stringify({...fixture,images:[[{showTimes:2},null]]}),JSON.stringify({...fixture,images:[{showTimes:2}]}),JSON.stringify({...fixture,images:[[{showTimes:'2'}]]})]) assert.deepEqual(run(url,body===undefined?null:body),{});
-  for (const status of [204,302,403,500]) assert.deepEqual(run(url,JSON.stringify(fixture),{status}),{});
-  assert.deepEqual(run(url,JSON.stringify(fixture),{method:'DELETE'}),{});
-  assert.deepEqual(run(url,JSON.stringify(fixture),{requestOnly:true}),{});
-  const results=[];vm.runInNewContext(source,{$done:r=>results.push(r)});assert.equal(results.length,1);assert.equal(Object.keys(results[0]).length,0);
+test('Map Local 脱敏模拟响应保留上游状态、内容及 Content-Type',()=>{
+ for(const r of manifest.rules.filter(r=>r.section==='Map Local')){
+  const fields=Object.fromEntries([...r.line.matchAll(/([\w-]+)=("[^"]*"|\S+)/g)].map(m=>[m[1],m[2].replace(/^"|"$/g,'')]));
+  assert.equal(fields['status-code'],'200');assert.equal(fields['data-type'],'text');
+  if(r.app==='米家'){assert.deepEqual(JSON.parse(fields.data),{});assert.equal(fields.header,'Content-Type:application/json');}
+  else {assert.equal(fields.data,' ');assert.ok(!fields.header);}
+ }
 });
-test('模块生成一致、独立测试地址、没有宽 MITM 或重复脚本', () => {
-  const previewURL=new URL('../StartupAds-Lite.candidate.sgmodule',import.meta.url);
-  assert.ok(fs.existsSync(previewURL), '必须先生成候选模块');
-  const preview=fs.readFileSync(previewURL,'utf8');
-  const ref=preview.match(/chogori-blog\/([0-9a-f]{40})\/surge\/scripts/)[1];
-  assert.equal(preview,generate(ref,true));
-  assert.equal(fs.readFileSync(new URL('../StartupAds-Lite.sgmodule',import.meta.url),'utf8'),generate(ref));
-  assert.equal(preview.split('\n').filter(l=>l.startsWith('京东_开屏 =')).length,1);
-  assert.ok(preview.includes('hostname = %APPEND% api.m.jd.com'));
-  assert.ok(!preview.includes('/main/surge/scripts'));
-  assert.ok(!preview.includes('reject'));
-  assert.equal(rule.enabled,false);
-  assert.equal(rule.status,'candidate');
+test('来源固定、GPL 许可及唯一源码行',()=>{
+ assert.match(manifest.source.ref,/^[0-9a-f]{40}$/);assert.match(manifest.source.sha256,/^[0-9a-f]{64}$/);
+ assert.equal(manifest.source.license,'GPL-3.0');assert.equal(new Set(manifest.rules.map(r=>r.source_line)).size,3);
+ assert.ok(fs.readFileSync(new URL('licenses/fmz200-GPL-3.0.txt',root),'utf8').includes('GNU GENERAL PUBLIC LICENSE'));
+});
+// 可选：以人工下载的固定上游快照核验逐字相等。此测试不下载或执行远端代码。
+if(process.env.SURGE_SOURCE_SNAPSHOT)test('固定上游快照校验和及逐字一致',()=>{
+ const bytes=fs.readFileSync(process.env.SURGE_SOURCE_SNAPSHOT);
+ return import('node:crypto').then(({createHash})=>{
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),manifest.source.sha256);
+  const lines=bytes.toString('utf8').split(/\r?\n/);
+  for(const r of manifest.rules)assert.equal(r.line,lines[r.source_line-1]);
+ });
 });

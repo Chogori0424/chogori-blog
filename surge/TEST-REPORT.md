@@ -1,26 +1,32 @@
 # 测试报告
 
-日期：2026-10-11（Asia/Shanghai）。安装清单提供的 Surge iOS 版本为 5.22.1；设备实时版本没有另行读取。检查工具为本机 Surge Mac 6.10.0 (12480)。
+执行日期 2026-10-11 至 2026-10-12。仅本地/公开源码检查，没有安装独立模块，没有重新抓取 iPhone 请求，也没有完成当前 App 的真实去广告验证。
 
-| 项目 | 结果与边界 |
-| --- | --- |
-| 原生配置静态检查 | 正式入口与候选分别合成离线最小配置，用 surge-cli --check 返回 OK；没有装载至现用配置。不等同于 iOS 安装测试 |
-| JavaScript 语法 | node --check 通过 |
-| 正则/模拟响应 | Node 4 组测试通过，覆盖参数顺序、路径/主机边界、非目标影音请求、重复 functionId、200/错误状态、JSON 异常、嵌套坏结构、方法/请求阶段、业务字段保留、单次 $done |
-| CSV 解析 | Python 3 组测试通过，涵盖 UTF-8/BOM/UTF-16 BOM/GB18030、重复与冲突、缺字段、版本字符串、受保护影音状态 |
-| 生成一致性 | 两个模块逐字等于生成器输出，候选仅一条脚本/一个精确 MITM 主机，不引用 main JS |
-| 公共脚本 | 不可变 SHA 的公开 raw 地址 HTTP GET 成功；下载字节与本地脚本一致 |
-| 公共模块 | 发布后检查 PR 分支两个 raw 模块地址及所有 script-path，下载与本地字节一致；正式 main 地址在未合并时可能 404，不声称已可订阅 |
-| 内部重复/冲突 | 候选只有京东一个响应脚本，无 URL Rewrite、Map Local、通用主机或框架；内部无重复。iPhone 其他模块的完整冲突审查未完成 |
-| 隐私 | 原始清单、完整分析、完整报告、逐 App 研究记录在 inventory 被忽略；公共矩阵 8 个已审查规则 App，无 Bundle ID/版本/账号/设备标识；不导出实机请求日志 |
-| 博客范围 | 按 AGENTS.md 运行 npm run build 成功；只加规定的开发日志，未修改文章、部署配置或其他博客功能 |
-| iPhone USB | Dashboard 实际连接成功，京东与高德主机筛选无可用启动记录；未安装或启用候选，未修改配置 |
-| 真正 App 效果 | 未测试，verified 数量为 0。未测试登录、首页、商品详情、缓存、蜂窝/Wi-Fi、影音回归，不把模拟测试当作成功 |
+| 检查 | 结果 | 限制 |
+| --- | --- | --- |
+| Surge CLI `--check` | 通过 | 将生成模块的 sections 放入临时最小 profile，展开 `%APPEND%`，用现装 Mac Surge 离线解析；不是 iOS 运行证明；不加载到生产配置 |
+| Node 生成器语法 | `node --check` 通过 | Surge 中没有 HTTP JavaScript，旧京东 JS 已删除 |
+| Node 测试 | 5 项通过（包含固定源快照校验） | 正例/非目标域名、登录、播放、菜单/设备反例；规则交叉不匹配；源文件 SHA256 与三行逐字一致 |
+| Map Local 模拟 | 200 单空格与 200 JSON 空对象/Content-Type 通过 | 没有执行 App；不能证明业务接受模拟响应 |
+| Python CSV 测试 | 4 项通过 | UTF-8/BOM/UTF-16/GB18030、去重、版本字符串、缺列、冲突、影音和六个现有独立方案排除 |
+| 生成一致性 | `generate.mjs --check` 通过 | 源变更后必须再生成 |
+| 重复与冲突 | 三条规则、三主机，内部无重复/交叉样例命中 | 没有读取或改动用户其他独立模块，跨模块冲突需启用前确认 |
+| 来源可访问 | 固定 fmz200 原始模块、GPL 文件及推荐模块源码实际获取成功 | 链接可访问不等于当前 App 有效；未来失效不影响本模块运行，因为无远端依赖 |
+| 隐私 | 原始 CSV/完整分析被 gitignore；公开矩阵只有三条规则支持信息 | 禁止强制提交本地 inventory 文件和网络日志 |
+| 博客构建 | 提交前执行 `npm run build` | 结果见 PR 验证记录 |
+| 实机 | **未测试** | 三条均 candidate，0 条 verified |
 
-正式模块启用 **0 规则/0 主机**。独立候选启用后尝试处理 **1 规则/1 主机**，命中与效果尚无真实证据。高德、闲鱼、什么值得买、微博只有研究来源，未生成可执行规则。
+实际命令：
 
-请求脚本返回结构的旧版本已审查，但本轮实现全部为响应脚本。异常返回空对象而非伪造成功响应。缓冲上限 262144 字节，超限按官方文档透传；没有取消证书验证或启用全域 MITM。
+```sh
+node --check surge/scripts/generate.mjs
+SURGE_SOURCE_SNAPSHOT=/tmp/surge-community/fmz200/Surge/module/blockAds.module node --test surge/tests/startup.test.mjs
+python3 -m unittest discover -s surge/tests -p '*_test.py'
+node surge/scripts/generate.mjs --check
+/Applications/Surge.app/Contents/Applications/surge-cli --check /tmp/startup-community-check.conf
+npm run build
+```
 
-潜在冲突：综合模块抢先脚本匹配、Rewrite/Map Local 提前返回、同主机业务请求解密、现有缓存。出现启动、登录或播放异常先停用候选；无需更改代理/DNS/FINAL。真实验收方法见 README。
+API 两条原始正则为前缀匹配，测试明确保留 suffix 也命中；不声称对未来同前缀新业务路径绝对无影响。麦当劳响应单空格非 JSON，米家响应空对象不是真实初始化响应；发生异常先禁用本模块并冷启动对应 App。用户日后选择 QQ音乐/麦当劳/米家相关独立模块，应从此统一模块去掉重叠 App 条目，重新生成、检查后审核发布。
 
-清单统计和广告可能性是本地静态分析：125 个唯一 App，50 可能有开屏，46 值得观察，5 candidate/41 unsupported/79 excluded；本轮未穷尽所有上游。逐项在已取得的综合规则中检索品牌线索，46 项均有本地研究记录，30 项发现相关品牌规则，但这些规则并不都属于开屏，未通过安全合同审查不得启用。
+统一入口的 GitHub PR 分支下载与本地文件一致性在推送后复核；main 的正式订阅地址需等待 PR 合并才能取得本轮版本。不自动合并。

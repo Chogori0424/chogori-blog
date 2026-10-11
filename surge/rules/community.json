@@ -1,0 +1,59 @@
+{
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-11"
+  },
+  "rules": [
+    {
+      "app": "QQ音乐",
+      "section": "URL Rewrite",
+      "line": "^https?:\\/\\/y\\.gtimg\\.cn\\/music\\/common\\/upload\\/t_splash_info\\/ - reject",
+      "source_line": 4905,
+      "hostname": "y.gtimg.cn",
+      "enabled": true,
+      "status": "candidate",
+      "source_review": "accepted",
+      "device_test": "未测试",
+      "risk": "仅拒绝明确开屏素材路径；不采用上游任意域名/IP 变体，不覆盖全部开屏变体",
+      "positive": "https://y.gtimg.cn/music/common/upload/t_splash_info/test.json",
+      "negative": "https://y.gtimg.cn/music/common/upload/album/test.json"
+    },
+    {
+      "app": "麦当劳",
+      "section": "Map Local",
+      "line": "^https?:\\/\\/api\\.mcd\\.cn\\/bff\\/portal\\/home\\/splash data-type=text data=\" \" status-code=200",
+      "source_line": 6867,
+      "hostname": "api.mcd.cn",
+      "enabled": true,
+      "status": "candidate",
+      "source_review": "accepted",
+      "device_test": "未测试",
+      "risk": "继承上游 200 单空格响应；非 JSON，App 是否接受未实测；保留上游前缀匹配",
+      "positive": "https://api.mcd.cn/bff/portal/home/splash?test=1",
+      "negative": "https://api.mcd.cn/bff/portal/home/menu"
+    },
+    {
+      "app": "米家",
+      "section": "Map Local",
+      "line": "^https?:\\/\\/home\\.mi\\.com\\/cgi-op\\/api\\/v1\\/resource\\/realtime\\/openingBanner data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "source_line": 6956,
+      "hostname": "home.mi.com",
+      "enabled": true,
+      "status": "candidate",
+      "source_review": "accepted",
+      "device_test": "未测试",
+      "risk": "仅 realtime openingBanner；不采用混合推荐/设备页面规则；保留上游前缀匹配",
+      "positive": "https://home.mi.com/cgi-op/api/v1/resource/realtime/openingBanner?test=1",
+      "negative": "https://home.mi.com/cgi-op/api/v1/resource/realtime/deviceList"
+    }
+  ]
+}

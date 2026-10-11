@@ -1,6 +1,20 @@
 #!name=Chogori | 开屏精简
-#!desc=安全入口：候选未启用；实机验证后人工发布
+#!desc=社区原生规则精选：QQ音乐、麦当劳、米家；未完成本机效果验证
 #!system=ios
 
-# 生成源：rules/jd.json；审查日期 2026-10-11；无真实 App 验证。
-# 当前启用 0 条规则、0 个 MITM hostname。候选测试入口见 README.md。
+# 派生整理：Chogori0424；上游 fmz200 / 奶思；GPL-3.0，见 licenses/ 与 NOTICE.md
+# 来源 https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module
+# 文件最近维护 2026-09-10；核实 2026-10-11；不自动同步
+
+[URL Rewrite]
+# QQ音乐 / 开屏 / candidate / source L4905 / 实机未测试
+^https?:\/\/y\.gtimg\.cn\/music\/common\/upload\/t_splash_info\/ - reject
+
+[Map Local]
+# 麦当劳 / 开屏 / candidate / source L6867 / 实机未测试
+^https?:\/\/api\.mcd\.cn\/bff\/portal\/home\/splash data-type=text data=" " status-code=200
+# 米家 / 开屏 / candidate / source L6956 / 实机未测试
+^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/resource\/realtime\/openingBanner data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% y.gtimg.cn, api.mcd.cn, home.mi.com

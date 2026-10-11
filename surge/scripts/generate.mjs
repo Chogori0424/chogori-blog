@@ -2,16 +2,27 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export function generate(ref, candidate = false) {
-  if (!/^[0-9a-f]{40}$/.test(ref)) throw new Error('必须固定到已推送的 40 位脚本提交');
-  const r = JSON.parse(fs.readFileSync(path.join(root, 'rules/jd.json'), 'utf8'));
-  const header = `#!name=Chogori | 开屏精简${candidate ? '候选测试' : ''}\n#!desc=${candidate ? '京东候选，仅供逐项实测，未验证效果' : '安全入口：候选未启用；实机验证后人工发布'}\n#!system=ios\n\n# 生成源：rules/jd.json；审查日期 2026-10-11；无真实 App 验证。\n`;
-  if (!candidate && !r.enabled) return header + '# 当前启用 0 条规则、0 个 MITM hostname。候选测试入口见 README.md。\n';
-  if (r.enabled && r.status !== 'verified') throw new Error('未经实机验证不得发布正式规则');
-  return header + `# ${r.app} / 开屏 / ${r.status} / ${r.source}\n[Script]\n京东_开屏 = type=http-response,pattern=${r.pattern},requires-body=true,max-size=262144,timeout=5,script-path=https://raw.githubusercontent.com/Chogori0424/chogori-blog/${ref}/surge/scripts/startup-lite.js\n\n[MITM]\nhostname = %APPEND% ${r.hostname}\n`;
+export const manifest = JSON.parse(fs.readFileSync(path.join(root, 'rules/community.json'), 'utf8'));
+export function generate() {
+  const {source, rules} = manifest;
+  const active = rules.filter(r => r.enabled);
+  if (new Set(active.map(r => r.line)).size !== active.length) throw new Error('重复规则');
+  if (active.some(r => r.source_review !== 'accepted' || r.hostname.includes('*'))) throw new Error('未审查或过宽 hostname');
+  let out = '#!name=Chogori | 开屏精简\n#!desc=社区原生规则精选：QQ音乐、麦当劳、米家；未完成本机效果验证\n#!system=ios\n\n';
+  out += '# 派生整理：Chogori0424；上游 fmz200 / 奶思；GPL-3.0，见 licenses/ 与 NOTICE.md\n';
+  out += `# 来源 ${source.url}\n# 文件最近维护 ${source.file_updated}；核实 ${source.review_date}；不自动同步\n`;
+  for (const section of ['URL Rewrite', 'Map Local']) {
+    out += `\n[${section}]\n`;
+    for (const rule of active.filter(r => r.section === section)) {
+      out += `# ${rule.app} / 开屏 / ${rule.status} / source L${rule.source_line} / 实机未测试\n${rule.line}\n`;
+    }
+  }
+  out += `\n[MITM]\nhostname = %APPEND% ${[...new Set(active.map(r => r.hostname))].join(', ')}\n`;
+  return out;
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const ref = process.argv[2];
-  fs.writeFileSync(path.join(root, 'StartupAds-Lite.sgmodule'), generate(ref));
-  fs.writeFileSync(path.join(root, 'StartupAds-Lite.candidate.sgmodule'), generate(ref, true));
+  const target = path.join(root, 'StartupAds-Lite.sgmodule');
+  if (process.argv.includes('--check')) {
+    if (fs.readFileSync(target, 'utf8') !== generate()) throw new Error('生成文件与源码不一致');
+  } else fs.writeFileSync(target, generate());
 }
