@@ -1,21 +1,6 @@
 #!name=Chogori | 开屏精简
-#!desc=轻量开屏处理：闲鱼、京东、美团外卖、高德地图、顺丰；不改B站/115/Emby；无全局广告域名拦截
+#!desc=安全入口：候选未启用；实机验证后人工发布
 #!system=ios
 
-# Precise startup endpoints only: no broad DOMAIN/DOMAIN-SUFFIX rules.
-[URL Rewrite]
-# 高德地图：开屏广告接口
-^https?://m\d+\.amap\.com/ws/valueadded/alimama/splash_screen/ _ reject
-# 顺丰速运：广告接口
-^https?://ccsp-egmas\.sf-express\.com/cx-app-base/base/app/ad/ _ reject
-
-[Script]
-# 闲鱼：在请求阶段返回空启动广告配置，不访问上游
-闲鱼_开屏 = type=http-request,pattern=^https:\/\/iyes\.youku\.com\/uts\/v1\/start\/,script-path=https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/scripts/startup-lite.js
-# 京东 / 美团外卖：只调整开屏相关字段，其他数据原样透传
-京东_开屏 = type=http-response,pattern=^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=start(?:&|$),requires-body=true,max-size=262144,script-path=https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/scripts/startup-lite.js
-美团外卖_开屏 = type=http-response,pattern=^https?:\/\/wmapi\.meituan\.com\/api\/v\d+\/loadInfo(?:\?|$),requires-body=true,max-size=262144,script-path=https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/scripts/startup-lite.js
-
-# Only these HTTPS hostnames are decrypted by this module.
-[MITM]
-hostname = %APPEND% m*.amap.com,ccsp-egmas.sf-express.com,iyes.youku.com,api.m.jd.com,wmapi.meituan.com
+# 生成源：rules/jd.json；审查日期 2026-10-11；无真实 App 验证。
+# 当前启用 0 条规则、0 个 MITM hostname。候选测试入口见 README.md。

@@ -31,3 +31,5 @@ surge/inventory/*
 !surge/inventory/support-matrix.csv
 surge/private/
 **/iphone-apps*.csv
+
+__pycache__/

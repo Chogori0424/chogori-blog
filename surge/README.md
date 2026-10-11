@@ -1,46 +1,73 @@
-# Chogori · Surge 开屏精简模块
+# Surge iOS 开屏精简模块
 
-个人使用、低维护成本的 iOS Surge 开屏广告模块。原则：**只处理命中的开屏请求，不叠加综合净化合集**。
+2026-10-11 审查版：正式入口默认 **0 条规则、0 个新增 MITM 主机**，当前没有去广告效果。京东在独立候选入口提供 **1 条响应脚本、1 个精确主机**，等待真实 App 验证。其他候选只保留研究证据，没有可安装实现。
 
-- 模块：[`StartupAds-Lite.sgmodule`](./StartupAds-Lite.sgmodule)
-- 脚本：[`scripts/startup-lite.js`](./scripts/startup-lite.js)
-- 稳定订阅地址（**需 PR 合并到 main 后才可使用**）：
-  `https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/StartupAds-Lite.sgmodule`
+稳定入口保持不变，PR 合并后可订阅：
 
-## 首批规则
+`https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/StartupAds-Lite.sgmodule`
 
-| App | 实现 | 说明 |
-| --- | --- | --- |
-| 高德地图 | URL Rewrite | 仅拦截 splash_screen 接口 |
-| 顺丰速运 | URL Rewrite | 仅拦截独立的 ad 接口 |
-| 闲鱼 | HTTP 请求脚本 | 对 `iyes.youku.com/uts/v1/start/` 返回 `{}` |
-| 京东 | HTTP 响应脚本 | 仅尝试关闭启动图片的展示次数/时间 |
-| 美团外卖 | HTTP 响应脚本 | 仅尝试清空 `startpicture.ad/mk` 数组 |
+PR 合并前的京东测试入口：
 
-**明确不处理：** Bilibili（避免既有规则/番剧冲突）、115/Emby/STRM/CDN、所有登录鉴权接口、App 首页推荐流、Safari 网页广告。百度网盘暂不收录：其开屏行为需要按当前 App 版本抓包验证，避免影响网盘功能。
+`https://raw.githubusercontent.com/Chogori0424/chogori-blog/feat/surge-startup-lite-20261011/surge/StartupAds-Lite.candidate.sgmodule`
 
-## 安装
+不要同时启用旧版模块。候选脚本固定到已发布提交 `2449ffc52688be28fce990fd71c9809368359a2d`，避免引用 main 尚不存在的文件。修改脚本必须先发布源码提交，再更新引用并核对下载内容。
 
-1. 合并包含本模块的 PR 后，在 Surge iOS 的「模块」中选择「从 URL 安装」，粘贴上面的稳定订阅地址。
-2. 确认 Surge 的 HTTPS 解密证书已安装并信任，并打开 HTTPS 解密及重写功能。
-3. 逐个彻底退出 App 再重新启动，观察开屏是否消失；有的开屏素材存在本地缓存，或走新的 API。
-4. **未经过 iOS 27 实机流量验证。** 任何 App 出现异常，先关闭本模块复测，再用 Surge 请求记录定位。Surge 对同一个响应只执行第一个匹配的 HTTP 响应脚本；不要同时为同一接口启用其他模块。
+## 支持状态
 
-## 与 AdGuard 搭配
+| App | 状态 | 实现 | 正式启用 |
+| --- | --- | --- | --- |
+| 京东 | candidate | 最小响应脚本，单独测试入口 | 否 |
+| 高德地图、闲鱼、什么值得买、微博 | candidate | 有开屏来源，合同/精确主机仍待研究 | 否 |
+| 网易云音乐、中国联通、百度贴吧 | unsupported | 已审查源文件，未获得独立开屏安全方案 | 否 |
+| 其他待研究目标 | unsupported | 本轮没有通过审查的方案 | 否 |
+| Bilibili、影音核心、金融支付、账号安全、Safari | excluded | 主动排除 | 否 |
 
-- AdGuard 开启 **Safari 内容拦截 / Safari 高级保护**；Surge 继续负责代理、DNS、HTTPS 解密和开屏规则。
-- AdGuard 的 **DNS 保护 / 本地 VPN** 不与 Surge 同时接管。不要把 AdGuard DNS 覆写进当前代理配置，尤其要保护 115 CDN 的直连链路。
-- 本模块只追加 5 个 MITM hostname 范围，不开启全局 MITM，且不含 DOMAIN 广告拦截规则。
-- 追加 MITM hostname 仍代表对这些域名的其他 HTTPS 连接也可能进行解密。发生 TLS/登录异常时优先关闭本模块回滚。
+`verified` 仅用于真实 iPhone 验证；`candidate` 表示可信来源等待实测，可能尚无实现；`unsupported` 表示本轮未建立可靠方案，并不证明互联网没有规则；`excluded` 表示主动排除。公共 [支持矩阵](inventory/support-matrix.csv) 只含已审查规则的 App，不含完整安装清单、Bundle ID 或版本。
 
-## 上游资料与维护
+本地 CSV 共识别 125 项、0 重复：50 项列为可能有开屏的观察目标，46 项值得先测试；5 candidate、41 unsupported、79 excluded。广告可能性是人工分流启发式，未证实当前安装版本有广告。3 个名称待确认。完整逐 App 结果只在被 Git 忽略的本地分析表。
 
-接口与字段结构参考：
-- [blackmatrix7 - 开屏去广告](https://github.com/blackmatrix7/ios_rule_script/tree/master/script/startup)
-- [BlueGrave/Surge - WhiteList.sgmodule](https://github.com/BlueGrave/Surge/blob/master/Module/WhiteList.sgmodule)
-- [Surge 官方 HTTP Response Script 文档](https://manual.nssurge.com/scripting/http-response.html)
-- [Surge 官方 URL Rewrite 文档](https://manual.nssurge.com/http/url-rewrite.html)
+## 目录与维护
 
-此处为独立编写的最小脚本实现，并不声称上游接口仍在最新版本 App 中有效。调整前请在 Surge 请求记录确认域名、路径与响应结构，避免直接复制数百条规则。
+```text
+surge/
+  StartupAds-Lite.sgmodule / StartupAds-Lite.candidate.sgmodule
+  scripts/startup-lite.js / generate.mjs / analyze-inventory.py
+  rules/jd.json / research.json
+  inventory/support-matrix.csv
+  tests/startup.test.mjs / inventory_test.py
+  README.md / CHANGELOG.md / SOURCE-AUDIT.md / TEST-REPORT.md
+```
 
-版本：v0.1.0（2026-10-11）。
+原始 CSV、`inventory/apps-analysis.csv`、`analysis-summary.json`、完整本地报告不提交。分析器只写本地，公共矩阵从审查规则源独立生成。支持 UTF-8/BOM、UTF-16 BOM、GB18030；版本保留字符串，按 Bundle ID 去重，冲突单独报告。Bundle ID 不用于推断域名，不使用 PROCESS-NAME。
+
+```sh
+python3 surge/scripts/analyze-inventory.py /path/to/local.csv
+python3 surge/tests/inventory_test.py
+node --check surge/scripts/startup-lite.js
+node --test surge/tests/startup.test.mjs
+node surge/scripts/generate.mjs 2449ffc52688be28fce990fd71c9809368359a2d
+```
+
+生成器拒绝未固定的脚本引用，并拒绝把非 verified 规则发布到正式入口。没有自动合并上游规则或新增 GitHub Actions。每次只研究一个 App，核对具体文件的提交时间，不能把仓库活跃时间等同于规则维护时间。
+
+## iPhone 验证流程
+
+本轮 Mac Dashboard 已通过 USB 连到 iPhone，检查过 CLI 和现有转发监听。按京东/高德主机筛选时没有启动记录，没有安装候选模块或改动设备配置。CLI 对 USB 请求的认证读取没有完成验证，不预设 6170 固定有效，不提取已保存密码。连接成功不等于去广告实测成功。
+
+1. 保持现状冷启动京东，记录开屏、首页与当前登录态。Dashboard 选择 iPhone 窗口，搜索 `api.m.jd.com`，不要使用本地 Mac 窗口数据。
+2. 用户自行安装候选入口。仅在已有 MITM 证书正常受信任时测试，不改变证书校验或扩大 HTTPS 范围。`api.m.jd.com` 其他 HTTPS 请求也会被解密，正则只能限定脚本执行范围。
+3. 核对 `/client.action`、唯一 `functionId=start`、状态 200、`images` 二维对象数组及脚本命中。只记录字段名、类型与计次变化，不导出 HAR、完整查询参数、Cookie、Token、账号数据或响应正文。
+4. 启用/停用候选各重复冷启动 3 次，检查开屏、首页耗时、登录、搜索、商品详情；Wi-Fi 与蜂窝各一次。影音服务仍按原路径验证。缓存优先用 App 自带清理，不要求卸载或退出账号。
+5. 开屏效果与核心功能都通过后，在本地记录日期、App/Surge 版本、方法和结论，再人工标为 verified。没有目标请求或一次没看到广告不能证明规则有效。
+
+脚本仅修改数字计次/时长，不改日期、countdown 或业务字段。未知 JSON、结构变化、业务错误、非 200、重复 functionId、其他方法/URL 均 `$done({})` 原样放行。返回只含 `{body: ...}`，不重写头，无网络访问、存储或日志。响应超过 262144 字节按官方文档跳过，未在 iOS 实测这个边界。
+
+## 冲突、回滚与下一批目标
+
+Surge 每个响应仅执行第一个匹配脚本。其他去广告模块、Map Local、Rewrite/Body Rewrite 可能抢先处理。模块内部无重复，与 iPhone 现有有效配置的冲突尚未验证。异常时先停用候选，重新启动 App，不改变代理、DNS、GEOIP、FINAL 或 B 站模块。AdGuard 继续只负责 Safari。
+
+旧规则完整保留在 Git 历史 `8bfd0882147bfd95dc7bcc31b073e9aa3efb9b43`，见 [来源审计](SOURCE-AUDIT.md)。旧版有已知风险，恢复安全状态应停用候选或使用零规则入口。
+
+下一批按顺序：京东、高德地图、闲鱼、什么值得买、微博、知乎、豆瓣、IT之家、酷安、航旅纵横。前五项有开屏来源线索，后五项先确认是否实际展示开屏，再定位独立接口。未经审查不添加正式规则。
+
+依据：[Surge URL Rewrite](https://manual.nssurge.com/http/url-rewrite.html)、[请求脚本](https://manual.nssurge.com/scripting/http-request.html)、[响应脚本](https://manual.nssurge.com/scripting/http-response.html)、[处理顺序](https://manual.nssurge.com/http/overview.html)。见 [测试报告](TEST-REPORT.md)。

@@ -38,7 +38,7 @@ test('未知结构、坏 JSON、错误响应、错误方法、请求阶段均放
 });
 test('模块生成一致、独立测试地址、没有宽 MITM 或重复脚本', () => {
   const previewURL=new URL('../StartupAds-Lite.candidate.sgmodule',import.meta.url);
-  if (!fs.existsSync(previewURL)) return; // 源码阶段还未生成，第二阶段必须生成后复测。
+  assert.ok(fs.existsSync(previewURL), '必须先生成候选模块');
   const preview=fs.readFileSync(previewURL,'utf8');
   const ref=preview.match(/chogori-blog\/([0-9a-f]{40})\/surge\/scripts/)[1];
   assert.equal(preview,generate(ref,true));
