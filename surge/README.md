@@ -2,10 +2,10 @@
 
 个人使用、低维护成本的 iOS Surge 开屏广告模块。原则：**只处理命中的开屏请求，不叠加综合净化合集**。
 
-- 模块：[\`StartupAds-Lite.sgmodule\`](./StartupAds-Lite.sgmodule)
-- 脚本：[\`scripts/startup-lite.js\`](./scripts/startup-lite.js)
+- 模块：[`StartupAds-Lite.sgmodule`](./StartupAds-Lite.sgmodule)
+- 脚本：[`scripts/startup-lite.js`](./scripts/startup-lite.js)
 - 稳定订阅地址（**需 PR 合并到 main 后才可使用**）：
-  \`https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/StartupAds-Lite.sgmodule\`
+  `https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/StartupAds-Lite.sgmodule`
 
 ## 首批规则
 
@@ -13,9 +13,9 @@
 | --- | --- | --- |
 | 高德地图 | URL Rewrite | 仅拦截 splash_screen 接口 |
 | 顺丰速运 | URL Rewrite | 仅拦截独立的 ad 接口 |
-| 闲鱼 | HTTP 请求脚本 | 对 \`iyes.youku.com/uts/v1/start/\` 返回 \`{}\` |
+| 闲鱼 | HTTP 请求脚本 | 对 `iyes.youku.com/uts/v1/start/` 返回 `{}` |
 | 京东 | HTTP 响应脚本 | 仅尝试关闭启动图片的展示次数/时间 |
-| 美团外卖 | HTTP 响应脚本 | 仅尝试清空 \`startpicture.ad/mk\` 数组 |
+| 美团外卖 | HTTP 响应脚本 | 仅尝试清空 `startpicture.ad/mk` 数组 |
 
 **明确不处理：** Bilibili（避免既有规则/番剧冲突）、115/Emby/STRM/CDN、所有登录鉴权接口、App 首页推荐流、Safari 网页广告。百度网盘暂不收录：其开屏行为需要按当前 App 版本抓包验证，避免影响网盘功能。
 
