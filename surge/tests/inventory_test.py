@@ -14,7 +14,7 @@ class InventoryTests(unittest.TestCase):
             self.assertEqual(len(rows),1)
             self.assertEqual(rows[0]['版本'],'001')
             self.assertEqual(stats['duplicates'],1)
-            self.assertEqual(m.analyze(rows)[0]['当前验证状态'],'candidate')
+            self.assertEqual(m.analyze(rows)[0]['当前验证状态'],'excluded')
     def test_bad_header_and_missing_bundle(self):
         for t in ['name,id,version\na,b,c\n','应用名称,Bundle ID,版本\na,,1\n']:
             with self.assertRaises(ValueError):m.parse(t.encode())

@@ -1,44 +1,82 @@
-# Surge iOS 开屏精简
+# Surge 社区广告精简
 
-从持续维护的社区原生 Surge 规则中按本地应用清单筛选，只维护统一入口 `StartupAds-Lite.sgmodule`。本轮采用 fmz200 合集中的三条原始规则，逐字保留，不开发广告接口或 JavaScript，不导入整个综合框架。
+2026-10-12 按用户明确选择，范围由“仅开屏”改为**各 App 完整社区广告规则的筛选整合**。保留 `StartupAds-Lite.sgmodule` 订阅路径，避免订阅地址再次变化。不是从零开发广告框架，不重新设计广告接口，不安装或改动用户现用配置。
 
-| App | 原生方案 | 规则数 | 精确 MITM hostname | 状态 |
+45 个匹配 App 均有归属：截图及原有独立方案、金融/账号保护范围对应 18 个匹配项排除；其余 **27 个 App 的全部 257 条原始来源条目** 按 App 维护。逐行审查后启用 **23 个 App / 98 条规则 / 43 个精确 MITM hostname**，其余 159 条有禁用原因。没有 HTTP 脚本、综合运行框架或远端运行依赖。启用并不表示实机通过，全部仍为 candidate。
+
+| App | 已维护原始条目 | 启用规则 | 精确 MITM 主机 | 状态 |
 | --- | --- | --- | --- | --- |
-| QQ音乐 | URL Rewrite：仅 t_splash_info 开屏素材 | 1 | y.gtimg.cn | candidate，来源已审查，本机未测试 |
-| 麦当劳 | Map Local：home/splash 返回上游 200 单空格 | 1 | api.mcd.cn | candidate，来源已审查，本机未测试 |
-| 米家 | Map Local：realtime/openingBanner 返回上游 200 空对象 | 1 | home.mi.com | candidate，来源已审查，本机未测试 |
+| 懂车帝 | 2 | 0 | 无 | 仅维护、暂不启用 |
+| 抖音 | 2 | 0 | 无 | 仅维护、暂不启用 |
+| 虎牙直播 | 11 | 3 | business.msstatic.com, cdnfile1.msstatic.com, live-ads.huya.com | candidate，实机未测试 |
+| 美团 | 10 | 6 | 无 | candidate，实机未测试 |
+| 咪咕视频 | 16 | 11 | common-sc.miguvideo.com, ggc.miguvideo.com, public-deliver9.miguvideo.com | candidate，实机未测试 |
+| 米家 | 3 | 3 | home.mi.com | candidate，实机未测试 |
+| 网易云音乐 | 32 | 3 | 无 | candidate，实机未测试 |
+| QQ音乐 | 39 | 15 | music.y.qq.com, us.l.qq.com, y.gtimg.cn | candidate，实机未测试 |
+| 淘宝 | 43 | 19 | acs.m.taobao.com | candidate，实机未测试 |
+| 中国联通 | 7 | 2 | m.client.10010.com, m1.ad.10010.com | candidate，实机未测试 |
+| 中国移动 | 4 | 1 | client.app.coc.10086.cn | candidate，实机未测试 |
+| 百度网盘 | 17 | 9 | issuecdn.baidupcs.com, ndstatic.cdn.bcebos.com, pan.baidu.com, staticsns.cdn.bcebos.com, update.pan.baidu.com | candidate，实机未测试 |
+| 必胜客 | 2 | 2 | res.pizzahut.com.cn | candidate，实机未测试 |
+| 大众点评 | 20 | 4 | img.meituan.net, mapi.dianping.com, rms.meituan.com, www.dpfile.com | candidate，实机未测试 |
+| 得物 | 2 | 1 | app.dewu.com | candidate，实机未测试 |
+| 航旅纵横 | 3 | 1 | oss.umetrip.com | candidate，实机未测试 |
+| 华住会 | 6 | 3 | hweb-hotel.huazhu.com, hweb-manager.huazhu.com | candidate，实机未测试 |
+| 肯德基 | 3 | 2 | res.kfc.com.cn | candidate，实机未测试 |
+| 拼多多 | 3 | 1 | api.pinduoduo.com, api.yangkeduo.com | candidate，实机未测试 |
+| 前程无忧51Job | 12 | 4 | appapi.51job.com, appapi.51jobapp.com, cupid.51job.com, cupid.51jobapp.com, img01.51jobcdn.com | candidate，实机未测试 |
+| 山姆会员商店 | 7 | 2 | api-sams.walmartmobile.cn | candidate，实机未测试 |
+| 识货 | 3 | 1 | sh-gateway.shihuo.cn | candidate，实机未测试 |
+| 笑容加 | 5 | 2 | wemallh5.usmile.com, www.myusmile.online | candidate，实机未测试 |
+| 猎聘 | 2 | 2 | api-ac.liepin.com, api-wanda.liepin.com | candidate，实机未测试 |
+| 麦当劳 | 1 | 1 | api.mcd.cn | candidate，实机未测试 |
+| 铁路12306 | 1 | 0 | 无 | 仅维护、暂不启用 |
+| Reddit | 1 | 0 | 无 | 仅维护、暂不启用 |
 
-合计 3 条、3 个 hostname、0 个 HTTP 脚本、0 个外部运行依赖。三条规则均完成源码/语法审查并进入统一模块；**没有声称当前 iPhone 去广告成功**。`candidate` 是实机状态，并不表示来源未审查；来源未审查或风险未明的规则不会生成到模块。`verified` 只用于真实设备确认；`unsupported` 表示本轮无可靠可采用的开屏适配；`excluded` 为主动排除。
+## 已有独立模块与保护边界
 
-YouTube、YouTube Music、虎扑、酷安、Spotify、哔哩哔哩明确排除。不修改其独立模块。115、Emby、STRM/CDN、Infuse、SenPlayer 及金融/支付/账号安全也不纳入。本次没有改动现用 Surge 的代理、DNS、策略组、GEOIP、FINAL，也没有安装任何推荐独立模块。
+截图确认已添加：IT之家、YouTube / YouTube Music、京东、什么值得买、小红书、知乎、虎扑、豆瓣、百度贴吧、酷安、闲鱼、高德地图。继续保留 Spotify、Bilibili 的原独立方案。上述 App 不生成规则，也不替换、修复或重复部署其模块；截图只能证明用户已选择/启用，不能证明实际去广告或业务回归。
 
-## 订阅入口与兼容性
+金融/支付/政务敏感范围继续排除（本次匹配项：云闪付、京东金融、全民生活、国家医保服务平台）。115生活、Emby、STRM/CDN、CloudDrive、Infuse、SenPlayer 等影音核心不纳入。未修改代理节点、策略组、DNS 设置、GEOIP、FINAL 或 AdGuard。模块新增的 [Rule] 只含审查后的广告/统计主机拒绝，不阻断 HTTP DNS、共享图片/视频 CDN、账号认证和软件/固件升级。
 
-合并后正式地址：[StartupAds-Lite.sgmodule](https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/StartupAds-Lite.sgmodule)。PR 尚未合并时 main 仍是旧内容；审核预览使用 [PR 分支入口](https://raw.githubusercontent.com/Chogori0424/chogori-blog/feat/surge-startup-lite-20261011/surge/StartupAds-Lite.sgmodule)，不要把旧 main 当成本轮结果。
+## 为什么四项只维护
 
-Map Local `data-type=text` 要求 Surge iOS 5.9.1+。参见 [官方 Map Local 文档](https://manual.nssurge.com/http/map-local.html) 与 [URL Rewrite 文档](https://manual.nssurge.com/http/url-rewrite.html)。原生 text 响应无需 `$done()`。HTTPS 命中需要已正确配置 MITM 信任与 Rewrite；本项目不会修改或自动安装证书。hostname 使用 `%APPEND%` 加三个精确主机，不自动扩大到域名后缀。
+- 懂车帝：只有共享图片 CDN 关键词，无法证明广告独占，可能误杀内容。
+- 抖音：共享图片 CDN 与设备/风控域名，账号和内容风险。
+- 铁路12306：第三方请求脚本仓库没有 LICENSE，JSON.parse 无异常放行；不擅自复制或创造替代接口。
+- Reddit：原脚本同时修改 NSFW 偏好，错误后可能返回部分处理对象；文件最后维护 2025-06-30。保留原始来源但不执行。
 
-麦当劳与米家保留上游前缀语义，扩展路径也可能匹配；未自行加锚点改变原规则。麦当劳单空格响应是否被当前 App 正确接受尚待测试。QQ音乐仅拒绝素材子目录，未复制任意域名/IP 变体，不会覆盖所有可能的开屏变体。
+其他 App 的非广告业务修改、混合账号/初始化、升级检查、视频 CDN、综合/未知第三方脚本、重复规则也不启用，逐条原因在 rules/apps/*.json。已授权完整去广告范围，不等于授权修改登录、权益或业务初始化。启用部分还包括推荐/推广与广告资源，具体边界见对应原始行；没有承诺全 App 广告全部消失。
 
-## 文件与维护
+## 订阅与安装
+
+正式入口：[StartupAds-Lite.sgmodule](https://raw.githubusercontent.com/Chogori0424/chogori-blog/main/surge/StartupAds-Lite.sgmodule)。此前 main 中没有该文件导致 404；只有 PR 合并并确认下载后才是可用正式入口。
+
+PR 开发预览：[分支入口](https://raw.githubusercontent.com/Chogori0424/chogori-blog/feat/surge-startup-lite-20261011/surge/StartupAds-Lite.sgmodule)。用户已经明确授权本轮完成后合并 PR；不会改变其他独立模块。安装/刷新订阅由用户在 iPhone 操作，本任务不代为启用。
+
+原生 Map Local text/tiny-gif 需要 Surge iOS 5.9.1+。HTTPS 需要已正确配置 MITM 信任和 Rewrite。使用 `%APPEND%` 加 43 个精确 hostname，不增加主机通配符和金融域名。**MITM 是主机级**：命中 App 的非广告请求也可能解密，但规则仅针对选定 URL；不能用 Bundle ID 或 PROCESS-NAME 隔离 iOS App。跨 App 共用主机的影响不能靠静态测试完全排除。AdGuard 保持 Safari 职责；没有加入综合 Safari 网页过滤，但相同主机/路径可能影响浏览器请求。
+
+## 文件及维护
 
 ```
 surge/
   StartupAds-Lite.sgmodule
-  scripts/generate.mjs            # 本地生成，不在 Surge 内运行
-  scripts/analyze-inventory.py    # 本地 CSV 分析
-  rules/community.json           # 三条原始规则、来源、状态与样例
-  rules/source-index.json         # 公开来源的按 App 审查索引
-  inventory/support-matrix.csv   # 脱敏支持矩阵
-  tests/                         # 正反例、原始行校验与本地分析测试
+  rules/community.json          # 来源、App 源清单与排除清单
+  rules/apps/*.json             # 27 App 全部原始条目、行号、启用/禁用原因
+  rules/source-index.json        # 45 App 公开来源索引
+  scripts/generate.mjs          # 本地生成，不在 Surge 内执行
+  scripts/analyze-inventory.py  # 本地 CSV 分析
+  inventory/support-matrix.csv # 脱敏支持/排除矩阵
+  tests/                       # 正反例、原始行、生成一致性测试
   licenses/fmz200-GPL-3.0.txt
   NOTICE.md / SOURCE-AUDIT.md / APP-MATCHING.md
   INDEPENDENT-MODULES.md / TEST-REPORT.md / CHANGELOG.md
 ```
 
-原始 CSV、完整分析表与包含版本/Bundle ID 的统计均在 `inventory/` 本地忽略，禁止手动 `git add -f`。公开文件不含完整安装目录、Cookie、Token、版本或 Bundle ID。
+原始 CSV、完整版本/Bundle ID 表仍本地 gitignore，不使用 git add -f。公共文件仅描述来源规则的支持状态，没有上传全手机目录、账号、Cookie、Token 或网络日志。
 
-更新流程：人工查看上游对应文件的提交与反馈 → 对照新本地 CSV → 逐条审查开屏作用范围、业务/许可风险 → 修改 community.json → 生成与测试 → PR 人工审核。生成器只读本地精选源，不下载或自动合并上游新增规则。独立模块只在 [选择清单](INDEPENDENT-MODULES.md) 推荐；用户未选择之前不整合。
+来源固定为 fmz200/wool_scripts 的原生 Surge 合集，最后文件提交 2026-09-10，核实 2026-10-12；原始 257 行均未改写，GPL 原文保留。不自动同步上游新增规则，不从安装名称推测接口。源 JSON 是完整审查档案，**enabled=false 的条目不会出现在生成模块**。
 
 ```sh
 node surge/scripts/generate.mjs
@@ -49,10 +87,12 @@ python3 -m unittest discover -s surge/tests -p '*_test.py'
 python3 surge/scripts/analyze-inventory.py /本地/应用清单.csv
 ```
 
-可选原始行证据校验：手工下载 rules/community.json 指定的 raw_url 到本地临时文件，然后设置 `SURGE_SOURCE_SNAPSHOT=/临时/文件` 运行 Node 测试，校验整文件 SHA256 和原始行。测试不执行上游代码。
+手工下载固定 raw_url 后，可用 `SURGE_SOURCE_SNAPSHOT=/临时/原始模块` 跑 Node 测试核对所有原始行和整文件 SHA256。生成器仅使用人工审查的本地源；不下载或执行第三方脚本。
 
-## 实机验证与回滚
+## 验证与回滚
 
-本轮不要求逐 App 抓包开发。先由用户选择是否启用此 PR 预览模块，再分别冷启动 QQ音乐、麦当劳、米家，检查开屏及播放/点单/设备控制和登录功能。Dashboard 只核对上述路径是否命中、状态码与内容类型，不保存 Cookie、账号或完整日志；静态测试不能替代这些结果。
+静态正反例、原始行/配置/模拟测试通过不等于 App 去广告成功。全部 23 个启用 App 均未完成当前设备的广告效果、登录与业务回归。用户启用后从实际常用 App 开始验证；Dashboard 只记录必要的脱敏路径、命中/状态，不持久保存私人请求。
 
-如业务异常，先禁用本模块并冷启动 App，必要时清除对应 App 广告缓存；不修改代理和 DNS。若日后选择对应独立模块，先从本通用模块移除该 App 的精选规则，避免重复命中。历史实现可从 Git 恢复；此前 candidate 入口与自写京东脚本已退出本轮方案，不再推荐订阅。AdGuard 保持 Safari 内容过滤职责，本模块没有新增网页规则，但相同主机的 HTTPS 仍按 Surge 主机级 MITM 处理，无法按 iOS 进程隔离。
+所有原始前缀匹配、空对象/单空格/透明 GIF 和广告 Reject 的响应合同均继承上游，不能保证当前客户端接受。其中中国联通广告 API 继承 tiny-gif 响应，米家 myTab 与华住推荐移除可能影响页面内容；不能将这些副作用隐藏成“只开屏”。百度 pcs/ad 与 pcs/adx 存在同动作前缀重叠，测试确认都是 reject，保留以覆盖不同 API 版本；不同时导入遮蔽 Map Local 的同主机 Domain Reject。
+
+如 App 出现异常，先禁用此统一模块并冷启动；不要改动代理、DNS 或已用独立模块。维护者可将对应 App 原始条目 enabled 设为 false，重新生成测试后提交审核。要回到此前三 App 范围，可使用固定 [5567d61 版本](https://raw.githubusercontent.com/Chogori0424/chogori-blog/5567d61fa688972285056cf47b6813789815b27d/surge/StartupAds-Lite.sgmodule)。旧自写京东/candidate 已删除，不再使用。

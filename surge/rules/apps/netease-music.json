@@ -1,0 +1,309 @@
+{
+  "app": "网易云音乐",
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-12"
+  },
+  "review_date": "2026-10-12",
+  "scope": "完整社区广告规则逐行审查；过滤非广告/业务风险/重复",
+  "device_test": "未测试",
+  "rules": [
+    {
+      "section": "Rule",
+      "source_line": 2434,
+      "line": "DOMAIN,iadmusicmat.music.126.net,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2435,
+      "line": "DOMAIN,iadmat.nosdn.127.net,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2436,
+      "line": "DOMAIN,iadmatapk.nosdn.127.net,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2437,
+      "line": "DOMAIN,httpdns.n.netease.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2438,
+      "line": "DOMAIN,httpdns.music.163.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 3198,
+      "line": "DOMAIN,iadmusicmat.music.126.net,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 3199,
+      "line": "DOMAIN,iadmat.nosdn.127.net,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 3200,
+      "line": "DOMAIN,iadmatapk.nosdn.127.net,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 3201,
+      "line": "DOMAIN,httpdns.n.netease.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 3202,
+      "line": "DOMAIN,httpdns.music.163.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7172,
+      "line": "https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163.com\\/e?api\\/ad data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7174,
+      "line": "^https?:\\/\\/interface\\d?\\.music\\.163\\.com\\/w?e?api\\/(side-bar\\/mini-program\\/music-service\\/account|delivery\\/(batch-deliver|deliver)|moment\\/tab\\/info\\/get|yunbei\\/account\\/entrance\\/get) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7176,
+      "line": "^https?:\\/\\/interface\\d?\\.music\\.163\\.com\\/eapi\\/(resource\\/comments?\\/musiciansaid|community\\/friends\\/fans-group\\/artist\\/group\\/get|user\\/sub\\/artist|music\\/songshare\\/text\\/recommend\\/get|mine\\/applet\\/redpoint|resniche\\/position\\/play\\/new\\/get) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7178,
+      "line": "^https?:\\/\\/interface\\d?\\.music\\.163.com\\/w?e?api\\/(search\\/(chart|default|rcmd\\/keyword|specialkeyword)|resource-exposure\\/|activity\\/bonus\\/playpage\\/time\\/query) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7179,
+      "line": "^https?:\\/\\/interface\\d?\\.music\\.163.com\\/eapi\\/(mlivestream\\/entrance\\/playpage|link\\/(position\\/show\\/strategy|scene\\/show)|ios\\/version|v\\d\\/content\\/exposure\\/comment\\/banner) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7737,
+      "line": "https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163.com\\/e?api\\/ad data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7740,
+      "line": "^https?:\\/\\/interface\\d?\\.music\\.163\\.com\\/w?e?api\\/(side-bar\\/mini-program\\/music-service\\/account|delivery\\/(batch-deliver|deliver)|moment\\/tab\\/info\\/get|yunbei\\/account\\/entrance\\/get) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7743,
+      "line": "^https?:\\/\\/interface\\d?\\.music\\.163\\.com\\/eapi\\/(resource\\/comments?\\/musiciansaid|community\\/friends\\/fans-group\\/artist\\/group\\/get|user\\/sub\\/artist|music\\/songshare\\/text\\/recommend\\/get|mine\\/applet\\/redpoint|resniche\\/position\\/play\\/new\\/get) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7746,
+      "line": "^https?:\\/\\/interface\\d?\\.music\\.163.com\\/w?e?api\\/(search\\/(chart|default|rcmd\\/keyword|specialkeyword)|resource-exposure\\/|activity\\/bonus\\/playpage\\/time\\/query) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7748,
+      "line": "^https?:\\/\\/interface\\d?\\.music\\.163.com\\/eapi\\/(mlivestream\\/entrance\\/playpage|link\\/(position\\/show\\/strategy|scene\\/show)|ios\\/version|v\\d\\/content\\/exposure\\/comment\\/banner) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 8975,
+      "line": "NetEaseCloudMusic_mian = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/(batch|v\\d\\/resource\\/comment\\/floor\\/get), script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 8978,
+      "line": "NetEaseCloudMusic_tab = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/link\\/home\\/framework\\/tab, script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20, argument=\"[{{{MY}}},{{{DT}}},{{{FX}}}]\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 8981,
+      "line": "NetEaseCloudMusic_home = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/(homepage\\/block\\/page|link\\/page\\/rcmd\\/(resource\\/show|block\\/resource\\/multi\\/refresh)), script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20, argument=\"[{PRGG},{PRRK},{PRDRD},{PRSCVPT},{PRST},{PRRR},{HMPR},{PRMST},{PRCN}]\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 8984,
+      "line": "NetEaseCloudMusic_fx = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/link\\/page\\/discovery\\/resource\\/show, script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 8987,
+      "line": "NetEaseCloudMusic_mybarad = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/link\\/position\\/show\\/resource, script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 8990,
+      "line": "NetEaseCloudMusic_foll = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/user\\/follow\\/users\\/mixed\\/get, script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 9223,
+      "line": "NetEaseCloudMusic_mian = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/(batch|v\\d\\/resource\\/comment\\/floor\\/get), script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 9226,
+      "line": "NetEaseCloudMusic_tab = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/link\\/home\\/framework\\/tab, script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20, argument=\"[{{{MY}}},{{{DT}}},{{{FX}}}]\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 9229,
+      "line": "NetEaseCloudMusic_home = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/(homepage\\/block\\/page|link\\/page\\/rcmd\\/(resource\\/show|block\\/resource\\/multi\\/refresh)), script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20, argument=\"[{PRGG},{PRRK},{PRDRD},{PRSCVPT},{PRST},{PRRR},{HMPR},{PRMST},{PRCN}]\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 9232,
+      "line": "NetEaseCloudMusic_fx = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/link\\/page\\/discovery\\/resource\\/show, script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 9235,
+      "line": "NetEaseCloudMusic_mybarad = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/link\\/position\\/show\\/resource, script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 9238,
+      "line": "NetEaseCloudMusic_foll = type=http-response, pattern=^https?:\\/\\/(ipv4|interface\\d?)\\.music\\.163\\.com\\/e?api\\/user\\/follow\\/users\\/mixed\\/get, script-path=https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js, requires-body=true, binary-body-mode=true, timeout=20",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    }
+  ]
+}

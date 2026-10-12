@@ -1,0 +1,39 @@
+{
+  "app": "懂车帝",
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-12"
+  },
+  "review_date": "2026-10-12",
+  "scope": "完整社区广告规则逐行审查；过滤非广告/业务风险/重复",
+  "device_test": "未测试",
+  "rules": [
+    {
+      "section": "Rule",
+      "source_line": 1179,
+      "line": "DOMAIN-KEYWORD,p3-pack.byteimg.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "仅共享素材 CDN 关键词，无法确认广告独占，可能影响图片",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 1180,
+      "line": "DOMAIN-KEYWORD,p6-pack.byteimg.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "仅共享素材 CDN 关键词，无法确认广告独占，可能影响图片",
+      "hostnames": []
+    }
+  ]
+}

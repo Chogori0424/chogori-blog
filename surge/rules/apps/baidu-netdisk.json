@@ -1,0 +1,192 @@
+{
+  "app": "百度网盘",
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-12"
+  },
+  "review_date": "2026-10-12",
+  "scope": "完整社区广告规则逐行审查；过滤非广告/业务风险/重复",
+  "device_test": "未测试",
+  "rules": [
+    {
+      "section": "URL Rewrite",
+      "source_line": 4092,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/rest\\/\\d\\.\\d\\/pcs\\/adx - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "pan.baidu.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4093,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/rest\\/2\\.0\\/pcs\\/ad - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "pan.baidu.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4094,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/act\\/v\\d\\/(bchannel|welfare)\\/list - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "pan.baidu.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4095,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/act\\/api\\/activityentry - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "pan.baidu.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4096,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/pmall\\/order\\/privilege\\/info - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "订单/权益接口，不处理",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4097,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/rest\\/.+\\/pcs\\/adx - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4098,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/api\\/useractivity\\/activity - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4099,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/act\\/.+\\/bchannel\\/list - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4100,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/api\\/certuser\\/get - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "账号认证接口，不处理",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4101,
+      "line": "^https?:\\/\\/pan\\.baidu\\.com\\/component\\/view\\/(1510|1130)\\?vip - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "VIP 业务组件，不处理",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4102,
+      "line": "^https?:\\/\\/ndstatic\\.cdn\\.bcebos\\.com\\/activity\\/welfare\\/js\\/.+\\.js - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "ndstatic.cdn.bcebos.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4103,
+      "line": "^https?:\\/\\/ndstatic\\.cdn\\.bcebos\\.com\\/activity\\/welfare\\/index\\.html - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "ndstatic.cdn.bcebos.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4104,
+      "line": "^https?:\\/\\/staticsns\\.cdn\\.bcebos\\.com\\/amis\\/.+/banner.png - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "staticsns.cdn.bcebos.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4105,
+      "line": "^https?:\\/\\/issuecdn\\.baidupcs\\.com\\/issue\\/netdisk\\/guanggao - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "issuecdn.baidupcs.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4106,
+      "line": "^https?:\\/\\/update\\.pan\\.baidu\\.com\\/statistics - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "update.pan.baidu.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4107,
+      "line": "^https?:\\/\\/fc-video\\.cdn\\.bcebos\\.com - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "视频 CDN，不处理",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4108,
+      "line": "^https?:\\/\\/rp\\.hpplay\\.cn\\/logouts - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "logout 相关路径及共享服务，不处理",
+      "hostnames": []
+    }
+  ]
+}

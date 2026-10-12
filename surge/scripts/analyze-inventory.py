@@ -60,30 +60,30 @@ def parse(data):
     return list(seen.values()), {'encoding': encoding, 'input_rows': len(rows), 'unique_apps': len(seen), 'duplicates': len(rows)-len(seen), 'conflicting_bundle_ids': sorted(set(conflicts))}
 
 
-INDEPENDENT = {'闲鱼','小红书','知乎','什么值得买','豆瓣','百度贴吧','高德地图','京东','IT之家'}
-EXPLICIT = {'YouTube','YouTube Music','虎扑','酷安','Spotify','哔哩哔哩'}
+EXPLICIT = {'IT之家','YouTube','YouTube Music','京东','什么值得买','小红书','知乎','虎扑','豆瓣','百度贴吧','酷安','闲鱼','高德地图','Spotify','哔哩哔哩'}
 
 def analyze(rows):
-    manifest = json.loads((ROOT/'rules/community.json').read_text())
-    selected = {r['app']: r for r in manifest['rules']}
-    catalog = json.loads((ROOT/'rules/source-index.json').read_text())
-    index = {r['app']: r for r in catalog['apps']}
-    result = []
+    manifest=json.loads((ROOT/'rules/community.json').read_text())
+    maintained={a['app']:json.loads((ROOT/a['file']).read_text()) for a in manifest['apps']}
+    catalog=json.loads((ROOT/'rules/source-index.json').read_text())
+    index={r['app']:r for r in catalog['apps']}
+    result=[]
     for r in rows:
-        name,bundle = r['应用名称'],r['Bundle ID']
-        special = {'iMovie 剪辑':'系统应用','Apple Store':'系统应用','Google Maps':'生活服务','YouTube Music':'音乐'}
-        category = special.get(name,next((g for g,names in GROUPS.items() if name in names.split()),'工具'))
-        info=selected.get(name);match=index.get(name)
+        name,bundle=r['应用名称'],r['Bundle ID']
+        special={'iMovie 剪辑':'系统应用','Apple Store':'系统应用','Google Maps':'生活服务','YouTube Music':'音乐'}
+        category=special.get(name,next((g for g,names in GROUPS.items() if name in names.split()),'工具'))
+        info=maintained.get(name);match=index.get(name)
+        chosen=[v for v in info['rules'] if v['enabled']] if info else []
         protected=name in EXPLICIT or name in PROTECTED or bundle.startswith('com.apple.') or category in ['系统应用','金融','政务','健康']
-        status='excluded' if protected else 'candidate' if info or name in INDEPENDENT else 'unsupported'
+        status='excluded' if protected else 'candidate' if chosen else 'unsupported'
         evidence=catalog['source']['url'] + ('；应用标题行 '+','.join(str(n) for v in match['sections'].values() for n in v) if match else '') if match else 'CSV 身份线索；本轮审查来源未找到可靠适配规则'
-        risk='已存在独立方案，明确排除' if name in EXPLICIT else '影音/金融/系统/政务/账号安全主动排除' if protected else info['risk'] if info else '独立模块仅供选择，未整合；参见 INDEPENDENT-MODULES.md' if name in INDEPENDENT else '匹配综合广告规则不等于可靠开屏规则；本轮未纳入' if match else '无可靠规则；不推断请求域名'
+        risk='用户确认已有独立方案，明确排除' if name in EXPLICIT else '影音/金融/系统/政务/账号安全主动排除' if protected else '完整社区规则已逐条维护；非广告/业务风险/重复条目不启用；所有效果未实测' if chosen else '已维护上游原始条目，但共享素材/风控或脚本安全与许可风险，未启用' if info else '无可靠规则；不推断请求域名'
         if name in AMBIGUOUS:risk='身份/用途待确认；不推断广告接口'
         result.append(dict(zip(FIELDS,[name,bundle,r['版本'],category,
             '有社区开屏接口线索，未实测' if match and match['startup_evidence'] else '可能（名称分流，非实测）' if name in POSSIBLE else '未知',
-            '是（社区原规则已精选）' if info else '是（独立模块供选择）' if name in INDEPENDENT and not protected else '否（本轮）',
-            info['section'] if info else '独立模块待选择' if name in INDEPENDENT and not protected else '不处理',
-            'P1' if info else 'P2' if name in INDEPENDENT and not protected else 'P3',evidence,status,risk,'待确认' if name in AMBIGUOUS else 'CSV 名称及 Bundle ID，非商店联网认证'])))
+            '是（社区广告规则已启用）' if chosen else '仅维护，不启用' if info else '否（本轮）',
+            '/'.join(sorted({v['section'] for v in chosen})) if chosen else '不处理（已维护待验证）' if info else '不处理',
+            'P1' if chosen else 'P2' if info else 'P3',evidence,status,risk,'待确认' if name in AMBIGUOUS else 'CSV 名称及 Bundle ID，非商店联网认证'])))
     return result
 
 
@@ -102,17 +102,23 @@ def main(input_path):
     write_csv(out/'apps-analysis.csv', FIELDS, analyzed)
     index=json.loads((ROOT/'rules/source-index.json').read_text())
     installed={r['App 名称'] for r in analyzed}
-    stats.update(possible_splash=sum(r['App 名称'] in POSSIBLE for r in analyzed),
-        matched_any_rule=[r['app'] for r in index['apps'] if r['app'] in installed],
-        matched_startup_evidence=[r['app'] for r in index['apps'] if r['app'] in installed and r['startup_evidence']],
-        retained=['QQ音乐','麦当劳','米家'], explicitly_excluded=sorted(EXPLICIT & installed),
+    manifest=json.loads((ROOT/'rules/community.json').read_text())
+    maintained=[json.loads((ROOT/a['file']).read_text()) for a in manifest['apps']]
+    stats.update(matched_any_rule=[r['app'] for r in index['apps'] if r['app'] in installed],
+        maintained_apps=[a['app'] for a in maintained],
+        retained=[a['app'] for a in maintained if any(v['enabled'] for v in a['rules'])],
+        pending=[a['app'] for a in maintained if not any(v['enabled'] for v in a['rules'])],
+        explicitly_excluded=sorted(EXPLICIT & installed),
         statuses=dict(Counter(r['当前验证状态'] for r in analyzed)),
         unsupported=[r['App 名称'] for r in analyzed if r['当前验证状态']=='unsupported'],
         excluded=[r['App 名称'] for r in analyzed if r['当前验证状态']=='excluded'])
     (out/'analysis-summary.json').write_text(json.dumps(stats,ensure_ascii=False,indent=2)+'\n')
     public=[]
-    for r in json.loads((ROOT/'rules/community.json').read_text())['rules']:
-        public.append({'App':r['app'],'状态':r['status'],'整合启用':'是' if r['enabled'] else '否','方案':r['section'],'实机测试':r['device_test'],'审查日期':'2026-10-11','来源':index['source']['url']+'#L'+str(r['source_line']),'风险':r['risk']})
+    for a in maintained:
+        selected=[v for v in a['rules'] if v['enabled']]
+        public.append({'App':a['app'],'状态':'candidate' if selected else 'unsupported','启用规则':len(selected),'维护条目':len(a['rules']),'精确MITM主机':','.join(sorted({h for v in selected for h in v['hostnames']})),'实机测试':'未测试','审查日期':'2026-10-12','来源':a['source']['url'],'风险':'原始前缀/共享主机；业务与效果待实测' if selected else '原始条目存在，因明确风险未启用'})
+    for a in manifest['excluded']:
+        public.append({'App':a['app'],'状态':'excluded','启用规则':0,'维护条目':0,'精确MITM主机':'','实机测试':'不处理','审查日期':'2026-10-12','来源':index['source']['url'],'风险':a['reason']})
     write_csv(out/'support-matrix.csv',list(public[0]),public)
     print(json.dumps(stats,ensure_ascii=False))
 

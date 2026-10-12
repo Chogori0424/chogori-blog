@@ -1,0 +1,50 @@
+{
+  "app": "航旅纵横",
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-12"
+  },
+  "review_date": "2026-10-12",
+  "scope": "完整社区广告规则逐行审查；过滤非广告/业务风险/重复",
+  "device_test": "未测试",
+  "rules": [
+    {
+      "section": "URL Rewrite",
+      "source_line": 4438,
+      "line": "^https:\\/\\/oss\\.umetrip\\.com\\/fs\\/advert\\/polite - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "oss.umetrip.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4439,
+      "line": "^http?:\\/\\/(discardrp|startup)\\.umetrip\\.com\\/gateway\\/api\\/umetrip\\/native - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "原始 http? 不匹配 https，疑似过时/错误表达式",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 8773,
+      "line": "航旅纵横 = type=http-response, pattern=^http?:\\/\\/(114\\.115\\.217\\.129)|(home\\.umetrip\\.com)\\/gateway\\/api\\/umetrip\\/native$, script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/umetrip/umetrip_ads.js, requires-body=true, timeout=60",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "原始表达式缺乏主机分组且只匹配 http?；外部脚本，不启用",
+      "hostnames": []
+    }
+  ]
+}
