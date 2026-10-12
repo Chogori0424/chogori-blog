@@ -1,0 +1,203 @@
+{
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-12"
+  },
+  "scope": "community-full-ads",
+  "apps": [
+    {
+      "app": "懂车帝",
+      "file": "rules/apps/dongchedi.json"
+    },
+    {
+      "app": "抖音",
+      "file": "rules/apps/douyin.json"
+    },
+    {
+      "app": "虎牙直播",
+      "file": "rules/apps/huya.json"
+    },
+    {
+      "app": "美团",
+      "file": "rules/apps/meituan.json"
+    },
+    {
+      "app": "咪咕视频",
+      "file": "rules/apps/miguvideo.json"
+    },
+    {
+      "app": "米家",
+      "file": "rules/apps/mijia.json"
+    },
+    {
+      "app": "网易云音乐",
+      "file": "rules/apps/netease-music.json"
+    },
+    {
+      "app": "QQ音乐",
+      "file": "rules/apps/qqmusic.json"
+    },
+    {
+      "app": "淘宝",
+      "file": "rules/apps/taobao.json"
+    },
+    {
+      "app": "中国联通",
+      "file": "rules/apps/china-unicom.json"
+    },
+    {
+      "app": "中国移动",
+      "file": "rules/apps/china-mobile.json"
+    },
+    {
+      "app": "百度网盘",
+      "file": "rules/apps/baidu-netdisk.json"
+    },
+    {
+      "app": "必胜客",
+      "file": "rules/apps/pizzahut.json"
+    },
+    {
+      "app": "大众点评",
+      "file": "rules/apps/dianping.json"
+    },
+    {
+      "app": "得物",
+      "file": "rules/apps/dewu.json"
+    },
+    {
+      "app": "航旅纵横",
+      "file": "rules/apps/umetrip.json"
+    },
+    {
+      "app": "华住会",
+      "file": "rules/apps/huazhu.json"
+    },
+    {
+      "app": "肯德基",
+      "file": "rules/apps/kfc.json"
+    },
+    {
+      "app": "拼多多",
+      "file": "rules/apps/pinduoduo.json"
+    },
+    {
+      "app": "前程无忧51Job",
+      "file": "rules/apps/51job.json"
+    },
+    {
+      "app": "山姆会员商店",
+      "file": "rules/apps/samsclub.json"
+    },
+    {
+      "app": "识货",
+      "file": "rules/apps/shihuo.json"
+    },
+    {
+      "app": "笑容加",
+      "file": "rules/apps/usmile.json"
+    },
+    {
+      "app": "猎聘",
+      "file": "rules/apps/liepin.json"
+    },
+    {
+      "app": "麦当劳",
+      "file": "rules/apps/mcdonalds.json"
+    },
+    {
+      "app": "铁路12306",
+      "file": "rules/apps/12306.json"
+    },
+    {
+      "app": "Reddit",
+      "file": "rules/apps/reddit.json"
+    }
+  ],
+  "excluded": [
+    {
+      "app": "百度贴吧",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "哔哩哔哩",
+      "reason": "既有独立方案，继续排除"
+    },
+    {
+      "app": "豆瓣",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "高德地图",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "虎扑",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "京东",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "闲鱼",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "小红书",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "知乎",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "什么值得买",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "云闪付",
+      "reason": "金融/支付/政务账号安全保护"
+    },
+    {
+      "app": "国家医保服务平台",
+      "reason": "金融/支付/政务账号安全保护"
+    },
+    {
+      "app": "京东金融",
+      "reason": "金融/支付/政务账号安全保护"
+    },
+    {
+      "app": "Spotify",
+      "reason": "既有独立方案，继续排除"
+    },
+    {
+      "app": "全民生活",
+      "reason": "金融/支付/政务账号安全保护"
+    },
+    {
+      "app": "YouTube",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "IT之家",
+      "reason": "截图确认已安装独立模块"
+    },
+    {
+      "app": "酷安",
+      "reason": "截图确认已安装独立模块"
+    }
+  ],
+  "additional_exclusions": [
+    "YouTube Music"
+  ]
+}

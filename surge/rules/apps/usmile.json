@@ -1,0 +1,70 @@
+{
+  "app": "笑容加",
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-12"
+  },
+  "review_date": "2026-10-12",
+  "scope": "完整社区广告规则逐行审查；过滤非广告/业务风险/重复",
+  "device_test": "未测试",
+  "rules": [
+    {
+      "section": "URL Rewrite",
+      "source_line": 5282,
+      "line": "^https?:\\/\\/myusmile\\.online\\/user\\/version\\/requestFirmwareUpdate\\/ - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "固件升级，不是广告，不处理",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 5284,
+      "line": "^https?:\\/\\/www\\.myusmile\\.online\\/user\\/userTagRecord\\/popup - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "www.myusmile.online"
+      ]
+    },
+    {
+      "section": "Map Local",
+      "source_line": 8022,
+      "line": "^https?:\\/\\/myusmile\\.online\\/user\\/version\\/requestAppUpdate data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "App 升级，不是广告，不处理",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 8025,
+      "line": "^https?:\\/\\/wemallh5\\.usmile\\.com\\/api\\/sp-portal\\/store\\/usmile\\/activity\\/dayCheck\\?pop data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "wemallh5.usmile.com"
+      ]
+    },
+    {
+      "section": "Script",
+      "source_line": 9322,
+      "line": "usmile = type=http-response, pattern=^https?:\\/\\/www\\.myusmile\\.online\\/user\\/plaqueTopic\\/selectByType, script-path=https://raw.githubusercontent.com/zirawell/R-Store/main/Res/Scripts/AntiAd/usmile.js",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "笑容加：plaqueTopic 口腔内容非明确广告；外部脚本未安全/许可确认",
+      "hostnames": []
+    }
+  ]
+}

@@ -1,0 +1,380 @@
+{
+  "app": "QQ音乐",
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-12"
+  },
+  "review_date": "2026-10-12",
+  "scope": "完整社区广告规则逐行审查；过滤非广告/业务风险/重复",
+  "device_test": "未测试",
+  "rules": [
+    {
+      "section": "Rule",
+      "source_line": 2473,
+      "line": "DOMAIN,adstats.tencentmusic.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2474,
+      "line": "DOMAIN,ad.tencentmusic.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2475,
+      "line": "DOMAIN,adcdn.tencentmusic.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2476,
+      "line": "DOMAIN,adcdn6.tencentmusic.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2477,
+      "line": "DOMAIN,adexpo.tencentmusic.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2478,
+      "line": "DOMAIN,adclick.tencentmusic.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2479,
+      "line": "DOMAIN,otheve.beacon.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2480,
+      "line": "DOMAIN,monitor.music.qq.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2481,
+      "line": "DOMAIN,stat.y.qq.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2482,
+      "line": "DOMAIN,tmead.y.qq.com-NO-DROP,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2483,
+      "line": "DOMAIN,oth.str.mdt.qq.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2484,
+      "line": "DOMAIN,h.trace.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2485,
+      "line": "DOMAIN,sdk.e.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2486,
+      "line": "DOMAIN,p.l.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2487,
+      "line": "DOMAIN,us.l.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2488,
+      "line": "DOMAIN,tangram.e.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2489,
+      "line": "DOMAIN,tmeadbak.y.qq.com-NO-DROP,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2490,
+      "line": "DOMAIN-SUFFIX,imtmp.net,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2491,
+      "line": "DOMAIN,tmeadcomm.y.qq.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2492,
+      "line": "DOMAIN,ad.tencentmusic.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2493,
+      "line": "DOMAIN,adstats.tencentmusic.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "重复原始规则；只审查/生成第一条",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2494,
+      "line": "DOMAIN,tmead.y.qq.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2495,
+      "line": "DOMAIN-SUFFIX,rqd.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2496,
+      "line": "DOMAIN-SUFFIX,wup.imtt.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2497,
+      "line": "DOMAIN-SUFFIX,gdt.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2498,
+      "line": "DOMAIN-SUFFIX,android.rqd.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2499,
+      "line": "DOMAIN-SUFFIX,e.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2500,
+      "line": "DOMAIN-SUFFIX,v.gdt.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2501,
+      "line": "DOMAIN,amsweb-cdn-gz-1258344696.file.myqcloud.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2502,
+      "line": "DOMAIN,wallpaper-1258344696.file.myqcloud.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2503,
+      "line": "DOMAIN,xs.gdt.qq.com,REJECT",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2504,
+      "line": "IP-CIDR,120.222.240.171/32,REJECT,no-resolve",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4904,
+      "line": "^https?:\\/\\/us\\.l\\.qq\\.com\\/exapp - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "us.l.qq.com"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4905,
+      "line": "^https?:\\/\\/y\\.gtimg\\.cn\\/music\\/common\\/upload\\/t_splash_info\\/ - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "y.gtimg.cn"
+      ]
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4906,
+      "line": "^https?:\\/\\/.+?\\/music\\/common\\/upload\\/t_splash_info\\/ - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4907,
+      "line": "^https?:\\/\\/((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)\\/music\\/common\\/upload\\/t_splash_info\\/ - reject",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "URL Rewrite",
+      "source_line": 4908,
+      "line": "^https:\\/\\/music\\.y\\.qq\\.com\\/maproxy\\/getPbCompressAd - reject",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "music.y.qq.com"
+      ]
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7253,
+      "line": "^https?:\\/\\/y\\.gtimg\\.cn\\/music\\/common\\/\\/upload\\/kg_ad/.*?\\d{4}\\.jpg data-type=tiny-gif status-code=200",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 7255,
+      "line": "^https?:\\/\\/y\\.gtimg\\.cn\\/music\\/common\\/upload\\/targeted_ads data-type=tiny-gif status-code=200",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "y.gtimg.cn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "app": "咪咕视频",
+  "source": {
+    "project": "fmz200/wool_scripts",
+    "author": "fmz200 / 奶思（上游模块署名）",
+    "ref": "5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97",
+    "file": "Surge/module/blockAds.module",
+    "url": "https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "raw_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module",
+    "sha256": "d75a30e3410fccc4269c2749cdc430f2c6ef5b092bca1bc342279642f9918423",
+    "file_commit": "3ca7487b4e4b86d9af76e50df72c62eacfbb659e",
+    "file_updated": "2026-09-10",
+    "license": "GPL-3.0",
+    "review_date": "2026-10-12"
+  },
+  "review_date": "2026-10-12",
+  "scope": "完整社区广告规则逐行审查；过滤非广告/业务风险/重复",
+  "device_test": "未测试",
+  "rules": [
+    {
+      "section": "Rule",
+      "source_line": 2127,
+      "line": "DOMAIN-SUFFIX,ad.cmvideo.cn,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2128,
+      "line": "DOMAIN,ggc.cmvideo.cn,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2129,
+      "line": "DOMAIN,ggv.cmvideo.cn,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2130,
+      "line": "DOMAIN,ggx.cmvideo.cn,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2131,
+      "line": "DOMAIN,ggx03.miguvideo.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2132,
+      "line": "DOMAIN,ggic03.miguvideo.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2133,
+      "line": "DOMAIN,ggmk.miguvideo.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Rule",
+      "source_line": 2134,
+      "line": "DOMAIN,ggadoffline.miguvideo.com,REJECT",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 6937,
+      "line": "^https?:\\/\\/ggc\\.miguvideo\\.com\\/v1\\/iflyad\\/deliverysystem\\/direct\\/ data-type=tiny-gif status-code=200",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "ggc.miguvideo.com"
+      ]
+    },
+    {
+      "section": "Map Local",
+      "source_line": 6939,
+      "line": "^https?:\\/\\/public-deliver9\\.miguvideo\\.com\\/deliver\\/site\\/batchMatch\\/mergeSpot\\/miguvideo\\/ data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "public-deliver9.miguvideo.com"
+      ]
+    },
+    {
+      "section": "Map Local",
+      "source_line": 6941,
+      "line": "^https?:\\/\\/recommend-dy\\.miguvideo\\.com\\/recommend-dynamic\\/dataSource\\/v1\\/recommend\\/merge data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 6943,
+      "line": "^https?:\\/\\/app-sc\\.miguvideo\\.com\\/app-management\\/v1\\/staticcache\\/settings\\/miguvideo\\/SHARE_PIC data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 6945,
+      "line": "^https?:\\/\\/common-sc\\.miguvideo\\.com\\/videoActivity\\/activityList\\/ data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": true,
+      "status": "candidate",
+      "reason": "广告/推广范围已审查；保留原始规则，实机未测试",
+      "hostnames": [
+        "common-sc.miguvideo.com"
+      ]
+    },
+    {
+      "section": "Map Local",
+      "source_line": 6948,
+      "line": "^https?:\\/\\/ggx.+\\.miguvideo\\.com\\/request\\/sdk.+[^?]*$ data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Map Local",
+      "source_line": 6950,
+      "line": "^https?:\\/\\/ggic\\d+.miguvideo\\.com\\/ad\\/ data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "待验证：共享平台/业务精简/外部脚本或范围不明确，不自动启用",
+      "hostnames": []
+    },
+    {
+      "section": "Script",
+      "source_line": 8926,
+      "line": "咪咕视频个人中心去广告 = type=http-response, pattern=^https?:\\/\\/display-sc\\.miguvideo\\.com\\/display\\/v3\\/static\\/PERSONAL_CENTER$, script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/refs/heads/main/Scripts/miguvideo/miguvideo_ads.js, requires-body=true, timeout=60",
+      "enabled": false,
+      "status": "unsupported",
+      "reason": "咪咕脚本含完整 Env 框架且异常 JSON 被二次序列化；不导入",
+      "hostnames": []
+    }
+  ]
+}

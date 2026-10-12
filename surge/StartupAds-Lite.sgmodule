@@ -1,0 +1,247 @@
+#!name=Chogori | 社区广告精简
+#!desc=按实际应用筛选完整社区广告规则；排除既有独立方案及敏感业务；未完成本机效果验证
+#!system=ios
+
+# 稳定入口名称保留；范围已由仅开屏调整为各 App 广告/推广。
+# 派生整理：Chogori0424；上游 fmz200 / 奶思；GPL-3.0，见 licenses/ 与 NOTICE.md
+# 来源 https://github.com/fmz200/wool_scripts/blob/5d5f63fcf98bc69d5f8f1b1bae6f86a01ee4bb97/Surge/module/blockAds.module
+# 文件最近维护 2026-09-10；核实 2026-10-12；不自动同步
+# 27 个 App 维护源；23 个 App 启用 98 条；43 个精确 MITM hostname；0 个 HTTP 脚本
+
+[Rule]
+# 美团 / candidate / 核实 2026-10-12 / 实机未测试
+# source L2085
+DOMAIN-SUFFIX,report.meituan.com,REJECT
+# source L2086
+DOMAIN-SUFFIX,analytics.meituan.net,REJECT
+# source L2087
+DOMAIN-SUFFIX,wmlog.meituan.com,REJECT
+# source L2088
+DOMAIN-SUFFIX,ad.e.waimai.sankuai.com,REJECT
+# source L2089
+DOMAIN-SUFFIX,mads.meituan.com,REJECT
+# source L2090
+DOMAIN-SUFFIX,dreport.meituan.net,REJECT
+# 咪咕视频 / candidate / 核实 2026-10-12 / 实机未测试
+# source L2127
+DOMAIN-SUFFIX,ad.cmvideo.cn,REJECT
+# source L2128
+DOMAIN,ggc.cmvideo.cn,REJECT
+# source L2129
+DOMAIN,ggv.cmvideo.cn,REJECT
+# source L2130
+DOMAIN,ggx.cmvideo.cn,REJECT
+# source L2131
+DOMAIN,ggx03.miguvideo.com,REJECT
+# source L2132
+DOMAIN,ggic03.miguvideo.com,REJECT
+# source L2133
+DOMAIN,ggmk.miguvideo.com,REJECT
+# source L2134
+DOMAIN,ggadoffline.miguvideo.com,REJECT
+# 米家 / candidate / 核实 2026-10-12 / 实机未测试
+# source L2138
+DOMAIN,sdkconfig.ad.xiaomi.com,REJECT
+# 网易云音乐 / candidate / 核实 2026-10-12 / 实机未测试
+# source L2434
+DOMAIN,iadmusicmat.music.126.net,REJECT
+# source L2435
+DOMAIN,iadmat.nosdn.127.net,REJECT
+# source L2436
+DOMAIN,iadmatapk.nosdn.127.net,REJECT
+# QQ音乐 / candidate / 核实 2026-10-12 / 实机未测试
+# source L2473
+DOMAIN,adstats.tencentmusic.com,REJECT
+# source L2474
+DOMAIN,ad.tencentmusic.com,REJECT
+# source L2475
+DOMAIN,adcdn.tencentmusic.com,REJECT
+# source L2476
+DOMAIN,adcdn6.tencentmusic.com,REJECT
+# source L2477
+DOMAIN,adexpo.tencentmusic.com,REJECT
+# source L2478
+DOMAIN,adclick.tencentmusic.com,REJECT
+# source L2480
+DOMAIN,monitor.music.qq.com,REJECT
+# source L2481
+DOMAIN,stat.y.qq.com,REJECT
+# source L2483
+DOMAIN,oth.str.mdt.qq.com,REJECT
+# source L2491
+DOMAIN,tmeadcomm.y.qq.com,REJECT
+# source L2494
+DOMAIN,tmead.y.qq.com,REJECT
+# 淘宝 / candidate / 核实 2026-10-12 / 实机未测试
+# source L2745
+DOMAIN-SUFFIX,dsp.simba.taobao.com,REJECT
+# source L2746
+DOMAIN-SUFFIX,fav.simba.taobao.com,REJECT
+# source L2747
+DOMAIN-SUFFIX,m.simba.taobao.com,REJECT
+# source L2748
+DOMAIN-SUFFIX,mclick.simba.taobao.com,REJECT
+# source L2749
+DOMAIN-SUFFIX,re.taobao.com,REJECT
+# source L2750
+DOMAIN-SUFFIX,redirect.simba.taobao.com,REJECT
+# source L2751
+DOMAIN-SUFFIX,simba.m.taobao.com,REJECT
+# source L2752
+DOMAIN-SUFFIX,srd.simba.taobao.com,REJECT
+# source L2754
+DOMAIN-SUFFIX,textlink.simba.taobao.com,REJECT
+# source L2755
+DOMAIN-SUFFIX,unitacs.m.taobao.com,REJECT
+# source L2763
+DOMAIN-SUFFIX,click.mz.simba.taobao.com,REJECT
+# source L2764
+DOMAIN-SUFFIX,click.simba.taobao.com,REJECT
+# source L2765
+DOMAIN-SUFFIX,click.tz.simba.taobao.com,REJECT
+# source L2766
+DOMAIN-SUFFIX,stat.simba.taobao.com,REJECT
+
+[URL Rewrite]
+# 虎牙直播 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4480
+^https?:\/\/business\.msstatic\.com\/advertiser\/material - reject
+# QQ音乐 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4904
+^https?:\/\/us\.l\.qq\.com\/exapp - reject
+# source L4905
+^https?:\/\/y\.gtimg\.cn\/music\/common\/upload\/t_splash_info\/ - reject
+# source L4908
+^https:\/\/music\.y\.qq\.com\/maproxy\/getPbCompressAd - reject
+# 中国移动 / candidate / 核实 2026-10-12 / 实机未测试
+# source L5429
+^https?:\/\/client\.app\.coc\.10086\.cn\/biz-orange\/DN\/explorePage\/getAdverList - reject
+# 百度网盘 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4092
+^https?:\/\/pan\.baidu\.com\/rest\/\d\.\d\/pcs\/adx - reject
+# source L4093
+^https?:\/\/pan\.baidu\.com\/rest\/2\.0\/pcs\/ad - reject
+# source L4094
+^https?:\/\/pan\.baidu\.com\/act\/v\d\/(bchannel|welfare)\/list - reject
+# source L4095
+^https?:\/\/pan\.baidu\.com\/act\/api\/activityentry - reject
+# source L4102
+^https?:\/\/ndstatic\.cdn\.bcebos\.com\/activity\/welfare\/js\/.+\.js - reject
+# source L4103
+^https?:\/\/ndstatic\.cdn\.bcebos\.com\/activity\/welfare\/index\.html - reject
+# source L4104
+^https?:\/\/staticsns\.cdn\.bcebos\.com\/amis\/.+/banner.png - reject
+# source L4105
+^https?:\/\/issuecdn\.baidupcs\.com\/issue\/netdisk\/guanggao - reject
+# source L4106
+^https?:\/\/update\.pan\.baidu\.com\/statistics - reject
+# 必胜客 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4132
+^https?:\/\/res\.pizzahut\.com\.cn\/CRM\/phad\/apphome\/apphome - reject
+# 大众点评 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4207
+^https?:\/\/mapi\.dianping\.com\/adshopping - reject
+# source L4211
+^https?:\/\/www\.dpfile\.com\/sc\/indexpromotion - reject
+# 得物 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4226
+^https?:\/\/app\.dewu\.com\/api\/v1\/app\/advertisement - reject
+# 航旅纵横 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4438
+^https:\/\/oss\.umetrip\.com\/fs\/advert\/polite - reject
+# 拼多多 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4778
+^https?:\/\/api\.(pinduoduo|yangkeduo)\.com\/api\/cappuccino\/splash - reject
+# 前程无忧51Job / candidate / 核实 2026-10-12 / 实机未测试
+# source L4841
+^https?:\/\/appapi\.51job(app)?\.com\/api\/market\/(adtrace|get_launch|get_prompt) - reject
+# source L4844
+^https:\/\/img01\.51jobcdn\.com\/im\/mkt/(?:tg/((19|20)\d{2})banner/(?!jcgz2/)|\d{4}/bd/\d{4}/).*\.jpg - reject
+# source L4848
+^https?:\/\/cupid\.51job(app)?\.com\/open\/guide\/home-page-top - reject
+# source L4852
+^https?:\/\/cupid\.51job(app)?\.com\/launch-hub\/open\/noauth\/popUp - reject
+# 山姆会员商店 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4937
+^https?:\/\/api-sams\.walmartmobile\.cn\/api\/v\d\/sams\/sams-user\/(window\/getGoUpPlus|screen_promotion\/get) - reject
+# 识货 / candidate / 核实 2026-10-12 / 实机未测试
+# source L4954
+^https?:\/\/sh-gateway\.shihuo\.cn\/v\d\/services\/sh-adapi\/home\/(screen|ad) - reject
+# 笑容加 / candidate / 核实 2026-10-12 / 实机未测试
+# source L5284
+^https?:\/\/www\.myusmile\.online\/user\/userTagRecord\/popup - reject
+
+[Map Local]
+# 虎牙直播 / candidate / 核实 2026-10-12 / 实机未测试
+# source L6521
+^https?:\/\/cdnfile1\.msstatic\.com\/cdnfile\/appad\/ data-type=tiny-gif status-code=200
+# source L6523
+^https?://live-ads\.huya\.com/live/getAllEntrance.*$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 咪咕视频 / candidate / 核实 2026-10-12 / 实机未测试
+# source L6937
+^https?:\/\/ggc\.miguvideo\.com\/v1\/iflyad\/deliverysystem\/direct\/ data-type=tiny-gif status-code=200
+# source L6939
+^https?:\/\/public-deliver9\.miguvideo\.com\/deliver\/site\/batchMatch\/mergeSpot\/miguvideo\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L6945
+^https?:\/\/common-sc\.miguvideo\.com\/videoActivity\/activityList\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 米家 / candidate / 核实 2026-10-12 / 实机未测试
+# source L6954
+^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/recommendation\/(banner|carousel\/banners|myTab|openingBanner) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L6956
+^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/resource\/realtime\/openingBanner data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# QQ音乐 / candidate / 核实 2026-10-12 / 实机未测试
+# source L7255
+^https?:\/\/y\.gtimg\.cn\/music\/common\/upload\/targeted_ads data-type=tiny-gif status-code=200
+# 淘宝 / candidate / 核实 2026-10-12 / 实机未测试
+# source L7488
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alibaba\.advertisementservice\.getadv data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L7490
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.alimama\.etao\.config\.query\/.+?etao_advertise data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L7494
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.etao\.noah\.query\/.+tao_splash data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L7496
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.film\.mtopadvertiseapi\.queryadvertise data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L7498
+^https?:\/\/acs\.m\.taobao\.com\/gw\/mtop\.o2o\.ad\.gateway\.get data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 中国联通 / candidate / 核实 2026-10-12 / 实机未测试
+# source L8400
+^https?:\/\/m\.client\.10010\.com\/uniAdmsInterface\/(getHomePageAd|getWelcomeAd) data-type=tiny-gif status-code=200
+# source L8404
+^https?:\/\/m1\.ad\.10010\.com\/noticeMag\/images\/imageUpload\/2\d{3} data-type=tiny-gif status-code=200
+# 必胜客 / candidate / 核实 2026-10-12 / 实机未测试
+# source L5990
+^https?:\/\/res\.pizzahut\.com\.cn\/CRM\/phad\/member\/app\/member data-type=text data=" " status-code=200
+# 大众点评 / candidate / 核实 2026-10-12 / 实机未测试
+# source L6158
+^https?:\/\/img\.meituan\.net\/goodsawardpic\/\w+\.gif data-type=tiny-gif status-code=200
+# source L6160
+^https?:\/\/rms\.meituan\.com\/api\/v\d\/rmsmina\/c\/queryWechatAdvertisement data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 华住会 / candidate / 核实 2026-10-12 / 实机未测试
+# source L6556
+^https?:\/\/hweb-hotel\.huazhu\.com\/home\/queryRecommond data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L6562
+^https?:\/\/hweb-manager\.huazhu\.com\/notice\/getAppPopupNotifyAlert data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L6568
+^https?:\/\/hweb-manager\.huazhu\.com\/hotels\/ad\/ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 肯德基 / candidate / 核实 2026-10-12 / 实机未测试
+# source L6680
+^https?:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/apphome5\/apphome data-type=text data=" " status-code=200
+# source L6682
+^https?:\/\/res\.kfc\.com\.cn\/CRM\/kfcad\/apphome6\/\w+\.json\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 山姆会员商店 / candidate / 核实 2026-10-12 / 实机未测试
+# source L7295
+^https?:\/\/api-sams\.walmartmobile\.cn\/api\/v\d\/sams\/channel\/portal\/AdgroupData data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 笑容加 / candidate / 核实 2026-10-12 / 实机未测试
+# source L8025
+^https?:\/\/wemallh5\.usmile\.com\/api\/sp-portal\/store\/usmile\/activity\/dayCheck\?pop data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 猎聘 / candidate / 核实 2026-10-12 / 实机未测试
+# source L6750
+^https?:\/\/api-ac\.liepin\.com\/api\/com\.liepin\.cyclops\.live\.get-ad-cards data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# source L6752
+^https?:\/\/api-wanda\.liepin\.com\/api\/com\.liepin\.cbp\.baizhong\.op\.v2-show-4app data-type=text data=" " status-code=200
+# 麦当劳 / candidate / 核实 2026-10-12 / 实机未测试
+# source L6867
+^https?:\/\/api\.mcd\.cn\/bff\/portal\/home\/splash data-type=text data=" " status-code=200
+
+[MITM]
+hostname = %APPEND% acs.m.taobao.com, api-ac.liepin.com, api-sams.walmartmobile.cn, api-wanda.liepin.com, api.mcd.cn, api.pinduoduo.com, api.yangkeduo.com, app.dewu.com, appapi.51job.com, appapi.51jobapp.com, business.msstatic.com, cdnfile1.msstatic.com, client.app.coc.10086.cn, common-sc.miguvideo.com, cupid.51job.com, cupid.51jobapp.com, ggc.miguvideo.com, home.mi.com, hweb-hotel.huazhu.com, hweb-manager.huazhu.com, img.meituan.net, img01.51jobcdn.com, issuecdn.baidupcs.com, live-ads.huya.com, m.client.10010.com, m1.ad.10010.com, mapi.dianping.com, music.y.qq.com, ndstatic.cdn.bcebos.com, oss.umetrip.com, pan.baidu.com, public-deliver9.miguvideo.com, res.kfc.com.cn, res.pizzahut.com.cn, rms.meituan.com, sh-gateway.shihuo.cn, staticsns.cdn.bcebos.com, update.pan.baidu.com, us.l.qq.com, wemallh5.usmile.com, www.dpfile.com, www.myusmile.online, y.gtimg.cn
