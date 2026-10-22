@@ -1,255 +1,146 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getCategoryByName } from '../consts';
+import PostCover from './PostCover.astro';
 
 interface Props {
 	post: CollectionEntry<'blog'>;
+	/** row：左右图文（首页）；stack：上图下文（网格） */
+	layout?: 'row' | 'stack';
+	/** row 布局时图片放右侧 */
+	reverse?: boolean;
+	/** 更大的标题，用于分类页的置顶文章 */
+	featured?: boolean;
+	headingLevel?: 'h2' | 'h3';
 }
 
-const { post } = Astro.props;
-
-const title = post?.data?.title || 'Untitled';
-const description = post?.data?.description?.trim();
-const category = post?.data?.category;
+const { post, layout = 'stack', reverse = false, featured = false, headingLevel = 'h3' } = Astro.props;
+const { title, description, category, pubDate } = post.data;
 const href = `/blog/${post.id}/`;
-const dateValue = post?.data?.pubDate;
-const date = dateValue instanceof Date ? dateValue : dateValue ? new Date(dateValue) : null;
-const formattedDate = date && !Number.isNaN(date.valueOf()) ? date.toISOString().slice(0, 10) : '';
-const hasMeta = Boolean(category || formattedDate);
-
-const categoryClassMap: Record<string, string> = {
-	网络代理: 'is-network-proxy',
-	工程制造: 'is-engineering',
-	音频设备: 'is-audio',
-	'AI 工具': 'is-ai-tools',
-	个人日志: 'is-personal',
-};
-const categoryClass = category ? categoryClassMap[category] || 'is-default' : 'is-default';
-const coverLabel = category || 'Chogori Blog';
+const meta = getCategoryByName(category);
+const dateText = pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+const Heading = headingLevel;
 ---
 
-<article class="post-card">
-	<a class="post-card-cover" href={href} aria-label={title}>
-		<div class:list={['post-card-gradient', categoryClass]} aria-hidden="true">
-			<span>{coverLabel}</span>
-		</div>
+<article
+	class:list={['post-card', 'lift', 'zoom-cover', `post-card--${layout}`, { 'is-reverse': reverse, 'is-featured': featured }]}
+	data-reveal
+>
+	<a class="post-card-cover" href={href} tabindex="-1" aria-hidden="true">
+		<PostCover post={post} />
 	</a>
-
-	<div class="post-card-content">
-		{
-			hasMeta && (
-				<div class="post-card-meta">
-					{category && <span class="post-card-category">{category}</span>}
-					{formattedDate && (
-						<time datetime={formattedDate} class="post-card-date">
-							{formattedDate}
-						</time>
-					)}
-				</div>
-			)
-		}
-
-		<h3 class="post-card-title">
-			<a href={href}>{title}</a>
-		</h3>
-
-		{
-			description && (
-				<p class="post-card-excerpt">
-					{description}
-				</p>
-			)
-		}
-
-		<a class="post-card-more" href={href} aria-label={`阅读全文：${title}`}>
-			阅读全文 →
-		</a>
+	<div class="post-card-body">
+		<a class="pill" href={meta ? `/categories/${meta.slug}/` : '/categories'}>{category}</a>
+		<Heading class="post-card-title"><a href={href}>{title}</a></Heading>
+		{description && <p class="post-card-excerpt">{description}</p>}
+		<time class="post-card-date" datetime={pubDate.toISOString().slice(0, 10)}>{dateText}</time>
 	</div>
 </article>
 
 <style>
 	.post-card {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		height: 100%;
 		min-width: 0;
 		overflow: hidden;
-		border: 1px solid color-mix(in srgb, var(--color-card-border) 78%, transparent);
 		border-radius: var(--radius-card);
-		background: color-mix(in srgb, var(--surface) 88%, var(--color-bg-secondary));
-		transition:
-			transform 0.2s ease,
-			background-color 0.2s ease,
-			border-color 0.2s ease,
-			color 0.2s ease;
+		background: var(--color-card-bg);
+		box-shadow: var(--card-shadow);
 	}
-
-	.post-card:hover {
-		transform: translateY(-4px);
-		border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-card-border));
-		background: color-mix(in srgb, var(--surface) 72%, var(--color-bg-hover));
+	.post-card--row {
+		flex-direction: row;
+		flex-wrap: wrap;
 	}
-
+	.post-card--row.is-reverse {
+		flex-direction: row-reverse;
+	}
 	.post-card-cover {
 		display: block;
-		width: 100%;
-		aspect-ratio: 16 / 9;
 		overflow: hidden;
-		background: #18181b;
-		color: inherit;
-		text-decoration: none;
+		aspect-ratio: 16 / 9;
 	}
-
-	.post-card-gradient {
-		display: flex;
-		width: 100%;
-		height: 100%;
-		align-items: center;
-		justify-content: center;
-		background: linear-gradient(135deg, #1d4ed8, #0f766e);
+	.post-card--row .post-card-cover {
+		flex: 1 1 420px;
+		aspect-ratio: auto;
+		min-height: 300px;
 	}
-
-	.post-card-gradient span {
-		border: 1px solid color-mix(in srgb, #ffffff 48%, transparent);
-		border-radius: var(--radius-pill);
-		background: color-mix(in srgb, #ffffff 18%, transparent);
-		color: #ffffff;
-		padding: 0.35rem 0.85rem;
-		font-size: 0.9rem;
-		font-weight: 800;
-		letter-spacing: 0;
-		text-shadow: 0 1px 10px rgba(0, 0, 0, 0.28);
+	.post-card--row.is-featured .post-card-cover {
+		flex: 3 1 480px;
+		min-height: 360px;
 	}
-
-	.post-card-gradient.is-network-proxy {
-		background: linear-gradient(135deg, #1d4ed8 0%, #0f766e 100%);
-	}
-
-	.post-card-gradient.is-engineering {
-		background: linear-gradient(135deg, #ea580c 0%, #b45309 100%);
-	}
-
-	.post-card-gradient.is-audio {
-		background: linear-gradient(135deg, #475569 0%, #0891b2 100%);
-	}
-
-	.post-card-gradient.is-ai-tools {
-		background: linear-gradient(135deg, #047857 0%, #2563eb 52%, #7c3aed 100%);
-	}
-
-	.post-card-gradient.is-personal {
-		background: linear-gradient(135deg, #db2777 0%, #7c3aed 100%);
-	}
-
-	.post-card-gradient.is-default {
-		background: linear-gradient(135deg, #334155 0%, #2563eb 100%);
-	}
-
-	.post-card-content {
+	.post-card-body {
 		display: flex;
 		flex: 1;
 		flex-direction: column;
+		justify-content: center;
+		gap: 12px;
 		min-width: 0;
-		padding: 1.25rem;
+		padding: 28px;
 	}
-
-	.post-card-meta {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem;
-		color: var(--color-text-muted);
-		font-size: 0.78rem;
-		line-height: 1.4;
+	.post-card--row .post-card-body {
+		flex: 1 1 420px;
+		padding: 40px;
 	}
-
-	.post-card-category {
-		min-width: 0;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+	.post-card--row.is-featured .post-card-body {
+		flex: 2 1 340px;
 	}
-
-	.post-card-date {
-		flex-shrink: 0;
-	}
-
 	.post-card-title {
-		margin: 0.75rem 0 0;
-		color: var(--color-text);
-		font-size: 1.15rem;
-		font-weight: 700;
+		margin: 0;
+		font-size: 1.3rem;
+		line-height: 1.4;
+		letter-spacing: 0;
+	}
+	.post-card--row .post-card-title {
+		font-size: clamp(1.4rem, 2.2vw, 1.75rem);
 		line-height: 1.35;
-		overflow-wrap: anywhere;
 	}
-
 	.post-card-title a {
-		display: -webkit-box;
-		min-width: 0;
-		overflow: hidden;
-		color: inherit;
-		text-decoration: none;
-		overflow-wrap: anywhere;
-		transition: color 0.2s ease;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-		line-clamp: 2;
-		word-break: break-all;
+		color: var(--color-text);
 	}
-
-	.post-card-title a:hover,
-	.post-card-title a:focus-visible {
-		color: var(--color-accent-hover);
+	/* 整张卡片可点：标题链接的点击区域铺满卡片 */
+	.post-card-title a::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 0;
 	}
-
-	.post-card-title a,
+	.post-card .pill {
+		position: relative;
+		z-index: 1;
+	}
 	.post-card-excerpt {
 		display: -webkit-box;
+		margin: 0;
 		overflow: hidden;
-		-webkit-box-orient: vertical;
-	}
-
-	.post-card-excerpt {
-		margin: 0.75rem 0 0;
 		color: var(--color-text-muted);
-		font-size: 0.92rem;
-		line-height: 1.65;
-		overflow-wrap: anywhere;
-		-webkit-line-clamp: 2;
-		line-clamp: 2;
+		font-size: 0.95rem;
+		line-height: 1.75;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
 	}
-
-	.post-card-more {
-		margin-top: auto;
-		padding-top: 1.25rem;
-		color: color-mix(in srgb, var(--color-accent-hover) 82%, var(--color-text));
-		font-size: 0.92rem;
-		font-weight: 700;
-		text-decoration: none;
-		transition: color 0.2s ease;
+	.post-card-date {
+		color: var(--color-text-muted);
+		font-size: 0.85rem;
 	}
-
-	.post-card-more:hover,
-	.post-card-more:focus-visible {
-		color: var(--color-accent-hover);
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.post-card,
-		.post-card-title a,
-		.post-card-more {
-			transition: none;
-		}
-
-		.post-card:hover {
-			transform: none;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.post-card-meta {
-			align-items: flex-start;
+	@media (max-width: 720px) {
+		.post-card--row,
+		.post-card--row.is-reverse {
 			flex-direction: column;
-			gap: 0.35rem;
+			flex-wrap: nowrap;
+		}
+		.post-card--row .post-card-cover,
+		.post-card--row.is-featured .post-card-cover {
+			flex: none;
+			width: 100%;
+			min-height: 0;
+			aspect-ratio: 16 / 9;
+		}
+		.post-card--row .post-card-body {
+			flex: none;
+			padding: 22px;
 		}
 	}
 </style>

@@ -1,0 +1,76 @@
+---
+// 文章封面：有 heroImage 用图片；没有时用分类渐变 + 分类图标作为占位封面。
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { getCategoryByName } from '../consts';
+import CategoryIcon from './CategoryIcon.astro';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+	/** 图片输出宽度 */
+	width?: number;
+	eager?: boolean;
+}
+
+const { post, width = 960, eager = false } = Astro.props;
+const { heroImage, category } = post.data;
+const meta = getCategoryByName(category);
+const [from, to] = meta?.gradient ?? ['#8e8e93', '#636366'];
+const height = Math.round((width * 9) / 16);
+---
+
+{
+	heroImage ? (
+		typeof heroImage === 'string' ? (
+			<img
+				class="cover-media"
+				src={heroImage}
+				alt=""
+				width={width}
+				height={height}
+				loading={eager ? 'eager' : 'lazy'}
+				decoding="async"
+			/>
+		) : (
+			<Image
+				class="cover-media"
+				src={heroImage}
+				alt=""
+				width={width}
+				height={height}
+				loading={eager ? 'eager' : 'lazy'}
+			/>
+		)
+	) : (
+		<div class="cover-media cover-fallback" style={`--cover-from:${from};--cover-to:${to};`}>
+			<CategoryIcon category={category} size={72} />
+		</div>
+	)
+}
+
+<style>
+	.cover-media {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+	}
+	.cover-fallback {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 100%;
+		background:
+			radial-gradient(120% 90% at 15% 10%, color-mix(in srgb, var(--cover-from) 70%, transparent), transparent 60%),
+			radial-gradient(90% 90% at 90% 100%, color-mix(in srgb, var(--cover-to) 80%, transparent), transparent 65%),
+			linear-gradient(135deg, color-mix(in srgb, var(--cover-to) 55%, #0b1a2e), color-mix(in srgb, var(--cover-from) 45%, #1f3b63));
+	}
+	.cover-fallback :global(.category-icon) {
+		background: rgba(255, 255, 255, 0.18);
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(12px);
+	}
+</style>

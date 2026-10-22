@@ -1,7 +1,7 @@
 ---
 title: '从 Windows 常驻到 Linux Agent：我的 115 + MoviePilot + OpenClaw + Codex 媒体库架构'
 description: '记录一套面向长期维护和可迁移性的家庭媒体库方案：115 作为最终资产库，MoviePilot 负责媒体自动化，OpenClaw 统一 Telegram/iOS 入口，Codex 管理部署与排障，NFO 与 Artwork 独立于 Emby。'
-category: '个人日志'
+category: '家庭服务器'
 tags: ['家庭影音', '媒体服务器', '115', 'MoviePilot', 'OpenClaw', 'Codex', 'Emby', 'STRM']
 pubDate: '2026-09-21'
 ---

@@ -1,109 +1,172 @@
 ---
 import Avatar from '../components/Avatar.astro';
 import BaseHead from '../components/BaseHead.astro';
+import CategoryIcon from '../components/CategoryIcon.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { AUTHOR_NAME, SITE_TITLE } from '../consts';
+import { AUTHOR_NAME, AUTHOR_ROLE, BLOG_CATEGORIES, SITE_URL } from '../consts';
 ---
 
 <!doctype html>
 <html lang="zh-CN">
 	<head>
-		<BaseHead title="关于" description="关于 Chogori Lee：模具注塑工艺工程师，关注网络代理配置、工程制造、CAD/UG、音频设备和个人知识管理。" />
+		<BaseHead
+			title="关于"
+			description="关于 Chogori Lee：模具注塑工艺工程师，关注网络代理配置、工程制造、CAD/UG、音频设备和个人知识管理。"
+		/>
 		<style>
+			body {
+				background: var(--color-section-alt);
+			}
 			main {
-				width: 860px;
+				width: 1040px;
 			}
-			.about-head {
-				display: grid;
-				grid-template-columns: 112px minmax(0, 1fr);
-				gap: 1.25rem;
+			.about-hero {
+				display: flex;
+				max-width: 760px;
+				margin: 0 auto;
+				padding: 24px 0 56px;
+				flex-direction: column;
 				align-items: center;
-				margin-bottom: 2rem;
+				gap: 16px;
+				text-align: center;
 			}
-			.about-copy {
-				min-width: 0;
+			.about-hero h1 {
+				margin: 8px 0 0;
+				font-size: clamp(2.4rem, 6vw, 3.5rem);
 			}
-			.kicker {
-				margin: 0 0 0.65rem;
+			.role {
+				margin: 0;
 				color: var(--color-text-muted);
-				font-size: 0.9rem;
-				font-weight: 700;
+				font-size: 1.3rem;
 			}
-			h1 {
-				margin-bottom: 0.75rem;
-				font-size: 2.6rem;
+			.intro {
+				margin: 8px 0 0;
+				color: var(--color-text-secondary);
+				font-size: 1.1rem;
+				line-height: 1.85;
 			}
-			.summary {
-				max-width: 720px;
-				margin: 0;
-			}
-			.info-grid {
+			.bento {
 				display: grid;
-				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: 1rem;
-				margin: 2rem 0;
+				grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+				gap: 16px;
 			}
-			.info-card {
-				border: 1px solid var(--color-card-border);
-				border-radius: var(--radius-container);
-				background: var(--surface);
-				padding: 1rem;
-				transition:
-					background-color 0.3s ease,
-					border-color 0.3s ease,
-					color 0.3s ease;
+			.card {
+				display: flex;
+				flex-direction: column;
+				gap: 14px;
+				padding: 32px;
+				border-radius: var(--radius-card);
+				background: var(--color-card-bg);
+				box-shadow: var(--card-shadow);
+				color: var(--color-text);
 			}
-			.info-card h2 {
-				margin: 0 0 0.6rem;
-				font-size: 1.2rem;
+			.card--wide {
+				grid-column: 1 / -1;
 			}
-			.info-card p,
-			.info-card ul {
+			.card h2 {
 				margin: 0;
+				font-size: 1.3rem;
 			}
-			.info-card ul {
-				padding-left: 1.1rem;
+			.card p,
+			.card ul {
+				margin: 0;
+				color: var(--color-text-secondary);
+				font-size: 16px;
+				line-height: 1.8;
 			}
-			.note {
-				border-left: 4px solid var(--color-accent);
-				padding-left: 1rem;
+			.card ul {
+				padding-left: 1.2em;
 			}
-			@media (max-width: 720px) {
-				.about-head {
-					grid-template-columns: 1fr;
-				}
-				.info-grid {
-					grid-template-columns: 1fr;
-				}
-				h1 {
-					font-size: 2.1rem;
-				}
+			.card-icon {
+				display: inline-flex;
+				width: 44px;
+				height: 44px;
+				align-items: center;
+				justify-content: center;
+				border-radius: var(--radius-container);
+				background: var(--color-accent-muted);
+				color: var(--color-accent-text);
+			}
+			.topic-links {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+				gap: 14px;
+			}
+			.topic-links a {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				color: var(--color-text);
+				font-size: 15px;
+			}
+			.topic-links a:hover {
+				color: var(--color-link);
+			}
+			.card--bot {
+				background: radial-gradient(120% 120% at 0% 0%, #339cff, #1f3b63 60%, #0b1a2e);
+				color: #ffffff;
+			}
+			.card--bot h2,
+			.card--bot:hover {
+				color: #ffffff;
+			}
+			.card--bot p {
+				color: rgba(255, 255, 255, 0.85);
+			}
+			.card--bot .card-icon {
+				background: rgba(255, 255, 255, 0.18);
+				color: #ffffff;
+				-webkit-backdrop-filter: blur(12px);
+				backdrop-filter: blur(12px);
+			}
+			.card--bot .cta {
+				font-weight: 500;
+			}
+			.card--bot .cta::after {
+				content: ' ›';
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<section class="about-head">
-				<Avatar variant="about" />
-				<div class="about-copy">
-					<p class="kicker">{SITE_TITLE} / About</p>
-					<h1>{AUTHOR_NAME}</h1>
-					<p class="summary">
-						模具注塑工艺工程师，关注网络代理配置、工程制造、CAD/UG、音频设备和个人知识管理。
-					</p>
-				</div>
+			<section class="about-hero">
+				<span class="pop"><Avatar variant="about" /></span>
+				<h1 class="rise d1">{AUTHOR_NAME}</h1>
+				<p class="role rise d2">{AUTHOR_ROLE}</p>
+				<p class="intro rise d3">
+					关注网络代理配置、工程制造、CAD/UG、音频设备和个人知识管理。这个博客会把“怎么做”和“为什么这样做”一起记录下来：相比单纯保存配置片段，我更希望留下排查路径、约束条件和维护成本，方便以后复盘，也方便同样方向的人参考。
+				</p>
 			</section>
 
-			<section class="info-grid">
-				<article class="info-card">
+			<section class="bento">
+				<div class="card card--wide" data-reveal>
+					<h2>我在写什么</h2>
+					<div class="topic-links">
+						{
+							BLOG_CATEGORIES.map((category) => (
+								<a href={`/categories/${category.slug}/`}>
+									<CategoryIcon category={category.name} size={40} radius={10} />
+									{category.name}
+								</a>
+							))
+						}
+					</div>
+				</div>
+
+				<div class="card" data-reveal>
+					<span class="card-icon" aria-hidden="true">
+						<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"></path></svg>
+					</span>
 					<h2>工程背景</h2>
-					<p>
-						长期接触模具注塑工艺、工程制造流程和 Siemens NX/UG 相关工作，关注如何把现场经验整理成可复用的方法。
-					</p>
-				</article>
-				<article class="info-card">
+					<p>长期接触模具注塑工艺、工程制造流程和 Siemens NX/UG 相关工作，关注如何把现场经验整理成可复用的方法。</p>
+				</div>
+
+				<div class="card" data-reveal style="--reveal-delay:0.05s">
+					<span class="card-icon" aria-hidden="true">
+						<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2 5.5 5.5 2-5.5 2L12 18l-2-5.5-5.5-2 5.5-2z"></path></svg>
+					</span>
 					<h2>技术兴趣</h2>
 					<ul>
 						<li>Surge / Quantumult X 网络代理配置</li>
@@ -112,14 +175,36 @@ import { AUTHOR_NAME, SITE_TITLE } from '../consts';
 						<li>音频设备与桌面链路</li>
 						<li>个人知识管理与写作系统</li>
 					</ul>
-				</article>
-			</section>
+				</div>
 
-			<section class="note">
-				<p>
-					这个博客会把“怎么做”和“为什么这样做”一起记录下来。相比单纯保存配置片段，我更希望留下排查路径、
-					约束条件和维护成本，方便以后复盘，也方便同样方向的人参考。
-				</p>
+				<div class="card" data-reveal>
+					<span class="card-icon" aria-hidden="true">
+						<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path><path d="M12 12l8-4.5M12 12v9M12 12 4 7.5"></path></svg>
+					</span>
+					<h2>关于这个站</h2>
+					<p>
+						{SITE_URL.replace('https://', '')} 是静态优先的个人博客，不使用 WordPress、不接入数据库、不引入复杂 CMS。内容文件保存在仓库中，所有变更都可以通过 Git diff 审阅。
+					</p>
+					<a class="link-more" href="/devlog">查看开发日志</a>
+				</div>
+
+				<a class="card card--bot lift" href="/bot" data-reveal style="--reveal-delay:0.05s">
+					<span class="card-icon" aria-hidden="true">
+						<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>
+					</span>
+					<h2>和我的分身聊聊</h2>
+					<p>和 Chogori Blog 的公开访客分身对话。</p>
+					<span class="cta">开始对话</span>
+				</a>
+
+				<div class="card" data-reveal style="--reveal-delay:0.1s">
+					<span class="card-icon" aria-hidden="true">
+						<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+					</span>
+					<h2>订阅更新</h2>
+					<p>新文章发布后会进入 RSS，适合用阅读器长期跟进、跨设备同步。</p>
+					<a class="link-more" href="/rss.xml">订阅 RSS</a>
+				</div>
 			</section>
 		</main>
 		<Footer />

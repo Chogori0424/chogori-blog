@@ -1,106 +1,109 @@
 ---
-import { SITE_TITLE, SITE_URL } from '../consts';
+import { AUTHOR_NAME, BLOG_CATEGORIES } from '../consts';
 
 const today = new Date();
+const columns = [
+	{
+		title: '浏览',
+		links: [
+			{ href: '/blog', label: '全部文章' },
+			{ href: '/categories', label: '分类' },
+		],
+	},
+	{
+		title: '主题',
+		links: BLOG_CATEGORIES.slice(0, 3).map((category) => ({
+			href: `/categories/${category.slug}/`,
+			label: category.name,
+		})),
+	},
+	{
+		title: '关于',
+		links: [
+			{ href: '/about', label: '关于我' },
+			{ href: '/bot', label: '分身' },
+			{ href: '/devlog', label: '开发日志' },
+		],
+	},
+	{
+		title: '订阅',
+		links: [
+			{ href: '/rss.xml', label: 'RSS' },
+			{ href: '/sitemap-index.xml', label: 'Sitemap' },
+		],
+	},
+];
 ---
 
-<footer>
+<footer class="site-footer">
 	<div class="footer-inner">
-		<section class="footer-note" aria-labelledby="footer-note-title">
-			<h2 id="footer-note-title">站点说明</h2>
-			<p>
-				{SITE_URL} 当前是静态优先的个人博客，不使用 WordPress、不接入数据库、不引入复杂 CMS。
-				内容文件保存在仓库中，所有变更都可以通过 Git diff 审阅。
-			</p>
-			<p>
-				<a href="/rss.xml">RSS</a> 可用于订阅更新，<a href="/sitemap-index.xml">sitemap</a>
-				用于帮助搜索引擎发现公开页面。
-			</p>
-		</section>
-
-		<nav class="footer-nav" aria-label="页脚导航">
-			<a href="/blog">文章</a>
-			<a href="/categories">分类</a>
-			<a href="/about">关于</a>
-			<a
-				href="/devlog"
-				title="记录博客本身的搭建与迭代过程"
-				aria-label="开发日志：记录博客本身的搭建与迭代过程"
-			>
-				开发日志
-			</a>
-			<a href="/rss.xml">RSS 订阅</a>
+		<nav class="footer-columns" aria-label="页脚导航">
+			{
+				columns.map((column) => (
+					<div class="footer-column">
+						<h2>{column.title}</h2>
+						{column.links.map((link) => (
+							<a href={link.href}>{link.label}</a>
+						))}
+					</div>
+				))
+			}
 		</nav>
-
 		<div class="footer-meta">
-			<p>&copy; {today.getFullYear()} Chogori Lee. All rights reserved.</p>
-			<p>
-				<a href={SITE_URL}>{SITE_TITLE}</a> / 个人技术博客
-			</p>
+			<p>&copy; {today.getFullYear()} {AUTHOR_NAME}. 保留所有权利。</p>
+			<p>静态站点，用 Astro 构建</p>
 		</div>
 	</div>
 </footer>
+
 <style>
-	footer {
-		padding: 2.5em 1em 6em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
+	.site-footer {
+		padding: 36px 16px 48px;
+		background: var(--color-footer);
 		color: var(--color-text-muted);
+		font-size: 12px;
+		line-height: 1.6;
 	}
 	.footer-inner {
 		display: grid;
-		gap: 1.5rem;
-		max-width: 1080px;
+		gap: 20px;
+		max-width: var(--content-width);
 		margin: 0 auto;
 	}
-	.footer-note {
-		border: 1px solid var(--color-card-border);
-		border-radius: var(--radius-container);
-		background: var(--surface-soft);
-		padding: 1rem;
-		text-align: left;
+	.footer-columns {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 24px;
+		padding-bottom: 20px;
+		border-bottom: 1px solid var(--color-border);
 	}
-	.footer-note h2 {
-		margin: 0 0 0.65rem;
+	.footer-column {
+		display: grid;
+		align-content: start;
+		gap: 10px;
+	}
+	.footer-column h2 {
+		margin: 0;
 		color: var(--color-text);
-		font-size: 1.15rem;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0;
 	}
-	.footer-note p {
-		margin: 0.45rem 0;
-		font-size: 0.95rem;
+	.footer-column a {
+		width: fit-content;
+		color: var(--color-text-secondary);
 	}
-	.footer-nav {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.65rem 1rem;
-		align-items: center;
-	}
-	.footer-nav a {
-		color: var(--color-link);
-		font-weight: 700;
-		text-decoration: none;
+	.footer-column a:hover {
+		color: var(--color-text);
+		text-decoration: underline;
 	}
 	.footer-meta {
-		display: grid;
-		gap: 0.25rem;
-		border-top: 1px solid var(--color-border);
-		padding-top: 1rem;
-		text-align: left;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 8px;
 	}
-	footer p {
+	.footer-meta p {
 		margin: 0;
-	}
-	footer a {
-		color: var(--color-link);
-		text-decoration: none;
-	}
-	footer a:hover,
-	footer a:focus-visible {
-		color: var(--color-link-hover);
-	}
-	@media (max-width: 720px) {
-		.footer-nav {
-			align-items: flex-start;
-			flex-direction: column;
-		}
 	}
 </style>

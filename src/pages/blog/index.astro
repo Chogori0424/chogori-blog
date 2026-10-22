@@ -3,73 +3,237 @@ import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
-import PostCard from '../../components/PostCard.astro';
-import { BLOG_CATEGORIES, SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import PostCover from '../../components/PostCover.astro';
+import { BLOG_CATEGORIES, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+// 按年份分组
+const groups = new Map<number, typeof posts>();
+for (const post of posts) {
+	const year = post.data.pubDate.getFullYear();
+	groups.set(year, [...(groups.get(year) ?? []), post]);
+}
+const years = [...groups.entries()];
+const usedCategories = BLOG_CATEGORIES.filter((category) =>
+	posts.some((post) => post.data.category === category.name),
+);
+const formatDay = (date: Date) => date.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' });
 ---
 
 <!doctype html>
 <html lang="zh-CN">
 	<head>
-		<BaseHead title={`文章 - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+		<BaseHead title="全部文章" description={`${SITE_TITLE} 的全部文章，按时间倒序排列，可按分类筛选或搜索。`} />
 		<style>
+			body {
+				background: var(--color-section-alt);
+			}
 			main {
+				max-width: calc(100% - 32px);
 				width: 1040px;
 			}
 			.page-head {
-				margin-bottom: 2rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 16px;
+				padding: 32px 0 40px;
+				text-align: center;
 			}
 			.page-head h1 {
-				margin-bottom: 0.75rem;
-				font-size: 2.4rem;
+				margin: 0;
+				font-size: clamp(2.4rem, 6vw, 3.5rem);
 			}
 			.page-head p {
-				max-width: 760px;
 				margin: 0;
+				color: var(--color-text-muted);
+				font-size: 1.1rem;
 			}
-			.category-nav {
+			.search-field {
+				display: flex;
+				width: 100%;
+				max-width: 520px;
+				height: 48px;
+				margin-top: 8px;
+				align-items: center;
+				gap: 10px;
+				padding: 0 18px;
+				border: 1px solid var(--color-border);
+				border-radius: var(--radius-pill);
+				background: var(--color-card-bg);
+				color: var(--color-text-muted);
+				transition: box-shadow 0.25s ease, border-color 0.25s ease;
+			}
+			.search-field:focus-within {
+				border-color: var(--color-brand);
+				box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand) 22%, transparent);
+			}
+			.search-field input {
+				flex: 1;
+				min-width: 0;
+				border: 0;
+				background: transparent;
+				color: var(--color-text);
+				font-size: 16px;
+				outline: none;
+			}
+			.toolbar {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 0.6rem;
-				margin-top: 1rem;
+				gap: 8px;
+				margin-bottom: 36px;
 			}
-			.category-nav a {
-				border: 1px solid var(--color-accent);
+			.filter {
+				height: 40px;
+				padding: 0 16px;
+				border: 0;
 				border-radius: var(--radius-pill);
-				padding: 0.35rem 0.75rem;
-				background: var(--color-accent-muted);
+				background: var(--color-card-bg);
+				box-shadow: inset 0 0 0 1px var(--color-border);
 				color: var(--color-text);
-				font-size: 0.9rem;
-				font-weight: 700;
-				text-decoration: none;
+				font-size: 14px;
+				cursor: pointer;
 				transition:
-					background-color 0.3s ease,
-					border-color 0.3s ease,
-					color 0.3s ease;
+					background-color 0.25s ease,
+					color 0.25s ease,
+					box-shadow 0.25s ease;
 			}
-			.category-nav a:hover {
-				border-color: var(--color-accent-hover);
-				background: var(--color-bg-hover);
+			.filter:hover {
+				box-shadow: inset 0 0 0 1px var(--color-text-muted);
 			}
-			.post-grid {
+			.filter[aria-pressed='true'] {
+				background: var(--color-text);
+				box-shadow: none;
+				color: var(--color-bg);
+			}
+			.year-group {
 				display: grid;
-				grid-template-columns: 1fr;
-				gap: 1.5rem;
-				align-items: stretch;
-				list-style: none;
+				gap: 14px;
+				margin-bottom: 36px;
+			}
+			.year-group h2 {
+				margin: 0 0 0 8px;
+				font-size: 1.75rem;
+			}
+			.year-group h2 span {
+				margin-left: 6px;
+				color: var(--color-text-muted);
+				font-size: 15px;
+				font-weight: 400;
+			}
+			.post-list {
 				margin: 0;
 				padding: 0;
+				overflow: hidden;
+				list-style: none;
+				border-radius: var(--radius-card);
+				background: var(--color-card-bg);
+				box-shadow: var(--card-shadow);
 			}
-			.post-grid > li {
+			.post-row + .post-row .row-link {
+				box-shadow: inset 0 1px 0 var(--color-border);
+			}
+			.post-row + .post-row .row-link:hover {
+				box-shadow: none;
+			}
+			.row-link {
+				display: flex;
+				align-items: center;
+				gap: 20px;
+				padding: 16px 20px;
+				color: var(--color-text);
+				transition: background-color 0.25s ease;
+			}
+			.row-link:hover {
+				background: color-mix(in srgb, var(--color-text) 4%, transparent);
+				color: var(--color-text);
+			}
+			.row-thumb {
+				flex: none;
+				width: 104px;
+				height: 68px;
+				overflow: hidden;
+				border-radius: var(--radius-container);
+			}
+			.row-thumb :global(.category-icon) {
+				--ci-size: 36px !important;
+				--ci-radius: 10px !important;
+			}
+			.row-thumb :global(.category-icon svg) {
+				width: 18px;
+				height: 18px;
+			}
+			.row-text {
+				display: grid;
+				flex: 1;
 				min-width: 0;
-				height: 100%;
+				gap: 4px;
 			}
-			@media (min-width: 768px) {
-				.post-grid {
-					grid-template-columns: repeat(2, minmax(0, 1fr));
+			.row-title {
+				font-size: 17px;
+				font-weight: 600;
+				line-height: 1.45;
+			}
+			.row-desc {
+				overflow: hidden;
+				color: var(--color-text-muted);
+				font-size: 14px;
+				line-height: 1.6;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.row-side {
+				display: flex;
+				flex: none;
+				flex-direction: column;
+				align-items: flex-end;
+				gap: 8px;
+				color: var(--color-text-muted);
+				font-size: 13px;
+			}
+			.row-chevron {
+				flex: none;
+				color: var(--color-text-muted);
+				transition: transform 0.25s var(--ease-out);
+			}
+			.row-link:hover .row-chevron {
+				transform: translateX(3px);
+			}
+			.empty-state {
+				padding: 48px 24px;
+				border-radius: var(--radius-card);
+				background: var(--color-card-bg);
+				color: var(--color-text-muted);
+				text-align: center;
+			}
+			@media (max-width: 720px) {
+				.row-link {
+					gap: 14px;
+					padding: 14px 16px;
+				}
+				.row-thumb {
+					width: 72px;
+					height: 54px;
+				}
+				.row-side .pill,
+				.row-chevron {
+					display: none;
+				}
+				.row-desc {
+					display: none;
+				}
+				.row-text {
+					gap: 2px;
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				.row-chevron,
+				.row-link:hover .row-chevron {
+					transition: none;
+					transform: none;
 				}
 			}
 		</style>
@@ -78,17 +242,129 @@ const posts = (await getCollection('blog')).sort(
 		<Header />
 		<main>
 			<section class="page-head">
-				<h1>全部文章</h1>
-				<p>按时间查看 Chogori Blog 的技术记录。栏目用于保持写作边界清晰，文章内容仍然以问题、过程和结论为主。</p>
-				<nav class="category-nav" aria-label="文章栏目">
-					{BLOG_CATEGORIES.map((category) => <a href={`/categories/${category.slug}/`}>{category.name}</a>)}
-				</nav>
+				<h1 class="rise">全部文章</h1>
+				<p class="rise d1">共 {posts.length} 篇，按时间倒序排列。</p>
+				<label class="search-field rise d2" id="search">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+						<circle cx="11" cy="11" r="7"></circle>
+						<path d="M20 20l-4-4"></path>
+					</svg>
+					<span class="sr-only">在文章中搜索</span>
+					<input id="post-search" type="search" placeholder="搜索标题、摘要或标签" autocomplete="off" />
+				</label>
 			</section>
 
-			<ul class="post-grid">
-				{posts.map((post) => <li><PostCard post={post} /></li>)}
-			</ul>
+			<div class="toolbar rise d3" role="group" aria-label="按分类筛选">
+				<button class="filter" type="button" data-filter="" aria-pressed="true">全部</button>
+				{
+					usedCategories.map((category) => (
+						<button class="filter" type="button" data-filter={category.name} aria-pressed="false">
+							{category.name}
+						</button>
+					))
+				}
+			</div>
+
+			{
+				years.map(([year, yearPosts]) => (
+					<section class="year-group" data-year-group data-reveal>
+						<h2>
+							{year}
+							<span data-year-count>{yearPosts.length} 篇</span>
+						</h2>
+						<ul class="post-list">
+							{yearPosts.map((post) => (
+								<li
+									class="post-row"
+									data-category={post.data.category}
+									data-search={[post.data.title, post.data.description, post.data.category, ...post.data.tags]
+										.join(' ')
+										.toLowerCase()}
+								>
+									<a class="row-link" href={`/blog/${post.id}/`}>
+										<span class="row-thumb">
+											<PostCover post={post} width={240} />
+										</span>
+										<span class="row-text">
+											<span class="row-title">{post.data.title}</span>
+											<span class="row-desc">{post.data.description}</span>
+										</span>
+										<span class="row-side">
+											<span class="pill">{post.data.category}</span>
+											<time datetime={post.data.pubDate.toISOString().slice(0, 10)}>{formatDay(post.data.pubDate)}</time>
+										</span>
+										<svg class="row-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+											<path d="M9 6l6 6-6 6"></path>
+										</svg>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
+			}
+			<p class="empty-state" id="empty-state" hidden>没有找到匹配的文章，换个关键词试试。</p>
 		</main>
 		<Footer />
+
+		<script>
+			const input = document.getElementById('post-search') as HTMLInputElement | null;
+			const filters = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+			const rows = Array.from(document.querySelectorAll<HTMLElement>('.post-row'));
+			const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-year-group]'));
+			const empty = document.getElementById('empty-state');
+			let activeCategory = '';
+
+			const apply = () => {
+				const query = (input?.value ?? '').trim().toLowerCase();
+				const terms = query.split(/\s+/).filter(Boolean);
+				let shown = 0;
+				rows.forEach((row) => {
+					const matchCategory = !activeCategory || row.dataset.category === activeCategory;
+					const haystack = row.dataset.search ?? '';
+					const matchQuery = terms.every((term) => haystack.includes(term));
+					const visible = matchCategory && matchQuery;
+					row.hidden = !visible;
+					if (visible) shown += 1;
+				});
+				groups.forEach((group) => {
+					const count = group.querySelectorAll('.post-row:not([hidden])').length;
+					group.hidden = count === 0;
+					const label = group.querySelector('[data-year-count]');
+					if (label) label.textContent = `${count} 篇`;
+				});
+				if (empty) empty.hidden = shown > 0;
+
+				// 把筛选状态写进地址栏，方便分享和返回
+				const url = new URL(window.location.href);
+				if (query) url.searchParams.set('q', query);
+				else url.searchParams.delete('q');
+				if (activeCategory) url.searchParams.set('category', activeCategory);
+				else url.searchParams.delete('category');
+				history.replaceState(null, '', url);
+			};
+
+			const setCategory = (name: string) => {
+				activeCategory = name;
+				filters.forEach((button) =>
+					button.setAttribute('aria-pressed', button.dataset.filter === name ? 'true' : 'false'),
+				);
+				apply();
+			};
+
+			filters.forEach((button) => button.addEventListener('click', () => setCategory(button.dataset.filter ?? '')));
+			input?.addEventListener('input', apply);
+
+			// 读取首页搜索框带过来的 ?q= 以及 ?category=
+			const params = new URLSearchParams(window.location.search);
+			if (input && params.get('q')) input.value = params.get('q') ?? '';
+			const initialCategory = params.get('category') ?? '';
+			if (initialCategory && filters.some((button) => button.dataset.filter === initialCategory)) {
+				setCategory(initialCategory);
+			} else if (input?.value) {
+				apply();
+			}
+			if (window.location.hash === '#search') input?.focus();
+		</script>
 	</body>
 </html>

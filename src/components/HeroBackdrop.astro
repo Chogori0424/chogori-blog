@@ -1,0 +1,136 @@
+---
+// 首页首屏背景：配置了 HERO_IMAGE 时用照片，否则用内置雪山插画（白天/夜晚两版随主题切换）。
+import { HERO_IMAGE } from '../consts';
+---
+
+<div class="hero-backdrop" aria-hidden="true">
+	<div class="hero-parallax" data-parallax>
+		{
+			HERO_IMAGE ? (
+				<img class="hero-photo" src={HERO_IMAGE} alt="" loading="eager" fetchpriority="high" decoding="async" />
+			) : (
+				<>
+					<svg class="hero-art hero-art--day" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice">
+						<defs>
+							<linearGradient id="hero-sky-day" x1="0" y1="0" x2="0" y2="1">
+								<stop offset="0" stop-color="#1F3B63" />
+								<stop offset="0.45" stop-color="#4F78A8" />
+								<stop offset="0.8" stop-color="#A9C2DD" />
+								<stop offset="1" stop-color="#DCE6F0" />
+							</linearGradient>
+							<linearGradient id="hero-snow-day" x1="0" y1="0" x2="0" y2="1">
+								<stop offset="0" stop-color="#FFFFFF" />
+								<stop offset="1" stop-color="#B9C7D6" />
+							</linearGradient>
+						</defs>
+						<rect width="1440" height="760" fill="url(#hero-sky-day)" />
+						<polygon points="0,560 160,430 300,500 430,380 560,520 640,470 640,760 0,760" fill="#8FA6BF" />
+						<polygon points="800,480 930,360 1060,470 1190,400 1320,500 1440,440 1440,760 800,760" fill="#8FA6BF" />
+						<polygon points="720,170 1010,620 430,620" fill="url(#hero-snow-day)" />
+						<polygon points="720,170 1010,620 760,620 735,420" fill="#7D93AB" />
+						<polyline points="610,420 650,400 690,430 735,380" fill="none" stroke="#C5D2DF" stroke-width="3" />
+						<polygon points="0,640 260,560 520,630 760,580 1010,640 1240,590 1440,630 1440,760 0,760" fill="#5E7590" />
+					</svg>
+					<svg class="hero-art hero-art--night" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice">
+						<defs>
+							<linearGradient id="hero-sky-night" x1="0" y1="0" x2="0" y2="1">
+								<stop offset="0" stop-color="#03060F" />
+								<stop offset="0.5" stop-color="#101E3D" />
+								<stop offset="0.85" stop-color="#263960" />
+								<stop offset="1" stop-color="#2E4470" />
+							</linearGradient>
+							<linearGradient id="hero-snow-night" x1="0" y1="0" x2="0" y2="1">
+								<stop offset="0" stop-color="#DCE6F5" />
+								<stop offset="1" stop-color="#5F7396" />
+							</linearGradient>
+						</defs>
+						<rect width="1440" height="760" fill="url(#hero-sky-night)" />
+						<g fill="#FFFFFF">
+							<circle cx="120" cy="90" r="1.4" />
+							<circle cx="300" cy="50" r="1" />
+							<circle cx="520" cy="120" r="1.2" />
+							<circle cx="900" cy="70" r="1.5" />
+							<circle cx="1100" cy="140" r="1" />
+							<circle cx="1300" cy="60" r="1.3" />
+							<circle cx="1220" cy="220" r="0.9" />
+							<circle cx="240" cy="230" r="0.9" />
+						</g>
+						<polygon points="0,560 160,430 300,500 430,380 560,520 640,470 640,760 0,760" fill="#1E2F52" />
+						<polygon points="800,480 930,360 1060,470 1190,400 1320,500 1440,440 1440,760 800,760" fill="#1E2F52" />
+						<polygon points="720,170 1010,620 430,620" fill="url(#hero-snow-night)" />
+						<polygon points="720,170 1010,620 760,620 735,420" fill="#34466A" />
+						<polyline points="610,420 650,400 690,430 735,380" fill="none" stroke="#8597B5" stroke-width="3" />
+						<polygon points="0,640 260,560 520,630 760,580 1010,640 1240,590 1440,630 1440,760 0,760" fill="#0E1828" />
+					</svg>
+				</>
+			)
+		}
+	</div>
+	<div class="hero-fade"></div>
+</div>
+
+<script>
+	// 首屏轻微视差：背景随滚动以 0.3 倍速下移
+	const layer = document.querySelector<HTMLElement>('[data-parallax]');
+	const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	if (layer && !reduce) {
+		let ticking = false;
+		const update = () => {
+			const y = Math.min(window.scrollY, window.innerHeight);
+			layer.style.transform = `translate3d(0, ${y * 0.3}px, 0) scale(1.06)`;
+			ticking = false;
+		};
+		window.addEventListener(
+			'scroll',
+			() => {
+				if (!ticking) {
+					ticking = true;
+					requestAnimationFrame(update);
+				}
+			},
+			{ passive: true },
+		);
+		update();
+	}
+</script>
+
+<style>
+	.hero-backdrop {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+	}
+	.hero-parallax {
+		position: absolute;
+		inset: 0;
+		transform: scale(1.06);
+		will-change: transform;
+	}
+	.hero-art,
+	.hero-photo {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+	}
+	.hero-art--night {
+		display: none;
+	}
+	:global([data-theme='dark']) .hero-art--day {
+		display: none;
+	}
+	:global([data-theme='dark']) .hero-art--night {
+		display: block;
+	}
+	/* 底部渐隐到页面底色，与下方内容自然衔接 */
+	.hero-fade {
+		position: absolute;
+		inset: 0;
+		background:
+			radial-gradient(42% 30% at 50% 46%, rgba(8, 20, 40, 0.42), transparent 100%),
+			linear-gradient(to bottom, rgba(0, 0, 0, 0.18), transparent 30%),
+			linear-gradient(to bottom, transparent 55%, var(--color-bg) 100%);
+	}
+</style>
