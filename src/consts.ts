@@ -9,12 +9,12 @@ export const AUTHOR_ROLE = '模具注塑工艺工程师';
 export const AUTHOR_AVATAR = '/images/avatar.webp';
 export const SITE_IMAGE = AUTHOR_AVATAR;
 /**
- * 首页首屏背景照片（例如乔戈里峰实拍），放到 public/images/ 下后填路径，如 '/images/hero-k2.webp'。
+ * 首页首屏背景照片（雪山实拍），放到 public/images/ 下后填路径，如 '/images/hero-mountain.webp'。
  * 留空时使用内置的雪山插画（自动区分浅色/暗色）。
  */
-export const HERO_IMAGE = '/images/hero-k2.webp';
+export const HERO_IMAGE = '/images/hero-mountain.webp';
 /** 手机端竖图（可选），屏宽 760px 以下使用；留空则手机也用 HERO_IMAGE */
-export const HERO_IMAGE_MOBILE = '/images/hero-k2-mobile.webp';
+export const HERO_IMAGE_MOBILE = '/images/hero-mountain-mobile.webp';
 
 /**
  * 分类定义。

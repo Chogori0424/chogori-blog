@@ -6,7 +6,7 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import HeroBackdrop from '../components/HeroBackdrop.astro';
 import PostCard from '../components/PostCard.astro';
-import { AUTHOR_ROLE, BLOG_CATEGORIES, SITE_DESCRIPTION, SITE_TAGLINE, SITE_TITLE } from '../consts';
+import { AUTHOR_ROLE, BLOG_CATEGORIES, HERO_IMAGE, SITE_DESCRIPTION, SITE_TAGLINE, SITE_TITLE } from '../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -29,6 +29,11 @@ const latestPosts = posts.slice(0, 4);
 				padding: calc(var(--header-height) + 24px) 16px 140px;
 				text-align: center;
 				color: #ffffff;
+			}
+			/* 照片模式：文字放在画面下半部分，把上方留给主峰 */
+			.hero.has-photo {
+				justify-content: flex-end;
+				padding-bottom: max(120px, 15vh);
 			}
 			.hero-content {
 				position: relative;
@@ -233,7 +238,7 @@ const latestPosts = posts.slice(0, 4);
 	<body class="has-hero">
 		<Header />
 		<main style="width: 100%; max-width: 100%; padding: 0;">
-			<section class="hero">
+			<section class:list={['hero', { 'has-photo': Boolean(HERO_IMAGE) }]}>
 				<HeroBackdrop />
 				<div class="hero-content">
 					<span class="hero-eyebrow rise">{AUTHOR_ROLE}的技术笔记</span>
