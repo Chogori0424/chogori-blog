@@ -12,7 +12,9 @@ export const SITE_IMAGE = AUTHOR_AVATAR;
  * 首页首屏背景照片（例如乔戈里峰实拍），放到 public/images/ 下后填路径，如 '/images/hero-k2.webp'。
  * 留空时使用内置的雪山插画（自动区分浅色/暗色）。
  */
-export const HERO_IMAGE = '';
+export const HERO_IMAGE = '/images/hero-k2.webp';
+/** 手机端竖图（可选），屏宽 760px 以下使用；留空则手机也用 HERO_IMAGE */
+export const HERO_IMAGE_MOBILE = '/images/hero-k2-mobile.webp';
 
 /**
  * 分类定义。
