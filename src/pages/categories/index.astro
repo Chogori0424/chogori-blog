@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
+import CategoryIcon from '../../components/CategoryIcon.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import { BLOG_CATEGORIES, SITE_TITLE } from '../../consts';
@@ -22,64 +23,74 @@ const categories = BLOG_CATEGORIES.map((category) => {
 <!doctype html>
 <html lang="zh-CN">
 	<head>
-		<BaseHead title="分类" description="Chogori Blog 的技术分类：网络代理、工程制造、音频设备、AI 工具和个人日志。" />
+		<BaseHead title="分类" description={`${SITE_TITLE} 的文章分类：${BLOG_CATEGORIES.map((c) => c.name).join('、')}。`} />
 		<style>
 			main {
-				width: 960px;
+				width: 1040px;
 			}
 			.page-head {
-				margin-bottom: 2rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 14px;
+				padding: 32px 0 48px;
+				text-align: center;
 			}
 			.page-head h1 {
-				margin-bottom: 0.75rem;
-				font-size: 2.4rem;
+				margin: 0;
+				font-size: clamp(2.4rem, 6vw, 3.5rem);
 			}
 			.page-head p {
-				max-width: 720px;
+				max-width: 36em;
 				margin: 0;
+				color: var(--color-text-muted);
+				font-size: 1.1rem;
 			}
 			.category-grid {
 				display: grid;
-				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: 1rem;
+				grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+				gap: 16px;
 			}
 			.category-card {
-				display: grid;
-				gap: 0.7rem;
-				border: 1px solid var(--color-card-border);
-				border-radius: var(--radius-container);
-				background: var(--surface);
-				padding: 1rem;
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+				padding: 28px;
+				border-radius: var(--radius-card);
+				background: var(--color-bg-secondary);
 				color: var(--color-text);
-				text-decoration: none;
-				transition:
-					background-color 0.3s ease,
-					border-color 0.3s ease,
-					color 0.3s ease;
+			}
+			.category-card:hover {
+				background: var(--color-bg-hover);
+				color: var(--color-text);
+			}
+			.card-top {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+			}
+			.count {
+				color: var(--color-text-muted);
+				font-size: 14px;
 			}
 			.category-card h2 {
 				margin: 0;
-				font-size: 1.35rem;
+				font-size: 1.4rem;
 			}
 			.category-card p {
 				margin: 0;
-			}
-			.meta {
-				color: var(--color-text-muted);
-				font-size: 0.88rem;
+				color: var(--color-text-secondary);
+				font-size: 15px;
+				line-height: 1.7;
 			}
 			.latest {
+				margin-top: auto;
+				padding-top: 14px;
 				border-top: 1px solid var(--color-border);
-				padding-top: 0.7rem;
-				font-size: 0.92rem;
-			}
-			.category-card:hover {
-				border-color: var(--color-accent);
-			}
-			@media (max-width: 720px) {
-				.category-grid {
-					grid-template-columns: 1fr;
-				}
+				color: var(--color-text-muted);
+				font-size: 14px;
+				line-height: 1.6;
 			}
 		</style>
 	</head>
@@ -87,19 +98,27 @@ const categories = BLOG_CATEGORIES.map((category) => {
 		<Header />
 		<main>
 			<section class="page-head">
-				<h1>分类</h1>
-				<p>{SITE_TITLE} 目前按技术方向整理文章，先保持少量清晰栏目，后续随着内容增长再细分标签。</p>
+				<h1 class="rise">分类</h1>
+				<p class="rise d1">按技术方向整理文章。先保持少量清晰的栏目，内容多起来后再细分。</p>
 			</section>
 
 			<section class="category-grid">
 				{
-					categories.map((category) => (
-						<a class="category-card" href={`/categories/${category.slug}/`}>
+					categories.map((category, index) => (
+						<a
+							class="category-card lift"
+							href={`/categories/${category.slug}/`}
+							data-reveal
+							style={`--reveal-delay:${index * 0.05}s`}
+						>
+							<div class="card-top">
+								<CategoryIcon category={category.name} size={56} />
+								<span class="count">{category.count} 篇</span>
+							</div>
 							<div>
 								<h2>{category.name}</h2>
-								<p class="meta">{category.count} 篇文章</p>
+								<p>{category.description}</p>
 							</div>
-							<p>{category.description}</p>
 							<p class="latest">
 								{category.latestPost ? `最新：${category.latestPost.data.title}` : '这个分类还在整理中。'}
 							</p>

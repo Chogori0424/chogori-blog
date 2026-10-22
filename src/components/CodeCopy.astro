@@ -88,7 +88,6 @@
 		overflow-x: hidden !important;
 		overflow-wrap: anywhere;
 		white-space: pre-wrap;
-		padding-right: 5.5rem;
 	}
 
 	.code-block-wrapper pre > code {
@@ -98,42 +97,27 @@
 		word-break: inherit;
 	}
 
+	/* 复制按钮放在代码块的标题栏里 */
 	.code-copy-button {
 		position: absolute;
-		top: 0.65rem;
-		right: 0.65rem;
+		top: 4px;
+		right: 8px;
 		z-index: 1;
-		border: 1px solid var(--color-accent);
+		height: 26px;
+		padding: 0 12px;
+		border: 0;
 		border-radius: var(--radius-pill);
-		padding: 0.2rem 0.55rem;
-		background: var(--surface-soft);
+		background: color-mix(in srgb, var(--color-text) 8%, transparent);
 		color: var(--color-text);
 		font: inherit;
-		font-size: 0.72rem;
-		font-weight: 700;
-		line-height: 1.4;
+		font-size: 12px;
+		line-height: 26px;
 		cursor: pointer;
-		opacity: 0;
-		pointer-events: none;
-		backdrop-filter: blur(10px);
-		transition:
-			background-color 0.2s ease,
-			border-color 0.2s ease,
-			color 0.2s ease,
-			opacity 0.2s ease;
-	}
-
-	.code-block-wrapper:hover .code-copy-button,
-	.code-block-wrapper:focus-within .code-copy-button,
-	.code-copy-button:focus-visible {
-		opacity: 1;
-		pointer-events: auto;
+		transition: background-color 0.2s ease;
 	}
 
 	.code-copy-button:hover,
 	.code-copy-button:focus-visible {
-		border-color: var(--color-accent-hover);
-		background: var(--color-bg-hover);
-		color: var(--color-text);
+		background: color-mix(in srgb, var(--color-text) 14%, transparent);
 	}
 </style>

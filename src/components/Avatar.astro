@@ -26,8 +26,8 @@ const {
 
 const dimensions: Record<AvatarVariant, { width: number; height: number }> = {
 	site: { width: 32, height: 32 },
-	hero: { width: 72, height: 72 },
-	about: { width: 112, height: 112 },
+	hero: { width: 28, height: 28 },
+	about: { width: 128, height: 128 },
 };
 const { width, height } = dimensions[variant];
 const avatarClass = ['avatar', `avatar--${variant}`, className].filter(Boolean).join(' ');

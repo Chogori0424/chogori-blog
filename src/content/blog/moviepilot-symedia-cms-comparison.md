@@ -1,7 +1,7 @@
 ---
 title: 'MoviePilot、Symedia、CMS 怎么选？从我的 115 + Emby 媒体库需求重新审视三套主流自动化方案'
 description: '结合 115、Emby、STRM、OpenList、CloudDrive2、Telegram、MoviePilot MCP 与 Codex 的实际需求，对比 MoviePilot V3、Symedia 与 CloudMediaSync，并记录我最终以 MoviePilot 为主控、Symedia 作为候选整理层、暂不引入 CMS 的取舍。'
-category: '个人日志'
+category: '家庭服务器'
 tags: ['家庭影音', '媒体服务器', '115', 'MoviePilot', 'Symedia', 'CloudMediaSync', 'CMS', 'Emby', 'STRM']
 pubDate: '2026-09-21'
 ---

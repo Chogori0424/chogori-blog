@@ -1,33 +1,17 @@
 ---
 import { getCollection } from 'astro:content';
-import Avatar from '../components/Avatar.astro';
 import BaseHead from '../components/BaseHead.astro';
+import CategoryIcon from '../components/CategoryIcon.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import HeroBackdrop from '../components/HeroBackdrop.astro';
 import PostCard from '../components/PostCard.astro';
-import {
-	AUTHOR_NAME,
-	BLOG_CATEGORIES,
-	SITE_DESCRIPTION,
-	SITE_TITLE,
-} from '../consts';
+import { AUTHOR_ROLE, BLOG_CATEGORIES, SITE_DESCRIPTION, SITE_TAGLINE, SITE_TITLE } from '../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 const latestPosts = posts.slice(0, 4);
-
-const categories = BLOG_CATEGORIES.map((category) => {
-	const categoryPosts = posts
-		.filter((post) => post.data.category === category.name)
-		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-	return {
-		...category,
-		count: categoryPosts.length,
-		latestPost: categoryPosts[0],
-	};
-});
 ---
 
 <!doctype html>
@@ -35,354 +19,295 @@ const categories = BLOG_CATEGORIES.map((category) => {
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			main {
-				width: 1080px;
-				max-width: calc(100% - 2rem);
-			}
 			.hero {
-				display: grid;
-				grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
-				gap: 2rem;
-				align-items: start;
-				margin-bottom: 2.5rem;
-			}
-			.hero-copy {
-				min-width: 0;
-			}
-			.kicker {
-				margin: 0 0 0.65rem;
-				color: var(--color-text-muted);
-				font-size: 0.9rem;
-				font-weight: 700;
-			}
-			.hero-title-row {
+				position: relative;
 				display: flex;
-				gap: 1rem;
+				min-height: max(640px, 100svh);
+				flex-direction: column;
 				align-items: center;
-				margin-bottom: 1rem;
+				justify-content: center;
+				padding: calc(var(--header-height) + 24px) 16px 140px;
+				text-align: center;
+				color: #ffffff;
+			}
+			.hero-content {
+				position: relative;
+				z-index: 1;
+				display: flex;
+				width: 100%;
+				max-width: 760px;
+				flex-direction: column;
+				align-items: center;
+				gap: 22px;
+			}
+			.hero-eyebrow {
+				padding: 6px 14px;
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				border-radius: var(--radius-pill);
+				background: rgba(10, 25, 50, 0.32);
+				-webkit-backdrop-filter: blur(12px);
+				backdrop-filter: blur(12px);
+				font-size: 13px;
 			}
 			.hero h1 {
 				margin: 0;
-				font-size: 3rem;
-				line-height: 1.08;
+				color: #ffffff;
+				font-size: clamp(3rem, 8vw, 5rem);
+				line-height: 1.05;
+				letter-spacing: -0.03em;
+				text-shadow: 0 4px 30px rgba(10, 25, 50, 0.35);
 			}
-			.hero p {
-				max-width: 760px;
-				margin: 0 0 1rem;
+			.hero-tagline {
+				margin: 0;
+				color: rgba(255, 255, 255, 0.92);
+				font-size: clamp(1.05rem, 2vw, 1.3rem);
+				text-shadow: 0 2px 16px rgba(10, 25, 50, 0.35);
 			}
-			.profile-meta {
+			.hero-search {
 				display: flex;
-				flex-wrap: wrap;
-				gap: 0.5rem;
-				margin-top: 1.25rem;
-			}
-			.profile-meta span {
-				display: inline-flex;
-				border: 1px solid var(--color-accent);
-				border-radius: var(--radius-pill);
-				padding: 0.18rem 0.62rem;
-				background: var(--color-accent-muted);
-				color: var(--color-text);
-				font-size: 0.82rem;
-				font-weight: 700;
-			}
-			.hero-cta,
-			.category-card,
-			.rss-cta {
-				border: 1px solid var(--color-card-border);
-				border-radius: var(--radius-card);
-				background: var(--surface-soft);
-				padding: 1.1rem;
-				transition:
-					background-color 0.3s ease,
-					border-color 0.3s ease,
-					color 0.3s ease,
-					transform 0.2s ease;
-			}
-			.hero-cta {
-				display: grid;
-				gap: 0.85rem;
-				align-content: start;
-				margin-top: clamp(4rem, 6vw, 5rem);
-			}
-			.hero-cta:hover,
-			.category-card:hover,
-			.rss-cta:hover {
-				border-color: var(--color-accent);
-			}
-			.cta-eyebrow {
-				margin: 0;
-				color: var(--color-text-muted);
-				font-size: 0.85rem;
-				font-weight: 800;
-			}
-			.hero-cta h2 {
-				margin: 0;
-				font-size: 1.5rem;
-				line-height: 1.35;
-			}
-			.primary-cta,
-			.rss-cta-button {
-				display: inline-flex;
-				width: fit-content;
+				width: 100%;
+				max-width: 560px;
+				height: 56px;
+				margin-top: 12px;
 				align-items: center;
-				justify-content: center;
-				border: 1px solid var(--color-accent);
+				gap: 12px;
+				padding: 0 8px 0 22px;
 				border-radius: var(--radius-pill);
-				background: var(--color-accent);
-				color: var(--color-bg);
-				font-weight: 800;
-				line-height: 1;
-				text-decoration: none;
-				transition:
-					background-color 0.2s ease,
-					border-color 0.2s ease,
-					color 0.2s ease,
-					transform 0.2s ease;
-			}
-			.primary-cta {
-				padding: 0.8rem 1rem;
-			}
-			.rss-cta-button {
-				padding: 0.75rem 0.95rem;
-				white-space: nowrap;
-			}
-			.primary-cta:hover,
-			.rss-cta-button:hover {
-				transform: translateY(-2px);
-			}
-			.rss-subtle-link {
-				width: fit-content;
 				color: var(--color-text-muted);
-				font-size: 0.92rem;
-				font-weight: 800;
-				text-decoration-color: var(--color-accent);
-				text-underline-offset: 0.2em;
+				cursor: text;
+				transition:
+					box-shadow 0.3s ease,
+					transform 0.3s var(--ease-out);
 			}
-			.section-title,
-			.rss-cta h2 {
-				margin: 0 0 0.85rem;
-				font-size: 1.35rem;
+			.hero-search:focus-within {
+				transform: scale(1.02);
+				box-shadow:
+					0 0 0 4px color-mix(in srgb, var(--color-brand) 35%, transparent),
+					var(--glass-shadow);
 			}
-			.section {
-				margin-top: 2.5rem;
-			}
-			.latest-list {
-				display: grid;
-				grid-template-columns: 1fr;
-				gap: 1.5rem;
-				align-items: stretch;
-				list-style: none;
-				margin: 0;
-				padding: 0;
-			}
-			.latest-list > li {
+			.hero-search input {
+				flex: 1;
 				min-width: 0;
-				height: 100%;
-			}
-			.direction-grid {
-				display: grid;
-				grid-template-columns: repeat(4, minmax(0, 1fr));
-				gap: 1rem;
-			}
-			.category-card {
-				display: grid;
-				align-content: start;
-				gap: 0.55rem;
-				border-radius: var(--radius-container);
+				border: 0;
+				background: transparent;
 				color: var(--color-text);
+				font-size: 17px;
+				outline: none;
 			}
-			.category-card h3 {
-				margin: 0;
-				font-size: 1.05rem;
-			}
-			.category-card a {
-				color: var(--color-text);
-				font-weight: 800;
-				text-decoration-color: var(--color-accent);
-				text-underline-offset: 0.2em;
-			}
-			.category-count {
-				margin: 0 0 0.1rem;
-				color: var(--color-accent);
-				font-size: 2.5rem;
-				font-weight: 900;
-				line-height: 1;
-			}
-			.category-card p {
-				margin: 0;
-				font-size: 0.92rem;
-			}
-			.latest-post {
-				border-top: 1px solid var(--color-card-border);
-				padding-top: 0.75rem;
+			.hero-search input::placeholder {
 				color: var(--color-text-muted);
 			}
-			.latest-post span {
-				font-weight: 800;
-			}
-			.latest-post a {
-				color: var(--color-text);
-			}
-			.rss-cta {
-				display: grid;
-				grid-template-columns: auto minmax(0, 1fr) auto;
-				gap: 1rem;
-				align-items: center;
-			}
-			.rss-icon {
-				display: inline-flex;
-				width: 3rem;
-				height: 3rem;
-				align-items: center;
-				justify-content: center;
-				border: 1px solid var(--color-accent);
+			.hero-search kbd {
+				padding: 6px 10px;
 				border-radius: var(--radius-pill);
-				background: var(--color-accent-muted);
-				color: var(--color-accent);
-			}
-			.rss-cta h2 {
-				margin-bottom: 0.35rem;
-			}
-			.rss-cta p {
-				margin: 0;
+				background: color-mix(in srgb, var(--color-text) 7%, transparent);
 				color: var(--color-text-muted);
-				font-size: 0.95rem;
+				font-family: var(--font-sans);
+				font-size: 12px;
 			}
-			@media (min-width: 768px) {
-				.latest-list {
-					grid-template-columns: repeat(2, minmax(0, 1fr));
+			.scroll-cue {
+				position: absolute;
+				bottom: 32px;
+				left: 50%;
+				z-index: 1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 6px;
+				transform: translateX(-50%);
+				color: var(--color-text-secondary);
+				font-size: 13px;
+			}
+			.scroll-cue svg {
+				animation: nudge 2.4s var(--ease-out) infinite;
+			}
+			@keyframes nudge {
+				0%,
+				60%,
+				100% {
+					transform: none;
+				}
+				30% {
+					transform: translateY(5px);
 				}
 			}
-			@media (max-width: 900px) {
-				.hero,
-				.direction-grid {
-					grid-template-columns: 1fr;
-				}
-				.rss-cta {
-					grid-template-columns: 1fr;
-				}
-				.hero-cta {
-					margin-top: 0;
-				}
-				.hero h1 {
-					font-size: 2.25rem;
-				}
+
+			.topics {
+				padding: 64px 16px 80px;
 			}
-			@media (max-width: 520px) {
-				.hero-title-row {
-					gap: 0.75rem;
+			.topics-inner {
+				display: flex;
+				max-width: 1040px;
+				margin: 0 auto;
+				flex-direction: column;
+				align-items: center;
+				gap: 40px;
+			}
+			.topics h2 {
+				margin: 0;
+				font-size: clamp(1.75rem, 3vw, 2.5rem);
+			}
+			.topic-grid {
+				display: grid;
+				width: 100%;
+				grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+				gap: 12px;
+			}
+			.topic-tile {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 14px;
+				padding: 28px 12px;
+				border-radius: var(--radius-card);
+				background: var(--color-bg-secondary);
+				color: var(--color-text);
+				font-size: 15px;
+				font-weight: 500;
+				transition:
+					transform 0.35s var(--ease-out),
+					background-color 0.35s ease;
+			}
+			.topic-tile:hover {
+				transform: translateY(-4px) scale(1.02);
+				background: var(--color-bg-hover);
+				color: var(--color-text);
+			}
+
+			.latest {
+				padding: 80px 16px;
+				background: var(--color-section-alt);
+			}
+			.latest-inner {
+				display: grid;
+				max-width: var(--content-width);
+				margin: 0 auto;
+				gap: 28px;
+			}
+			.latest-inner .section-head {
+				margin-bottom: 0;
+			}
+
+			.subscribe {
+				padding: 64px 16px;
+			}
+			.subscribe .notice {
+				max-width: var(--content-width);
+				margin: 0 auto;
+			}
+
+			@media (max-width: 720px) {
+				.hero {
+					padding-bottom: 120px;
 				}
-				.hero h1 {
-					font-size: 2rem;
+				.topic-grid {
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					gap: 10px;
+				}
+				.topic-tile {
+					padding: 18px 6px;
+					font-size: 13px;
+					gap: 10px;
+				}
+				.topic-tile :global(.category-icon) {
+					--ci-size: 52px !important;
+				}
+				.latest {
+					padding: 56px 16px;
 				}
 			}
 			@media (prefers-reduced-motion: reduce) {
-				.primary-cta,
-				.rss-cta-button,
-				.category-card {
-					transition: none;
+				.scroll-cue svg {
+					animation: none;
 				}
-				.primary-cta:hover,
-				.rss-cta-button:hover {
+				.topic-tile,
+				.topic-tile:hover,
+				.hero-search,
+				.hero-search:focus-within {
 					transform: none;
+					transition: none;
 				}
 			}
 		</style>
 	</head>
-	<body>
+	<body class="has-hero">
 		<Header />
-		<main>
+		<main style="width: 100%; max-width: 100%; padding: 0;">
 			<section class="hero">
-				<div class="hero-copy">
-					<p class="kicker">chogori.xyz / 个人技术博客</p>
-					<div class="hero-title-row">
-						<Avatar variant="hero" />
-						<h1>{SITE_TITLE}</h1>
-					</div>
-					<p>
-						我是 {AUTHOR_NAME}，模具注塑工艺工程师。这里记录网络代理配置、工程制造、CAD/UG、
-						音频设备和个人知识管理相关的实践笔记。
-					</p>
-					<p>
-						站点会优先保留问题背景、排查过程、配置取舍和后续维护思路，让零散经验变成能长期复用的资料。
-					</p>
-					<div class="profile-meta">
-						<span>Surge / Quantumult X</span>
-						<span>Siemens NX / UG</span>
-						<span>模具注塑工艺</span>
-						<span>音频设备</span>
-					</div>
+				<HeroBackdrop />
+				<div class="hero-content">
+					<span class="hero-eyebrow rise">{AUTHOR_ROLE}的技术笔记</span>
+					<h1 class="rise d1">{SITE_TITLE}</h1>
+					<p class="hero-tagline rise d2">{SITE_TAGLINE}</p>
+					<form class="hero-search glass rise d3" action="/blog" method="get" role="search">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+							<circle cx="11" cy="11" r="7"></circle>
+							<path d="M20 20l-4-4"></path>
+						</svg>
+						<label class="sr-only" for="hero-search-input">搜索文章</label>
+						<input id="hero-search-input" name="q" type="search" placeholder="搜索文章、配置、工具…" autocomplete="off" />
+						<kbd aria-hidden="true">/</kbd>
+					</form>
 				</div>
-				<aside class="hero-cta" aria-label="文章入口">
-					<p class="cta-eyebrow">从文章开始</p>
-					<h2>按时间查看技术记录，或用 RSS 跟进后续更新。</h2>
-					<a class="primary-cta" href="/blog">查看所有文章 →</a>
-					<a class="rss-subtle-link" href="/rss.xml">RSS 订阅</a>
-				</aside>
-			</section>
-
-			<section class="section">
-				<h2 class="section-title">最新文章</h2>
-				<ul class="latest-list">
-					{latestPosts.map((post) => <li><PostCard post={post} /></li>)}
-				</ul>
-			</section>
-
-			<section class="section">
-				<h2 class="section-title">技术方向</h2>
-				<div class="direction-grid">
-					{
-						categories.map((category) => (
-							<article class="category-card">
-								<div>
-									<p class="category-count" aria-label={`${category.count} 篇文章`}>
-										{category.count}
-									</p>
-									<h3>
-										<a href={`/categories/${category.slug}/`}>{category.name}</a>
-									</h3>
-								</div>
-								<p>{category.description}</p>
-								<p class="latest-post">
-									{category.latestPost ? (
-										<>
-											<span>最新：</span>
-											<a href={`/blog/${category.latestPost.id}/`}>{category.latestPost.data.title}</a>
-										</>
-									) : (
-										<span>最新：待整理</span>
-									)}
-								</p>
-							</article>
-						))
-					}
-				</div>
-			</section>
-
-			<section class="section rss-cta" aria-labelledby="rss-cta-title">
-				<div class="rss-icon" aria-hidden="true">
-					<svg
-						viewBox="0 0 24 24"
-						width="26"
-						height="26"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-					>
-						<path d="M4 11a9 9 0 0 1 9 9" />
-						<path d="M4 4a16 16 0 0 1 16 16" />
-						<circle cx="5" cy="19" r="1" />
+				<a class="scroll-cue rise d4" href="#latest">
+					开始阅读
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M6 9l6 6 6-6"></path>
 					</svg>
+				</a>
+			</section>
+
+			<section class="topics" aria-labelledby="topics-title">
+				<div class="topics-inner">
+					<h2 id="topics-title" data-reveal>按主题浏览</h2>
+					<div class="topic-grid">
+						{
+							BLOG_CATEGORIES.map((category, index) => (
+								<a
+									class="topic-tile"
+									href={`/categories/${category.slug}/`}
+									data-reveal
+									style={`--reveal-delay:${index * 0.05}s`}
+								>
+									<CategoryIcon category={category.name} size={64} />
+									<span>{category.name}</span>
+								</a>
+							))
+						}
+					</div>
 				</div>
-				<div>
-					<h2 id="rss-cta-title">订阅 RSS，获取最新文章更新</h2>
-					<p>新文章发布后可通过 RSS 阅读器跟进，适合长期保存和跨设备同步。</p>
+			</section>
+
+			<section class="latest" id="latest" aria-labelledby="latest-title">
+				<div class="latest-inner">
+					<div class="section-head" data-reveal>
+						<h2 id="latest-title">最新文章</h2>
+						<a class="link-more" href="/blog">查看全部文章</a>
+					</div>
+					{latestPosts.map((post, index) => <PostCard post={post} layout="row" reverse={index % 2 === 1} />)}
 				</div>
-				<a class="rss-cta-button" href="/rss.xml">订阅 RSS</a>
+			</section>
+
+			<section class="subscribe">
+				<div class="notice" data-reveal>
+					<span>新文章会第一时间出现在 RSS 里，适合用阅读器长期跟进、跨设备同步。</span>
+					<a class="link-more" href="/rss.xml">订阅 RSS</a>
+				</div>
 			</section>
 		</main>
 		<Footer />
+
+		<script>
+			// 按 / 键聚焦首屏搜索框
+			const input = document.getElementById('hero-search-input') as HTMLInputElement | null;
+			document.addEventListener('keydown', (event) => {
+				const target = event.target as HTMLElement;
+				const typing = target.closest('input, textarea, [contenteditable="true"]');
+				if (event.key === '/' && !typing && input) {
+					event.preventDefault();
+					input.focus();
+				}
+			});
+		</script>
 	</body>
 </html>

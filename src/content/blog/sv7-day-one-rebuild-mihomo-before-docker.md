@@ -1,7 +1,7 @@
 ---
 title: 'SV7 部署第一天复盘：为什么我决定重装，并把 Mihomo 提到 Docker 前面'
 description: '记录 SV7 Debian 服务器第一天的实际部署、踩坑与方案修正：从桌面组件、Docker 镜像拉取、OpenList/CD2、qBittorrent 到 MoviePilot V3，以及第二天重构时将 Tailscale、Mihomo 和 Docker 重新排序。'
-category: '个人日志'
+category: '家庭服务器'
 tags: ['SV7', 'Debian', '家庭服务器', 'Mihomo', 'Docker', 'MoviePilot', 'Tailscale', '115']
 pubDate: '2026-09-23'
 ---

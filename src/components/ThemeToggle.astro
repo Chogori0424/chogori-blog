@@ -85,33 +85,39 @@
 
 <style>
 	button#theme-toggle {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 22px;
-		height: 22px;
-		margin-left: 16px;
+		width: 44px;
+		height: 44px;
 		padding: 0;
-		border: none;
-		outline: none;
+		border: 0;
+		border-radius: var(--radius-pill);
 		background: transparent;
-		color: currentColor;
+		color: var(--color-text);
 		cursor: pointer;
-		opacity: 0.85;
-		transition: opacity 0.2s ease, transform 0.2s ease;
+		transition:
+			background-color 0.25s ease,
+			transform 0.4s var(--ease-spring);
 	}
 
 	button#theme-toggle:hover {
-		opacity: 1;
-		transform: scale(1.15);
+		background: color-mix(in srgb, var(--color-text) 8%, transparent);
 	}
 
-	button#theme-toggle:focus-visible {
-		outline: 3px solid var(--color-accent);
-		outline-offset: 3px;
+	button#theme-toggle:active {
+		transform: rotate(-20deg) scale(0.92);
 	}
 
 	button#theme-toggle svg {
 		flex: none;
+		width: 18px;
+		height: 18px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		button#theme-toggle {
+			transition: none;
+		}
 	}
 </style>

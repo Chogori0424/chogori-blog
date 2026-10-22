@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
+import CategoryIcon from '../../components/CategoryIcon.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import PostCard from '../../components/PostCard.astro';
@@ -21,57 +22,145 @@ export async function getStaticPaths() {
 }
 
 const { category, posts } = Astro.props;
-const pageTitle = `${category.name} - ${SITE_TITLE}`;
+const [featured, ...rest] = posts;
+const others = BLOG_CATEGORIES.filter((item) => item.slug !== category.slug);
+// 汇总本分类文章里出现过的标签，按出现次数排序，最多 10 个
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+	for (const tag of post.data.tags) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+}
+const topTags = [...tagCounts.entries()]
+	.sort((a, b) => b[1] - a[1])
+	.slice(0, 10)
+	.map(([tag]) => tag);
+const lastUpdated = featured?.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+const [glowFrom] = category.gradient;
 ---
 
 <!doctype html>
 <html lang="zh-CN">
 	<head>
-		<BaseHead title={pageTitle} description={category.description} />
+		<BaseHead title={`${category.name} - ${SITE_TITLE}`} description={category.description} />
 		<style>
 			main {
-				width: 960px;
-			}
-			.page-head {
-				margin-bottom: 2rem;
-			}
-			.page-head h1 {
-				margin-bottom: 0.75rem;
-				font-size: 2.4rem;
-			}
-			.page-head p {
-				max-width: 720px;
-				margin: 0;
-			}
-			.post-list {
-				display: grid;
-				grid-template-columns: 1fr;
-				gap: 1.5rem;
-				align-items: stretch;
-				list-style: none;
-				margin: 0;
+				width: 100%;
+				max-width: 100%;
 				padding: 0;
 			}
-			.post-list > li {
-				min-width: 0;
-				height: 100%;
+			.category-hero {
+				padding: 40px 16px 64px;
+				background: radial-gradient(60% 80% at 50% 0%, color-mix(in srgb, var(--glow) 32%, transparent), transparent 70%);
+			}
+			.category-hero-inner {
+				display: flex;
+				max-width: 820px;
+				margin: 0 auto;
+				flex-direction: column;
+				align-items: center;
+				gap: 20px;
+				text-align: center;
+			}
+			.category-hero h1 {
+				margin: 0;
+				font-size: clamp(2.4rem, 6vw, 3.5rem);
+			}
+			.category-hero p {
+				margin: 0;
+				color: var(--color-text-muted);
+				font-size: 1.15rem;
+				line-height: 1.7;
+			}
+			.tag-row {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 8px;
+			}
+			.tag-row .tag {
+				padding: 8px 14px;
+				font-size: 13px;
+			}
+			.posts {
+				display: grid;
+				max-width: var(--content-width);
+				margin: 0 auto;
+				padding: 8px 16px 80px;
+				gap: 20px;
+			}
+			.posts .section-head {
+				align-items: baseline;
+				margin-bottom: 0;
+			}
+			.posts .section-head h2 {
+				font-size: 1.75rem;
+			}
+			.updated {
+				color: var(--color-text-muted);
+				font-size: 14px;
+			}
+			.post-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+				gap: 20px;
 			}
 			.empty {
-				padding: 1rem;
-				border: 1px solid var(--color-card-border);
-				border-radius: var(--radius-container);
-				background: var(--surface);
+				padding: 48px 24px;
+				border-radius: var(--radius-card);
+				background: var(--color-bg-secondary);
+				color: var(--color-text-muted);
+				text-align: center;
+			}
+			.other-topics {
+				padding: 64px 16px 80px;
+				background: var(--color-section-alt);
+			}
+			.other-topics-inner {
+				display: flex;
+				max-width: 1040px;
+				margin: 0 auto;
+				flex-direction: column;
+				align-items: center;
+				gap: 28px;
+			}
+			.other-topics h2 {
+				margin: 0;
+				font-size: 1.75rem;
+			}
+			.topic-row {
+				display: grid;
+				width: 100%;
+				grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+				gap: 12px;
+			}
+			.topic-chip {
+				display: flex;
+				align-items: center;
+				gap: 14px;
+				padding: 16px;
+				border-radius: var(--radius-card);
+				background: var(--color-card-bg);
+				color: var(--color-text);
+				font-size: 15px;
+				font-weight: 500;
 				transition:
-					background-color 0.3s ease,
-					border-color 0.3s ease,
-					color 0.3s ease;
+					transform 0.35s var(--ease-out),
+					background-color 0.3s ease;
 			}
-			.empty {
-				border-color: var(--color-accent);
+			.topic-chip:hover {
+				transform: translateY(-4px);
+				background: var(--color-bg-hover);
+				color: var(--color-text);
 			}
-			@media (min-width: 768px) {
-				.post-list {
-					grid-template-columns: repeat(2, minmax(0, 1fr));
+			@media (max-width: 720px) {
+				.post-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				.topic-chip,
+				.topic-chip:hover {
+					transform: none;
+					transition: none;
 				}
 			}
 		</style>
@@ -79,20 +168,68 @@ const pageTitle = `${category.name} - ${SITE_TITLE}`;
 	<body>
 		<Header />
 		<main>
-			<section class="page-head">
-				<h1>{category.name}</h1>
-				<p>{category.description}</p>
+			<section class="category-hero" style={`--glow:${glowFrom};`}>
+				<div class="category-hero-inner">
+					<span class="pop"><CategoryIcon category={category.name} size={104} glow /></span>
+					<h1 class="rise d1">{category.name}</h1>
+					<p class="rise d2">{category.description}</p>
+					{
+						topTags.length > 0 && (
+							<div class="tag-row rise d3">
+								{topTags.map((tag) => (
+									<a class="tag" href={`/blog?q=${encodeURIComponent(tag)}`}>
+										{tag}
+									</a>
+								))}
+							</div>
+						)
+					}
+				</div>
 			</section>
 
-			{
-				posts.length > 0 ? (
-					<ul class="post-list">
-						{posts.map((post) => <li><PostCard post={post} /></li>)}
-					</ul>
-				) : (
-					<p class="empty">这个栏目还在整理中。</p>
-				)
-			}
+			<section class="posts" aria-labelledby="posts-title">
+				<div class="section-head">
+					<h2 id="posts-title">{posts.length} 篇文章</h2>
+					{lastUpdated && <span class="updated">最近更新：{lastUpdated}</span>}
+				</div>
+				{
+					featured ? (
+						<>
+							<PostCard post={featured} layout="row" featured />
+							{rest.length > 0 && (
+								<div class="post-grid">
+									{rest.map((post) => (
+										<PostCard post={post} />
+									))}
+								</div>
+							)}
+						</>
+					) : (
+						<p class="empty">这个分类还在整理中。</p>
+					)
+				}
+			</section>
+
+			<section class="other-topics" aria-labelledby="other-topics-title">
+				<div class="other-topics-inner">
+					<h2 id="other-topics-title" data-reveal>其他主题</h2>
+					<div class="topic-row">
+						{
+							others.map((item, index) => (
+								<a
+									class="topic-chip"
+									href={`/categories/${item.slug}/`}
+									data-reveal
+									style={`--reveal-delay:${index * 0.05}s`}
+								>
+									<CategoryIcon category={item.name} size={44} />
+									{item.name}
+								</a>
+							))
+						}
+					</div>
+				</div>
+			</section>
 		</main>
 		<Footer />
 	</body>

@@ -10,6 +10,11 @@ export default defineConfig({
 	integrations: [mdx(), sitemap()],
 	markdown: {
 		shikiConfig: {
+			// 代码高亮跟随站点深浅色：浅色主题写在行内颜色里，暗色主题通过 --shiki-dark 变量切换
+			themes: {
+				light: 'github-light',
+				dark: 'github-dark',
+			},
 			langAlias: {
 				surge: 'ini',
 			},
