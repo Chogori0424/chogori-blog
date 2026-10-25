@@ -53,19 +53,9 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 		<BaseHead title={title} description={description} image={heroImage} type="article" />
 		<style>
 			main {
-				/* 外层栅格基准：封面左右边缘 = 正文左边缘 / 目录右边缘 */
-				--article-width: 1024px;
 				width: 100%;
 				max-width: 100%;
 				padding: 0;
-			}
-			main.no-toc {
-				--article-width: 760px;
-			}
-			.post-frame {
-				max-width: calc(var(--article-width) + 32px);
-				margin: 0 auto;
-				padding: 0 16px;
 			}
 			.reading-progress {
 				position: fixed;
@@ -87,10 +77,10 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 				display: flex;
 				max-width: 860px;
 				margin: 0 auto;
-				padding: 40px 16px 28px;
+				padding: 64px 16px 40px;
 				flex-direction: column;
 				align-items: center;
-				gap: 14px;
+				gap: 20px;
 				text-align: center;
 			}
 			.post-header .pill {
@@ -98,7 +88,7 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 			}
 			.post-header h1 {
 				margin: 0;
-				font-size: clamp(1.8rem, 3.4vw, 2.35rem);
+				font-size: clamp(2rem, 4.4vw, 3rem);
 				line-height: 1.25;
 				letter-spacing: -0.015em;
 				text-wrap: balance;
@@ -119,10 +109,19 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 			}
 
 			.post-cover {
-				width: 100%;
+				position: relative;
+				max-width: var(--content-width);
+				margin: 0 auto;
+				overflow: hidden;
 				aspect-ratio: 21 / 9;
-				max-height: 340px;
 				border-radius: var(--radius-card);
+				box-shadow: var(--card-shadow);
+			}
+			.post-cover.is-fallback {
+				aspect-ratio: 4 / 1;
+			}
+			.post-cover-wrap {
+				padding: 0 16px;
 			}
 			.post-cover :global(img) {
 				display: block;
@@ -131,15 +130,27 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 				object-fit: cover;
 				border-radius: 0;
 			}
-			.post-cover .cover-placeholder :global(.category-icon) {
-				--ci-size: 64px !important;
-				--ci-radius: 16px !important;
+			.post-cover-fallback {
+				display: flex;
+				width: 100%;
+				height: 100%;
+				align-items: center;
+				justify-content: center;
+				background:
+					radial-gradient(120% 90% at 15% 10%, color-mix(in srgb, var(--cover-from) 70%, transparent), transparent 60%),
+					radial-gradient(90% 90% at 90% 100%, color-mix(in srgb, var(--cover-to) 80%, transparent), transparent 65%),
+					linear-gradient(135deg, color-mix(in srgb, var(--cover-to) 55%, #0b1a2e), color-mix(in srgb, var(--cover-from) 45%, #1f3b63));
+			}
+			.post-cover-fallback :global(.category-icon) {
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				background: rgba(255, 255, 255, 0.18);
+				-webkit-backdrop-filter: blur(12px);
+				backdrop-filter: blur(12px);
 			}
 			.cover-chip {
 				position: absolute;
 				bottom: 20px;
 				left: 20px;
-				z-index: 2;
 				padding: 8px 14px;
 				border: 1px solid rgba(255, 255, 255, 0.16);
 				border-radius: var(--radius-pill);
@@ -152,105 +163,88 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 
 			.post-shell {
 				display: grid;
-				grid-template-columns: minmax(0, 1fr);
+				grid-template-columns: minmax(0, 720px);
+				justify-content: center;
 				gap: 56px;
-				padding: 32px 0 96px;
+				max-width: var(--content-width);
+				margin: 0 auto;
+				padding: 56px 16px 96px;
 			}
 			.post-shell.has-toc {
-				grid-template-columns: minmax(0, 1fr) 220px;
+				grid-template-columns: minmax(0, 720px) minmax(220px, 260px);
 				align-items: start;
 			}
 			.post-article {
 				min-width: 0;
 			}
 
-			/* 摘要：左侧强调线 + 小字角标，不再重复分类图标 */
 			.post-summary {
-				margin-bottom: 28px;
-				padding: 14px 22px;
+				display: flex;
+				gap: 16px;
+				margin-bottom: 36px;
+				padding: 22px 24px;
 				border-radius: var(--radius-container);
-				background: color-mix(in srgb, var(--color-bg-secondary) 70%, transparent);
-				/* 强调线用内阴影绘制，保留 16px 圆角 */
-				box-shadow: inset 3px 0 0 var(--color-brand);
+				background: var(--color-bg-secondary);
 			}
 			.post-summary-label {
 				display: block;
-				margin-bottom: 2px;
-				color: var(--color-accent-text);
-				font-size: 12px;
+				margin-bottom: 4px;
+				color: var(--color-text);
+				font-size: 15px;
 				font-weight: 600;
-				letter-spacing: 0.08em;
 			}
 			.post-summary p {
 				margin: 0;
 				color: var(--color-text-secondary);
 				font-size: 16px;
-				line-height: 1.75;
+				line-height: 1.8;
 			}
 
-			/* 目录：无背景框，左侧细竖线导引 + 当前小节高亮条 */
 			.table-of-contents {
 				position: sticky;
-				top: calc(var(--header-height) + 32px);
-				max-height: calc(100vh - var(--header-height) - 64px);
+				top: calc(var(--header-height) + 16px);
+				max-height: calc(100vh - var(--header-height) - 40px);
 				overflow: auto;
-				font-size: 13px;
+				padding: 18px;
+				border-radius: var(--radius-container);
+				font-size: 14px;
 				line-height: 1.5;
-				scrollbar-width: none;
 			}
 			.toc-title {
-				margin: 0 0 12px;
-				padding-left: 15px;
+				margin: 0 0 8px;
+				padding: 0 12px;
 				color: var(--color-text-muted);
-				font-size: 12px;
+				font-size: 13px;
 				font-weight: 600;
-				letter-spacing: 0.08em;
 			}
 			.table-of-contents ol {
 				display: grid;
-				gap: 4px;
+				gap: 2px;
 				margin: 0;
 				padding: 0;
-				border-left: 1px solid var(--color-border);
 				list-style: none;
 			}
 			.table-of-contents a {
-				position: relative;
 				display: block;
-				padding: 5px 0 5px 14px;
+				padding: 8px 12px;
+				border-radius: var(--radius-small);
 				color: var(--color-text-muted);
 				overflow-wrap: anywhere;
-				transition: color 0.25s ease;
-			}
-			.table-of-contents a::before {
-				content: '';
-				position: absolute;
-				top: 4px;
-				bottom: 4px;
-				left: -1px;
-				width: 2px;
-				border-radius: 2px;
-				background: var(--color-brand);
-				opacity: 0;
-				transform: scaleY(0.4);
 				transition:
-					opacity 0.25s ease,
-					transform 0.3s var(--ease-out);
+					background-color 0.25s ease,
+					color 0.25s ease;
 			}
 			.table-of-contents a:hover {
 				color: var(--color-text);
 			}
 			.table-of-contents a.active {
+				background: color-mix(in srgb, var(--color-text) 7%, transparent);
 				color: var(--color-text);
 				font-weight: 500;
 			}
-			.table-of-contents a.active::before {
-				opacity: 1;
-				transform: none;
-			}
 			.table-of-contents .toc-depth-3 a {
-				padding-left: 26px;
-				font-size: 12.5px;
+				padding-left: 24px;
+				font-size: 13px;
 			}
 
 			.prose {
@@ -391,13 +385,9 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 			}
 
 			@media (max-width: 1080px) {
-				main {
-					--article-width: 760px;
-				}
 				.post-shell,
 				.post-shell.has-toc {
-					grid-template-columns: minmax(0, 1fr);
-					gap: 32px;
+					grid-template-columns: minmax(0, 720px);
 				}
 				.table-of-contents {
 					position: static;
@@ -407,13 +397,16 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 			}
 			@media (max-width: 720px) {
 				.post-header {
-					padding: 32px 16px 24px;
+					padding: 40px 16px 28px;
 				}
 				.post-cover {
 					aspect-ratio: 16 / 9;
 				}
+				.post-cover.is-fallback {
+					aspect-ratio: 5 / 2;
+				}
 				.post-shell {
-					padding: 28px 0 72px;
+					padding: 36px 16px 72px;
 					gap: 28px;
 				}
 				.prose {
@@ -433,7 +426,7 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 	<body>
 		<div class="reading-progress" aria-hidden="true"><span id="reading-progress-bar"></span></div>
 		<Header />
-		<main class:list={[!showToc && 'no-toc']}>
+		<main>
 			<header class="post-header">
 				{
 					category && (
@@ -450,31 +443,35 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 				</div>
 			</header>
 
-			<div class="post-frame">
-				<div class="post-cover cover-frame rise d3">
+			<div class="post-cover-wrap">
+				<div class:list={['post-cover', 'rise', 'd3', { 'is-fallback': !heroImage }]}>
 					{
 						heroImage ? (
 							typeof heroImage === 'string' ? (
-								<img src={heroImage} alt="" width={1024} height={439} />
+								<img src={heroImage} alt="" width={1120} height={480} />
 							) : (
-								<Image src={heroImage} alt="" width={1024} height={439} />
+								<Image src={heroImage} alt="" width={1120} height={480} />
 							)
 						) : (
-							<div class="cover-placeholder" style={`--cover-from:${from};--cover-to:${to};`}>
-								<CategoryIcon category={category ?? ''} size={64} tone="soft" />
+							<div class="post-cover-fallback" style={`--cover-from:${from};--cover-to:${to};`}>
+								<CategoryIcon category={category ?? ''} size={96} />
 							</div>
 						)
 					}
 					{tags.length > 0 && <span class="cover-chip">{tags.slice(0, 3).join(' · ')}</span>}
 				</div>
+			</div>
 
-				<div class:list={['post-shell', showToc && 'has-toc']}>
+			<div class:list={['post-shell', showToc && 'has-toc']}>
 				<article class="post-article">
 					{
 						description && (
 							<div class="post-summary">
-								<span class="post-summary-label">摘要</span>
-								<p>{description}</p>
+								<CategoryIcon category={category ?? ''} size={36} radius={10} />
+								<div>
+									<span class="post-summary-label">摘要</span>
+									<p>{description}</p>
+								</div>
 							</div>
 						)
 					}
@@ -512,7 +509,7 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 				</article>
 				{
 					showToc && (
-						<aside class="table-of-contents" aria-label="文章目录">
+						<aside class="table-of-contents glass" aria-label="文章目录">
 							<p class="toc-title">本文目录</p>
 							<nav>
 								<ol>
@@ -526,7 +523,6 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 						</aside>
 					)
 				}
-				</div>
 			</div>
 			<CodeCopy />
 		</main>

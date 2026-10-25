@@ -132,60 +132,60 @@ const latestPosts = posts.slice(0, 4);
 				}
 			}
 
-			/* 首屏之后的板块共用同一底色，只用间距和 1px 细线分隔 */
 			.topics {
-				padding: 72px 16px 64px;
+				padding: 64px 16px 80px;
 			}
-			.topics-inner,
-			.latest-inner {
-				max-width: var(--content-width);
+			.topics-inner {
+				display: flex;
+				max-width: 1040px;
 				margin: 0 auto;
+				flex-direction: column;
+				align-items: center;
+				gap: 40px;
+			}
+			.topics h2 {
+				margin: 0;
+				font-size: clamp(1.75rem, 3vw, 2.5rem);
 			}
 			.topic-grid {
 				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-				gap: 10px;
+				width: 100%;
+				grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+				gap: 12px;
 			}
 			.topic-tile {
 				display: flex;
+				flex-direction: column;
 				align-items: center;
-				gap: 12px;
-				min-width: 0;
-				padding: 10px 18px 10px 10px;
+				gap: 14px;
+				padding: 28px 12px;
 				border-radius: var(--radius-card);
-				background: var(--color-card-bg);
-				box-shadow: var(--card-shadow);
+				background: var(--color-bg-secondary);
 				color: var(--color-text);
 				font-size: 15px;
 				font-weight: 500;
-				white-space: nowrap;
 				transition:
 					transform 0.35s var(--ease-out),
-					background-color 0.25s ease,
-					box-shadow 0.25s ease;
+					background-color 0.35s ease;
 			}
 			.topic-tile:hover {
-				transform: translateY(-2px);
-				background: var(--color-bg-secondary);
-				box-shadow: var(--card-shadow-hover);
+				transform: translateY(-4px) scale(1.02);
+				background: var(--color-bg-hover);
 				color: var(--color-text);
-			}
-			.topic-tile span:last-child {
-				overflow: hidden;
-				text-overflow: ellipsis;
 			}
 
 			.latest {
-				padding: 0 16px 72px;
+				padding: 80px 16px;
+				background: var(--color-section-alt);
 			}
 			.latest-inner {
 				display: grid;
-				gap: 20px;
-				padding-top: 64px;
-				border-top: 1px solid var(--hairline);
+				max-width: var(--content-width);
+				margin: 0 auto;
+				gap: 28px;
 			}
 			.latest-inner .section-head {
-				margin-bottom: 4px;
+				margin-bottom: 0;
 			}
 
 			.subscribe {
@@ -200,23 +200,20 @@ const latestPosts = posts.slice(0, 4);
 				.hero {
 					padding-bottom: 120px;
 				}
-				.topics {
-					padding: 48px 16px 48px;
-				}
 				.topic-grid {
-					grid-template-columns: repeat(2, minmax(0, 1fr));
-					gap: 8px;
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					gap: 10px;
 				}
 				.topic-tile {
+					padding: 18px 6px;
+					font-size: 13px;
 					gap: 10px;
-					padding: 8px 12px 8px 8px;
-					font-size: 14px;
+				}
+				.topic-tile :global(.category-icon) {
+					--ci-size: 52px !important;
 				}
 				.latest {
-					padding: 0 16px 56px;
-				}
-				.latest-inner {
-					padding-top: 48px;
+					padding: 56px 16px;
 				}
 			}
 			@media (prefers-reduced-motion: reduce) {
@@ -260,12 +257,9 @@ const latestPosts = posts.slice(0, 4);
 				</a>
 			</section>
 
-			<section class="topics" id="topics" aria-labelledby="topics-title">
+			<section class="topics" aria-labelledby="topics-title">
 				<div class="topics-inner">
-					<div class="section-head" data-reveal>
-						<h2 id="topics-title">按主题浏览</h2>
-						<a class="link-more" href="/categories">全部分类</a>
-					</div>
+					<h2 id="topics-title" data-reveal>按主题浏览</h2>
 					<div class="topic-grid">
 						{
 							BLOG_CATEGORIES.map((category, index) => (
@@ -275,7 +269,7 @@ const latestPosts = posts.slice(0, 4);
 									data-reveal
 									style={`--reveal-delay:${index * 0.05}s`}
 								>
-									<CategoryIcon category={category.name} size={36} radius={10} tone="soft" />
+									<CategoryIcon category={category.name} size={64} />
 									<span>{category.name}</span>
 								</a>
 							))
@@ -290,7 +284,7 @@ const latestPosts = posts.slice(0, 4);
 						<h2 id="latest-title">最新文章</h2>
 						<a class="link-more" href="/blog">查看全部文章</a>
 					</div>
-					{latestPosts.map((post) => <PostCard post={post} layout="row" />)}
+					{latestPosts.map((post, index) => <PostCard post={post} layout="row" reverse={index % 2 === 1} />)}
 				</div>
 			</section>
 

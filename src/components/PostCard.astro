@@ -5,36 +5,39 @@ import PostCover from './PostCover.astro';
 
 interface Props {
 	post: CollectionEntry<'blog'>;
-	/** row：左图右文（首页、分类页置顶）；stack：上图下文（网格） */
+	/** row：左右图文（首页）；stack：上图下文（网格） */
 	layout?: 'row' | 'stack';
-	/** 更大的标题和更宽的封面，用于分类页的置顶文章 */
+	/** row 布局时图片放右侧 */
+	reverse?: boolean;
+	/** 更大的标题，用于分类页的置顶文章 */
 	featured?: boolean;
 	headingLevel?: 'h2' | 'h3';
 }
 
-const { post, layout = 'stack', featured = false, headingLevel = 'h3' } = Astro.props;
+const { post, layout = 'stack', reverse = false, featured = false, headingLevel = 'h3' } = Astro.props;
 const { title, description, category, pubDate } = post.data;
 const href = `/blog/${post.id}/`;
 const meta = getCategoryByName(category);
-// 等宽纯数字日期，与 datetime 属性保持一致
-const dateText = pubDate.toISOString().slice(0, 10);
+const dateText = pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 const Heading = headingLevel;
 ---
 
-<article class:list={['post-card', 'lift', 'zoom-cover', `post-card--${layout}`, { 'is-featured': featured }]} data-reveal>
-	<a class="post-card-cover cover-frame" href={href} tabindex="-1" aria-hidden="true">
+<article
+	class:list={['post-card', 'lift', 'zoom-cover', `post-card--${layout}`, { 'is-reverse': reverse, 'is-featured': featured }]}
+	data-reveal
+>
+	<a class="post-card-cover" href={href} tabindex="-1" aria-hidden="true">
 		<PostCover post={post} />
 	</a>
 	<div class="post-card-body">
 		<a class="pill" href={meta ? `/categories/${meta.slug}/` : '/categories'}>{category}</a>
 		<Heading class="post-card-title"><a href={href}>{title}</a></Heading>
 		{description && <p class="post-card-excerpt">{description}</p>}
-		<time class="post-card-date" datetime={dateText}>{dateText}</time>
+		<time class="post-card-date" datetime={pubDate.toISOString().slice(0, 10)}>{dateText}</time>
 	</div>
 </article>
 
 <style>
-	/* 封面贴边、外圆角沿用站点卡片圆角 24px，由 overflow 统一裁切 */
 	.post-card {
 		position: relative;
 		display: flex;
@@ -46,59 +49,52 @@ const Heading = headingLevel;
 		background: var(--color-card-bg);
 		box-shadow: var(--card-shadow);
 	}
-	/* 1px 内描边画在卡片最上层，沿 24px 圆角包住贴边的封面 */
-	.post-card::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		z-index: 2;
-		border-radius: inherit;
-		box-shadow: inset 0 0 0 1px var(--cover-ring);
-		pointer-events: none;
+	.post-card--row {
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+	.post-card--row.is-reverse {
+		flex-direction: row-reverse;
 	}
 	.post-card-cover {
-		aspect-ratio: 16 / 10;
+		display: block;
+		overflow: hidden;
+		aspect-ratio: 16 / 9;
 	}
-	.post-card-cover.cover-frame::after {
-		box-shadow: none;
+	.post-card--row .post-card-cover {
+		flex: 1 1 420px;
+		aspect-ratio: auto;
+		min-height: 300px;
 	}
-
-	/* 左图右文：图 40% / 文 60% */
-	.post-card--row {
-		display: grid;
-		grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-		align-items: center;
-		gap: 0;
+	.post-card--row.is-featured .post-card-cover {
+		flex: 3 1 480px;
+		min-height: 360px;
 	}
-	.post-card--row.is-featured {
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-	}
-
 	.post-card-body {
 		display: flex;
 		flex: 1;
 		flex-direction: column;
 		justify-content: center;
-		gap: 10px;
+		gap: 12px;
 		min-width: 0;
-		padding: 24px 28px 26px;
+		padding: 28px;
 	}
 	.post-card--row .post-card-body {
-		padding: 24px 36px;
+		flex: 1 1 420px;
+		padding: 40px;
+	}
+	.post-card--row.is-featured .post-card-body {
+		flex: 2 1 340px;
 	}
 	.post-card-title {
 		margin: 0;
-		font-size: 1.2rem;
-		line-height: 1.45;
+		font-size: 1.3rem;
+		line-height: 1.4;
 		letter-spacing: 0;
-		text-wrap: pretty;
 	}
 	.post-card--row .post-card-title {
-		font-size: clamp(1.2rem, 1.7vw, 1.4rem);
-		line-height: 1.4;
-	}
-	.post-card--row.is-featured .post-card-title {
-		font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+		font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+		line-height: 1.35;
 	}
 	.post-card-title a {
 		color: var(--color-text);
@@ -120,26 +116,30 @@ const Heading = headingLevel;
 		overflow: hidden;
 		color: var(--color-text-muted);
 		font-size: 0.95rem;
-		line-height: 1.7;
+		line-height: 1.75;
 		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-		line-clamp: 2;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
 	}
 	.post-card-date {
 		color: var(--color-text-muted);
 		font-size: 0.85rem;
-		font-variant-numeric: tabular-nums;
-		letter-spacing: 0.01em;
 	}
 	@media (max-width: 720px) {
 		.post-card--row,
-		.post-card--row.is-featured {
-			display: flex;
+		.post-card--row.is-reverse {
 			flex-direction: column;
-			align-items: stretch;
-			gap: 0;
+			flex-wrap: nowrap;
+		}
+		.post-card--row .post-card-cover,
+		.post-card--row.is-featured .post-card-cover {
+			flex: none;
+			width: 100%;
+			min-height: 0;
+			aspect-ratio: 16 / 9;
 		}
 		.post-card--row .post-card-body {
+			flex: none;
 			padding: 22px;
 		}
 	}
