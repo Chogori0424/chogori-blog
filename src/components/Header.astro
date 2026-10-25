@@ -99,6 +99,9 @@ const links = [
 		min-height: 56px;
 		padding: 6px 6px 6px 12px;
 		border-radius: var(--radius-pill);
+		/* 胶囊导航：半透明底 + 12px 毛玻璃 */
+		-webkit-backdrop-filter: saturate(180%) blur(12px);
+		backdrop-filter: saturate(180%) blur(12px);
 		transition:
 			background-color 0.35s ease,
 			box-shadow 0.35s ease;

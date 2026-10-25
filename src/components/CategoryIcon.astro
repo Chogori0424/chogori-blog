@@ -9,10 +9,12 @@ interface Props {
 	/** 方块圆角，默认沿用站点容器圆角 16px；大图标可传 24 */
 	radius?: number;
 	glow?: boolean;
+	/** soft：低饱和淡色底 + 彩色线条，无投影，用于紧凑列表和封面占位 */
+	tone?: 'solid' | 'soft';
 	class?: string;
 }
 
-const { category, size = 56, radius, glow = false, class: className = '' } = Astro.props;
+const { category, size = 56, radius, glow = false, tone = 'solid', class: className = '' } = Astro.props;
 const meta = getCategoryByName(category);
 const [from, to] = meta?.gradient ?? ['#8e8e93', '#636366'];
 const icon = meta?.icon ?? 'notebook';
@@ -21,7 +23,7 @@ const corner = radius ?? (size >= 80 ? 24 : size >= 40 ? 16 : 10);
 ---
 
 <span
-	class:list={['category-icon', { 'category-icon--glow': glow }, className]}
+	class:list={['category-icon', { 'category-icon--glow': glow, 'category-icon--soft': tone === 'soft' }, className]}
 	style={`--ci-size:${size}px;--ci-radius:${corner}px;--ci-from:${from};--ci-to:${to};`}
 	aria-hidden="true"
 >
@@ -100,6 +102,11 @@ const corner = radius ?? (size >= 80 ? 24 : size >= 40 ? 16 : 10);
 		background: linear-gradient(160deg, var(--ci-from), var(--ci-to));
 		color: #ffffff;
 		box-shadow: 0 8px 20px color-mix(in srgb, var(--ci-to) 30%, transparent);
+	}
+	.category-icon--soft {
+		background: color-mix(in srgb, var(--ci-to) 16%, transparent);
+		color: color-mix(in srgb, var(--ci-from) 85%, var(--color-text));
+		box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ci-from) 22%, transparent);
 	}
 	.category-icon--glow {
 		box-shadow: 0 20px 60px color-mix(in srgb, var(--ci-to) 45%, transparent);
