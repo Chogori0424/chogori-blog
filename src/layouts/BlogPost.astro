@@ -167,10 +167,11 @@ const [from, to] = meta?.gradient ?? ['#5ac8fa', '#0a84ff'];
 			/* 摘要：左侧强调线 + 小字角标，不再重复分类图标 */
 			.post-summary {
 				margin-bottom: 28px;
-				padding: 12px 18px;
-				border-left: 3px solid var(--color-brand);
-				border-radius: 0 var(--radius-small) var(--radius-small) 0;
+				padding: 14px 22px;
+				border-radius: var(--radius-container);
 				background: color-mix(in srgb, var(--color-bg-secondary) 70%, transparent);
+				/* 强调线用内阴影绘制，保留 16px 圆角 */
+				box-shadow: inset 3px 0 0 var(--color-brand);
 			}
 			.post-summary-label {
 				display: block;

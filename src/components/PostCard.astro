@@ -34,21 +34,33 @@ const Heading = headingLevel;
 </article>
 
 <style>
+	/* 封面贴边、外圆角沿用站点卡片圆角 24px，由 overflow 统一裁切 */
 	.post-card {
-		--card-pad: 10px;
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		height: 100%;
 		min-width: 0;
-		padding: var(--card-pad);
+		overflow: hidden;
 		border-radius: var(--radius-card);
 		background: var(--color-card-bg);
 		box-shadow: var(--card-shadow);
 	}
+	/* 1px 内描边画在卡片最上层，沿 24px 圆角包住贴边的封面 */
+	.post-card::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		border-radius: inherit;
+		box-shadow: inset 0 0 0 1px var(--cover-ring);
+		pointer-events: none;
+	}
 	.post-card-cover {
 		aspect-ratio: 16 / 10;
-		border-radius: calc(var(--radius-card) - var(--card-pad));
+	}
+	.post-card-cover.cover-frame::after {
+		box-shadow: none;
 	}
 
 	/* 左图右文：图 40% / 文 60% */
@@ -56,7 +68,7 @@ const Heading = headingLevel;
 		display: grid;
 		grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
 		align-items: center;
-		gap: 8px;
+		gap: 0;
 	}
 	.post-card--row.is-featured {
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -69,10 +81,10 @@ const Heading = headingLevel;
 		justify-content: center;
 		gap: 10px;
 		min-width: 0;
-		padding: 18px 16px 14px;
+		padding: 24px 28px 26px;
 	}
 	.post-card--row .post-card-body {
-		padding: 16px 28px 16px 20px;
+		padding: 24px 36px;
 	}
 	.post-card-title {
 		margin: 0;
@@ -128,7 +140,7 @@ const Heading = headingLevel;
 			gap: 0;
 		}
 		.post-card--row .post-card-body {
-			padding: 18px 14px 12px;
+			padding: 22px;
 		}
 	}
 </style>
